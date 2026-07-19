@@ -7,21 +7,21 @@ Template Name: Gallery
 get_header(); ?>
 
     <!-- ৪. পেজ ব্যানার ও ব্রেডক্রাম্ব -->
-    <section class="dnt-page-banner">
+    <section class="dnt-page-banner" style="background-image: url('<?php echo get_template_directory_uri();?>/assets/img/breadcrumb.jpg');">
         <div class="dnt-container">
-            <h1 class="dnt-page-title">ফটো গ্যালারি</h1>
+            <h1 class="dnt-page-title">গ্যালারি</h1>
             <div class="dnt-breadcrumb">
-                <a href="#">
+                <a href="<?php echo site_url();?>">
                     <svg class="dnt-icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                         <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                    </svg> হোম
+                    </svg> প্রথম পাতা
                 </a> 
                 <span>
                     <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="opacity:0.7;">
                         <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
                     </svg>
                 </span> 
-                <span style="color:var(--dnt-color-gray-300);">ফটো গ্যালারি</span>
+                <span style="color:var(--dnt-color-gray-300);">গ্যালারি</span>
             </div>
         </div>
     </section>

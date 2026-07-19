@@ -1,6 +1,6 @@
         :root {
-            --dnt-color-primary: #006a4e;
-            --dnt-color-primary-dark: #004d38;
+            --dnt-color-primary: #006A4E;
+            --dnt-color-primary-dark: #006A4E;
             --dnt-color-primary-light: #e6f3ef;
             --dnt-color-primary-rgb: 0, 106, 78;
             --dnt-color-secondary: #f42a41;
@@ -1565,7 +1565,7 @@
         .dnt-copyright {
             margin-bottom: 0;
         }
-        .dnt-footer-bottom-links {
+        .dnt-footer-bottom-links ul {
             display: flex;
             gap: 20px;
         }
@@ -1621,9 +1621,21 @@
            ৪. পেজ ব্যানার (Breadcrumb)           
            ========================================================================== */
         .dnt-page-banner {
-            background: linear-gradient(rgba(0, 77, 56, 0.85), rgba(0, 106, 78, 0.95));
+            position: relative;
+            z-index: 2;
             padding: 90px 0; color: #fff; text-align: center;
         }
+        .dnt-page-banner::before {
+	content: "";
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: #333;
+	left: 0;
+	top: 0;
+	z-index: -1;
+	opacity: 0.85;
+}
         .dnt-page-title {
 	font-size: 30px;
 	margin-bottom: 20px;

@@ -5,16 +5,22 @@ Template Name: Offices List
 */
 
 get_header(); ?>
-    <!-- 4. PAGE BREADCRUMB BANNER -->
-    <section class="dnt-page-banner">
+    <!-- ৪. পেজ ব্যানার ও ব্রেডক্রাম্ব -->
+    <section class="dnt-page-banner" style="background-image: url('<?php echo get_template_directory_uri();?>/assets/img/breadcrumb.jpg');">
         <div class="dnt-container">
-            <h1 class="dnt-page-title">প্রশাসনিক কর্মকর্তা</h1>
+            <h1 class="dnt-page-title">প্রশাসনিক কর্মকর্তাবৃন্দ</h1>
             <div class="dnt-breadcrumb">
-                <a href="index.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" fill="currentColor" width="1em" height="1em"><path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z"/></svg> হোম</a> 
-                <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" fill="currentColor" width="1em" height="1em" style="font-size:0.8rem; margin:0 5px;"><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg></span> 
-                <span>শিক্ষক ও কর্মচারী</span>
-                <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" fill="currentColor" width="1em" height="1em" style="font-size:0.8rem; margin:0 5px;"><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg></span> 
-                <span style="color:var(--dnt-color-gray-300);">প্রশাসনিক কর্মকর্তা</span>
+                <a href="<?php echo site_url();?>">
+                    <svg class="dnt-icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                    </svg> প্রথম পাতা
+                </a> 
+                <span>
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="opacity:0.7;">
+                        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                    </svg>
+                </span> 
+                <span style="color:var(--dnt-color-gray-300);">প্রশাসনিক কর্মকর্তাবৃন্দ</span>
             </div>
         </div>
     </section>

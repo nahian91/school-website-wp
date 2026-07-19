@@ -50,6 +50,9 @@ function ggisc_setup() {
 	register_nav_menus(
 		array(
 			'menu-1' => esc_html__( 'Primary', 'ggisc' ),
+			'footer-1' => esc_html__( 'Footer 1', 'ggisc' ),
+			'footer-2' => esc_html__( 'Footer 2', 'ggisc' ),
+			'footer-3' => esc_html__( 'Footer 3', 'ggisc' ),
 		)
 	);
 

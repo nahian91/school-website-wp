@@ -6,15 +6,21 @@ Template Name: Student Uniform
 
 get_header(); ?>
     <!-- ৪. পেজ ব্যানার ও ব্রেডক্রাম্ব -->
-    <section class="dnt-page-banner">
+    <section class="dnt-page-banner" style="background-image: url('<?php echo get_template_directory_uri();?>/assets/img/breadcrumb.jpg');">
         <div class="dnt-container">
-            <h1 class="dnt-page-title">শিক্ষার্থীদের পোশাক বিধি</h1>
+            <h1 class="dnt-page-title">শিক্ষার্থীদের ইউনিফর্ম</h1>
             <div class="dnt-breadcrumb">
-                <a href="#"><i class="fa-solid fa-house"></i> হোম</a> 
-                <span><i class="fa-solid fa-chevron-right" style="font-size:0.75rem; opacity:0.7;"></i></span> 
-                <span>একাডেমিক</span>
-                <span><i class="fa-solid fa-chevron-right" style="font-size:0.75rem; opacity:0.7;"></i></span> 
-                <span style="color:var(--dnt-color-gray-300);">পোশাক বিধি</span>
+                <a href="<?php echo site_url();?>">
+                    <svg class="dnt-icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                    </svg> প্রথম পাতা
+                </a> 
+                <span>
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="opacity:0.7;">
+                        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                    </svg>
+                </span> 
+                <span style="color:var(--dnt-color-gray-300);">শিক্ষার্থীদের ইউনিফর্ম</span>
             </div>
         </div>
     </section>

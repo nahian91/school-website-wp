@@ -7,14 +7,14 @@ Template Name: Contact
 get_header(); ?>
 
     <!-- ৪. পেজ ব্যানার ও ব্রেডক্রাম্ব -->
-    <section class="dnt-page-banner">
+    <section class="dnt-page-banner" style="background-image: url('<?php echo get_template_directory_uri();?>/assets/img/breadcrumb.jpg');">
         <div class="dnt-container">
             <h1 class="dnt-page-title">যোগাযোগ করুন</h1>
             <div class="dnt-breadcrumb">
-                <a href="#">
+                <a href="<?php echo site_url();?>">
                     <svg class="dnt-icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                         <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                    </svg> হোম
+                    </svg> প্রথম পাতা
                 </a> 
                 <span>
                     <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="opacity:0.7;">
@@ -49,7 +49,7 @@ get_header(); ?>
                         </div>
                         <div class="dnt-contact-card-details">
                             <h4>প্রতিষ্ঠানের ঠিকানা</h4>
-                            <p>স্কুল রোড, সদর উপজেলা,<br>ঢাকা-১২৩৪, বাংলাদেশ।</p>
+                            <p>প্রধান ক্যাম্পাস, ভিআইপি রোড,<br>রংমহল টাওয়ার, সিলেট-৩১০০, বাংলাদেশ।</p>
                         </div>
                     </div>
                     
@@ -61,7 +61,7 @@ get_header(); ?>
                         </div>
                         <div class="dnt-contact-card-details">
                             <h4>ফোন ও মোবাইল</h4>
-                            <p>অফিস: +৮৮০ ২-৯৯৯৯৯৯<br>হটলাইন: +৮৮০ ১৭০০-০০০০০০</p>
+                            <p>অফিস: +৮৮০ ৮২১-৭৭৭৭৭৭<br>হটলাইন: +৮৮০ ১৭০০-০০۰۰০০</p>
                         </div>
                     </div>
 
@@ -73,7 +73,7 @@ get_header(); ?>
                         </div>
                         <div class="dnt-contact-card-details">
                             <h4>ইমেইল ঠিকানা</h4>
-                            <p>info@adarshaschool.edu.bd<br>principal@adarshaschool.edu.bd</p>
+                            <p>info@gemsinternational.edu.bd<br>admission@gemsinternational.edu.bd</p>
                         </div>
                     </div>
 
@@ -85,7 +85,7 @@ get_header(); ?>
                         </div>
                         <div class="dnt-contact-card-details">
                             <h4>অফিস সময়সূচি</h4>
-                            <p>শনিবার - বৃহস্পতিবার<br>সকাল ০৯:০০ টা - বিকাল ০৪:০০ টা</p>
+                            <p>রবিবার - বৃহস্পতিবার<br>সকাল ০৯:০০ টা - বিকাল ০৪:০০ টা</p>
                         </div>
                     </div>
                 </div>
@@ -95,42 +95,42 @@ get_header(); ?>
                     <svg class="dnt-icon-heading" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" style="vertical-align: middle; margin-right: 8px;">
                         <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
                     </svg>
-                    বার্তা পাঠান
+                    অনলাইন অনুসন্ধান ও জিজ্ঞাসা
                 </h2>
                 <div class="dnt-contact-form-wrapper">
                     <form action="#" method="POST">
                         <div class="dnt-form-grid">
                             <div class="dnt-form-group">
-                                <label for="contact-name">আপনার নাম <span>*</span></label>
-                                <input type="text" id="contact-name" class="dnt-form-control" placeholder="উদাঃ মোঃ আবদুর রহমান" required>
+                                <label for="contact-name">আপনার পূর্ণ নাম <span>*</span></label>
+                                <input type="text" id="contact-name" class="dnt-form-control" placeholder="উদাঃ আবদ্ল্লাহ নাহিয়ান" required>
                             </div>
                             <div class="dnt-form-group">
-                                <label for="contact-phone">মোবাইল নম্বর <span>*</span></label>
+                                <label for="contact-phone">সক্রিয় মোবাইল নম্বর <span>*</span></label>
                                 <input type="tel" id="contact-phone" class="dnt-form-control" placeholder="উদাঃ ০১৭১১-০০০০০০" required>
                             </div>
                             <div class="dnt-form-group" style="grid-column: span 2;">
                                 <label for="contact-email">ইমেইল ঠিকানা (যদি থাকে)</label>
-                                <input type="email" id="contact-email" class="dnt-form-control" placeholder="উদাঃ name@example.com">
+                                <input type="email" id="contact-email" class="dnt-form-control" placeholder="উদাঃ nahian@example.com">
                             </div>
                             <div class="dnt-form-group" style="grid-column: span 2;">
-                                <label for="contact-subject">বার্তার বিষয় <span>*</span></label>
-                                <input type="text" id="contact-subject" class="dnt-form-control" placeholder="উদাঃ ভর্তি সংক্রান্ত তথ্য" required>
+                                <label for="contact-subject">বার্তার মূল বিষয় <span>*</span></label>
+                                <input type="text" id="contact-subject" class="dnt-form-control" placeholder="উদাঃ একাদশ শ্রেণীতে ভর্তি সংক্রান্ত তথ্য" required>
                             </div>
                             <div class="dnt-form-group" style="grid-column: span 2;">
-                                <label for="contact-message">আপনার বার্তা লিখুন <span>*</span></label>
-                                <textarea id="contact-message" class="dnt-form-control" placeholder="এখানে আপনার মতামত বা জিজ্ঞাসা বিস্তারিত লিখুন..." required></textarea>
+                                <label for="contact-message">আপনার বিস্তারিত তথ্য বা মতামত লিখুন <span>*</span></label>
+                                <textarea id="contact-message" class="dnt-form-control" placeholder="এখানে আপনার মতামত, জিজ্ঞাসা বা অভিযোগ বিস্তারিতভাবে লিখুন..." required></textarea>
                             </div>
                         </div>
                         <div class="dnt-form-actions">
                             <button type="reset" class="dnt-btn dnt-btn-secondary">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="vertical-align: middle; margin-right: 4px;">
                                     <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-                                </svg> মুছে ফেলুন
+                                </svg> রিসেট করুন
                             </button>
                             <button type="submit" class="dnt-btn dnt-btn-primary">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="vertical-align: middle; margin-right: 4px;">
                                     <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                                </svg> বার্তা পাঠান
+                                </svg> সাবমিট করুন
                             </button>
                         </div>
                     </form>
@@ -141,14 +141,14 @@ get_header(); ?>
                     <svg class="dnt-icon-heading" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" style="vertical-align: middle; margin-right: 8px;">
                         <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                     </svg>
-                    ম্যাপে আমাদের অবস্থান
+                    ডিজিটাল ম্যাপে আমাদের অবস্থান
                 </h2>
                 <div class="dnt-map-container">
                     <div class="dnt-map-placeholder">
                         <svg viewBox="0 0 24 24" width="48" height="48" fill="var(--dnt-color-primary)" style="margin-bottom: 15px;">
                             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                         </svg>
-                        <p>গুগল ম্যাপ লোকেশন ভিউ</p>
+                        <p>গুগল ম্যাপস লাইভ লোকেশন ভিউ</p>
                         <small style="color: var(--dnt-color-gray-500);">[বাস্তব প্রজেক্টে এখানে Google Maps আইফ্রেম বসিয়ে দিবেন]</small>
                     </div>
                 </div>

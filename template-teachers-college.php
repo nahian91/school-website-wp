@@ -28,25 +28,25 @@ get_header(); ?>
     }
 </style>
 
-    <!-- 4. PAGE BREADCRUMB BANNER -->
-    <section class="dnt-page-banner">
+    <!-- ৪. পেজ ব্যানার ও ব্রেডক্রাম্ব -->
+    <section class="dnt-page-banner" style="background-image: url('<?php echo get_template_directory_uri();?>/assets/img/breadcrumb.jpg');">
         <div class="dnt-container">
-            <h1 class="dnt-page-title">শিক্ষকমণ্ডলী (স্কুল শাখা)</h1>
+            <h1 class="dnt-page-title">শিক্ষকমণ্ডলী (কলেজ শাখা)</h1>
             <div class="dnt-breadcrumb">
-                <a href="index.html" style="display:flex; align-items:center; gap:5px;">
-                    <svg class="dnt-svg-icon dnt-icon-sm" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-                    হোম
+                <a href="<?php echo site_url();?>">
+                    <svg class="dnt-icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                    </svg> প্রথম পাতা
                 </a> 
                 <span>
-                    <svg class="dnt-svg-icon dnt-icon-xs" style="margin:0 5px;" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="opacity:0.7;">
+                        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                    </svg>
                 </span> 
-                <span>শিক্ষক ও কর্মচারী</span>
-                <span>
-                    <svg class="dnt-svg-icon dnt-icon-xs" style="margin:0 5px;" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-                </span> 
-                <span style="color:var(--dnt-color-gray-300);">স্কুল শাখা</span>
+                <span style="color:var(--dnt-color-gray-300);">শিক্ষকমণ্ডলী (কলেজ শাখা)</span>
             </div>
         </div>
+
     </section>
 
     <!-- 5. MAIN CONTENT -->
@@ -58,11 +58,11 @@ get_header(); ?>
                 
                 <h2 class="dnt-section-heading" style="display:flex; align-items:center; gap:10px;">
                     <svg class="dnt-svg-icon dnt-icon-lg" style="color:var(--dnt-color-primary);" viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7v2H8v2h8v-2h-2v-2h7c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/><circle cx="12" cy="9" r="2.5"/><path d="M16 16v-1.5c0-1.67-3.33-2.5-5-2.5s-5 .83-5 2.5V16h10z"/></svg>
-                    শিক্ষকমণ্ডলী (ষষ্ঠ - দশম শ্রেণি)
+                    শিক্ষকমণ্ডলী
                 </h2>
                 
                 <p class="dnt-intro-text">
-                    আদর্শ উচ্চ বিদ্যালয়ের স্কুল শাখায় পাঠদানের জন্য রয়েছেন একঝাঁক অভিজ্ঞ, উচ্চশিক্ষিত এবং নিবেদিতপ্রাণ শিক্ষকমণ্ডলী। ডিজিটাল কন্টেন্ট এবং আধুনিক পাঠদান পদ্ধতির মাধ্যমে তারা শিক্ষার্থীদের মাঝে জ্ঞানের আলো ছড়িয়ে দিচ্ছেন।
+                    কলেজ শাখায় পাঠদানের জন্য রয়েছেন একঝাঁক অভিজ্ঞ, উচ্চশিক্ষিত এবং নিবেদিতপ্রাণ শিক্ষকমণ্ডলী। ডিজিটাল কন্টেন্ট এবং আধুনিক পাঠদান পদ্ধতির মাধ্যমে তারা শিক্ষার্থীদের মাঝে জ্ঞানের আলো ছড়িয়ে দিচ্ছেন।
                 </p>
 
                 <!-- 1. Science Department -->

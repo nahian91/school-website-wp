@@ -6,20 +6,19 @@ Template Name: Admission Info
 
 get_header(); ?>
     <!-- ৪. পেজ ব্যানার ও ব্রেডক্রাম্ব -->
-    <section class="dnt-page-banner">
+    <section class="dnt-page-banner" style="background-image: url('<?php echo get_template_directory_uri();?>/assets/img/breadcrumb.jpg');">
         <div class="dnt-container">
             <h1 class="dnt-page-title">ভর্তি তথ্য</h1>
             <div class="dnt-breadcrumb">
-                <a href="index.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom;"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> 
-                    হোম
+                <a href="<?php echo site_url();?>">
+                    <svg class="dnt-icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                    </svg> প্রথম পাতা
                 </a> 
                 <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:0.75rem; opacity:0.7; margin:0 5px; vertical-align: middle;"><path d="m9 18 6-6-6-6"/></svg>
-                </span> 
-                <span>একাডেমিক</span>
-                <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:0.75rem; opacity:0.7; margin:0 5px; vertical-align: middle;"><path d="m9 18 6-6-6-6"/></svg>
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="opacity:0.7;">
+                        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                    </svg>
                 </span> 
                 <span style="color:var(--dnt-color-gray-300);">ভর্তি তথ্য</span>
             </div>
