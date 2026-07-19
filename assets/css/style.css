@@ -1,0 +1,3117 @@
+        :root {
+            --dnt-color-primary: #006a4e;
+            --dnt-color-primary-dark: #004d38;
+            --dnt-color-primary-light: #e6f3ef;
+            --dnt-color-primary-rgb: 0, 106, 78;
+            --dnt-color-secondary: #f42a41;
+            --dnt-color-secondary-dark: #cc1b2e;
+            --dnt-color-secondary-light: #fde9eb;
+            --dnt-color-accent: #fbc02d;
+            --dnt-color-accent-dark: #f9a825;
+            --dnt-color-accent-light: #fff9c4;
+            --dnt-color-dark: #111827;
+            --dnt-color-dark-soft: #1f2937;
+            --dnt-color-gray-900: #111827;
+            --dnt-color-gray-800: #1f2937;
+            --dnt-color-gray-700: #374151;
+            --dnt-color-gray-600: #4b5563;
+            --dnt-color-gray-500: #6b7280;
+            --dnt-color-gray-400: #9ca3af;
+            --dnt-color-gray-300: #d1d5db;
+            --dnt-color-gray-200: #e5e7eb;
+            --dnt-color-gray-100: #f3f4f6;
+            --dnt-color-gray-50: #f9fafb;            
+            --dnt-color-white: #ffffff;
+            --dnt-color-black: #000000;            
+            --dnt-color-bg-main: #f0f2f5;
+            --dnt-color-bg-card: #ffffff;
+            --dnt-font-primary: 'Kalpurush', 'SolaimanLipi', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --dnt-font-heading: 'SolaimanLipi', 'Segoe UI', Arial, sans-serif;
+            
+            /* Spacing */
+            --dnt-spacing-xs: 4px;
+            --dnt-spacing-sm: 8px;
+            --dnt-spacing-md: 16px;
+            --dnt-spacing-lg: 24px;
+            --dnt-spacing-xl: 32px;
+            --dnt-spacing-xxl: 48px;
+            --dnt-spacing-xxxl: 64px;
+
+            /* Borders & Shadows */
+            --dnt-border-radius-sm: 4px;
+            --dnt-border-radius-md: 8px;
+            --dnt-border-radius-lg: 12px;
+            --dnt-border-radius-xl: 16px;
+            --dnt-border-radius-full: 9999px;
+            
+            --dnt-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --dnt-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --dnt-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --dnt-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            
+            /* Transitions */
+            --dnt-transition-fast: 0.15s ease-in-out;
+            --dnt-transition-normal: 0.3s ease-in-out;
+            --dnt-transition-slow: 0.5s ease-in-out;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--dnt-font-primary);
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--dnt-color-gray-700);
+            background-color: var(--dnt-color-bg-main);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+            background-color: transparent;
+            transition: color var(--dnt-transition-normal), background-color var(--dnt-transition-normal);
+        }
+        ul, ol {
+            list-style: none;
+        }
+        img, picture, video, canvas, svg {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+        button, input, select, textarea {
+            font-family: inherit;
+            font-size: 100%;
+            line-height: 1.15;
+            margin: 0;
+            outline: none;
+        }
+        button {
+            cursor: pointer;
+            border: none;
+            background: transparent;
+        }
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--dnt-font-heading);
+            color: var(--dnt-color-gray-900);
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: var(--dnt-spacing-md);
+        }
+        p {
+            margin-bottom: var(--dnt-spacing-md);
+        }
+        strong, b {
+            font-weight: 700;
+        }
+        .dnt-container {
+            width: 100%;
+            max-width: 1280px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: var(--dnt-spacing-lg);
+            padding-right: var(--dnt-spacing-lg);
+        }
+        .dnt-section {
+            padding-top: var(--dnt-spacing-xxxl);
+            padding-bottom: var(--dnt-spacing-xxxl);
+        }
+        .dnt-section-sm {
+            padding-top: var(--dnt-spacing-xl);
+            padding-bottom: var(--dnt-spacing-xl);
+        }
+        .dnt-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-left: calc(var(--dnt-spacing-md) * -1);
+            margin-right: calc(var(--dnt-spacing-md) * -1);
+        }
+        .dnt-col {
+            padding-left: var(--dnt-spacing-md);
+            padding-right: var(--dnt-spacing-md);
+            flex: 1;
+        }
+        .dnt-d-flex { display: flex; }
+        .dnt-d-block { display: block; }
+        .dnt-d-inline-block { display: inline-block; }
+        .dnt-d-none { display: none; }
+
+        .dnt-flex-column { flex-direction: column; }
+        .dnt-flex-row { flex-direction: row; }
+        .dnt-flex-wrap { flex-wrap: wrap; }
+        
+        .dnt-align-items-center { align-items: center; }
+        .dnt-align-items-start { align-items: flex-start; }
+        .dnt-align-items-end { align-items: flex-end; }
+        .dnt-align-items-stretch { align-items: stretch; }
+        
+        .dnt-justify-content-center { justify-content: center; }
+        .dnt-justify-content-between { justify-content: space-between; }
+        .dnt-justify-content-around { justify-content: space-around; }
+        .dnt-justify-content-start { justify-content: flex-start; }
+        .dnt-justify-content-end { justify-content: flex-end; }
+
+        .dnt-text-center { text-align: center; }
+        .dnt-text-left { text-align: left; }
+        .dnt-text-right { text-align: right; }
+        .dnt-text-justify { text-align: justify; }
+
+        .dnt-w-100 { width: 100%; }
+        .dnt-h-100 { height: 100%; }
+
+        .dnt-mt-1 { margin-top: var(--dnt-spacing-sm); }
+        .dnt-mt-2 { margin-top: var(--dnt-spacing-md); }
+        .dnt-mt-3 { margin-top: var(--dnt-spacing-lg); }
+        .dnt-mt-4 { margin-top: var(--dnt-spacing-xl); }
+        .dnt-mt-5 { margin-top: var(--dnt-spacing-xxl); }
+
+        .dnt-mb-1 { margin-bottom: var(--dnt-spacing-sm); }
+        .dnt-mb-2 { margin-bottom: var(--dnt-spacing-md); }
+        .dnt-mb-3 { margin-bottom: var(--dnt-spacing-lg); }
+        .dnt-mb-4 { margin-bottom: var(--dnt-spacing-xl); }
+        .dnt-mb-5 { margin-bottom: var(--dnt-spacing-xxl); }
+
+        .dnt-py-1 { padding-top: var(--dnt-spacing-sm); padding-bottom: var(--dnt-spacing-sm); }
+        .dnt-py-2 { padding-top: var(--dnt-spacing-md); padding-bottom: var(--dnt-spacing-md); }
+        .dnt-py-3 { padding-top: var(--dnt-spacing-lg); padding-bottom: var(--dnt-spacing-lg); }
+        
+        .dnt-bg-white { background-color: var(--dnt-color-white); }
+        .dnt-bg-primary { background-color: var(--dnt-color-primary); }
+        .dnt-bg-primary-light { background-color: var(--dnt-color-primary-light); }
+        .dnt-bg-secondary { background-color: var(--dnt-color-secondary); }
+        .dnt-bg-gray { background-color: var(--dnt-color-gray-50); }
+
+        .dnt-text-primary { color: var(--dnt-color-primary); }
+        .dnt-text-secondary { color: var(--dnt-color-secondary); }
+        .dnt-text-accent { color: var(--dnt-color-accent); }
+        .dnt-text-white { color: var(--dnt-color-white); }
+        .dnt-text-muted { color: var(--dnt-color-gray-500); }
+
+        .dnt-section-title-wrapper {
+            text-align: center;
+            margin-bottom: var(--dnt-spacing-xxl);
+            position: relative;
+        }
+
+        .dnt-section-title-wrapper h2 {
+            font-size: 2.5rem;
+            color: var(--dnt-color-primary-dark);
+            display: inline-block;
+            position: relative;
+            padding-bottom: var(--dnt-spacing-md);
+            margin-bottom: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dnt-section-title-wrapper h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 2.5px;
+            background-color: var(--dnt-color-secondary);
+            border-radius: var(--dnt-border-radius-full);
+        }
+
+        .dnt-section-subtitle {
+            font-size: 1.125rem;
+            color: var(--dnt-color-gray-600);
+            max-width: 700px;
+            margin: var(--dnt-spacing-md) auto 0;
+        }
+
+        .dnt-card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--dnt-color-gray-900);
+            margin-bottom: var(--dnt-spacing-sm);
+        }
+
+        /* ==========================================================================
+           5. BUTTONS & BADGES
+           ========================================================================== */
+        .dnt-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: var(--dnt-border-radius-sm);
+            transition: all var(--dnt-transition-normal);
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            user-select: none;
+            gap: 8px;
+        }
+
+        .dnt-btn-sm {
+            padding: 8px 16px;
+            font-size: 0.875rem;
+        }
+
+        .dnt-btn-lg {
+            padding: 16px 40px;
+            font-size: 1.125rem;
+        }
+
+        .dnt-btn-primary {
+            background-color: var(--dnt-color-primary);
+            color: var(--dnt-color-white);
+            border-color: var(--dnt-color-primary);
+        }
+
+        .dnt-btn-primary:hover {
+            background-color: var(--dnt-color-primary-dark);
+            border-color: var(--dnt-color-primary-dark);
+            color: var(--dnt-color-white);
+            box-shadow: var(--dnt-shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .dnt-btn-secondary {
+            background-color: var(--dnt-color-secondary);
+            color: var(--dnt-color-white);
+            border-color: var(--dnt-color-secondary);
+        }
+
+        .dnt-btn-secondary:hover {
+            background-color: var(--dnt-color-secondary-dark);
+            border-color: var(--dnt-color-secondary-dark);
+            color: var(--dnt-color-white);
+            box-shadow: var(--dnt-shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .dnt-btn-outline-primary {
+            background-color: transparent;
+            color: var(--dnt-color-primary);
+            border-color: var(--dnt-color-primary);
+        }
+
+        .dnt-btn-outline-primary:hover {
+            background-color: var(--dnt-color-primary);
+            color: var(--dnt-color-white);
+        }
+
+        .dnt-btn-accent {
+            background-color: var(--dnt-color-accent);
+            color: var(--dnt-color-gray-900);
+            border-color: var(--dnt-color-accent);
+        }
+
+        .dnt-btn-accent:hover {
+            background-color: var(--dnt-color-accent-dark);
+            border-color: var(--dnt-color-accent-dark);
+        }
+
+        .dnt-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: var(--dnt-border-radius-full);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dnt-badge-new {
+            background-color: var(--dnt-color-secondary);
+            color: var(--dnt-color-white);
+            animation: dnt-pulse 2s infinite;
+        }
+
+        .dnt-badge-primary {
+            background-color: var(--dnt-color-primary-light);
+            color: var(--dnt-color-primary-dark);
+        }
+
+        /* SVG Icon Utilities */
+        .dnt-icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+            vertical-align: middle;
+        }
+
+        .dnt-icon-sm { width: 16px; height: 16px; }
+        .dnt-icon-md { width: 32px; height: 32px; }
+        .dnt-icon-lg { width: 48px; height: 48px; }
+        .dnt-icon-xl { width: 64px; height: 64px; }
+
+        /* ==========================================================================
+           6. HEADER & NAVIGATION (Top Bar, Brand Bar, Menu Bar)
+           ========================================================================== */
+        
+        /* 6.1 Top Bar (Government Portal Links, Email, Phone) */
+        .dnt-topbar {
+            background-color: var(--dnt-color-primary-dark);
+            color: var(--dnt-color-white);
+            padding: 8px 0;
+            font-size: 0.875rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .dnt-topbar-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dnt-topbar-left {
+            display: flex;
+            gap: var(--dnt-spacing-lg);
+        }
+
+        .dnt-topbar-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dnt-topbar-right {
+            display: flex;
+            gap: var(--dnt-spacing-md);
+        }
+
+        .dnt-topbar-link {
+            color: var(--dnt-color-gray-300);
+            transition: color var(--dnt-transition-fast);
+        }
+
+        .dnt-topbar-link:hover {
+            color: var(--dnt-color-accent);
+        }
+
+        .dnt-topbar-divider {
+            color: rgba(255,255,255,0.3);
+            margin: 0 5px;
+        }
+
+        /* 6.2 Brand Bar (Logo, School Name, EIIN) */
+        .dnt-brandbar {
+            background-color: var(--dnt-color-white);
+            padding: var(--dnt-spacing-lg) 0;
+            box-shadow: var(--dnt-shadow-sm);
+            position: relative;
+            z-index: 50;
+        }
+
+        .dnt-brand-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dnt-brand-left {
+            display: flex;
+            align-items: center;
+            gap: var(--dnt-spacing-lg);
+        }
+
+        .dnt-logo-container {
+            width: 70px;
+            height: 70px;
+            flex-shrink: 0;
+        }
+
+        /* Complex SVG Logo for Traditional School */
+        .dnt-logo-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .dnt-brand-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dnt-brand-title {
+            font-size: 26px;
+            color: var(--dnt-color-primary-dark);
+            margin-bottom: 2px;
+            font-weight: 800;
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.05);
+        }
+
+        .dnt-brand-subtitle {
+            font-size: 1.125rem;
+            color: var(--dnt-color-secondary);
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .dnt-brand-eiin {
+            font-size: 0.875rem;
+            color: var(--dnt-color-gray-500);
+            background-color: var(--dnt-color-gray-100);
+            padding: 4px 12px;
+            border-radius: var(--dnt-border-radius-full);
+            display: inline-block;
+            border: 1px solid var(--dnt-color-gray-200);
+            font-weight: 600;
+            align-self: flex-start;
+        }
+
+        .dnt-brand-right {
+            display: flex;
+            align-items: center;
+            gap: var(--dnt-spacing-md);
+        }
+
+        .dnt-mujib-corner-img {
+            width: 120px;
+            height: auto;
+        }
+
+        /* 6.3 Navigation Bar */
+        .dnt-navbar {
+            background-color: var(--dnt-color-primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--dnt-shadow-md);
+            border-bottom: 3px solid var(--dnt-color-secondary);
+        }
+
+        .dnt-nav-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dnt-nav-menu {
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        .dnt-nav-item {
+            position: relative;
+        }
+
+        .dnt-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 18px 20px;
+            color: var(--dnt-color-white);
+            font-weight: 700;
+            font-size: 1.05rem;
+            transition: background-color var(--dnt-transition-fast);
+        }
+
+        .dnt-nav-link:hover, .dnt-nav-item:hover > .dnt-nav-link {
+            background-color: var(--dnt-color-secondary);
+            color: var(--dnt-color-white);
+        }
+
+        .dnt-nav-link-icon {
+            width: 14px;
+            height: 14px;
+            transition: transform var(--dnt-transition-fast);
+        }
+
+        .dnt-nav-item:hover .dnt-nav-link-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Dropdown Menu */
+        .dnt-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 240px;
+            background-color: var(--dnt-color-white);
+            box-shadow: var(--dnt-shadow-lg);
+            border-radius: 0 0 var(--dnt-border-radius-sm) var(--dnt-border-radius-sm);
+            border-top: 3px solid var(--dnt-color-secondary);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all var(--dnt-transition-normal);
+            z-index: 101;
+        }
+
+        .dnt-nav-item:hover > .dnt-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dnt-dropdown-item {
+            display: block;
+            padding: 12px 20px;
+            color: var(--dnt-color-gray-800);
+            border-bottom: 1px solid var(--dnt-color-gray-100);
+            font-weight: 600;
+            transition: all var(--dnt-transition-fast);
+        }
+
+        .dnt-dropdown-item:last-child {
+            border-bottom: none;
+            border-radius: 0 0 var(--dnt-border-radius-sm) var(--dnt-border-radius-sm);
+        }
+
+        .dnt-dropdown-item:hover {
+            background-color: var(--dnt-color-primary-light);
+            color: var(--dnt-color-primary-dark);
+            padding-left: 26px;
+        }
+
+        /* Nested Dropdown */
+        .dnt-dropdown-submenu {
+            position: relative;
+        }
+
+        .dnt-dropdown-submenu > .dnt-dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-top: -3px;
+            border-radius: var(--dnt-border-radius-sm);
+        }
+
+        .dnt-nav-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--dnt-spacing-md);
+        }
+
+        .dnt-portal-btn {
+            background-color: var(--dnt-color-accent);
+            color: var(--dnt-color-gray-900);
+            font-weight: 800;
+            padding: 8px 16px;
+            border-radius: var(--dnt-border-radius-sm);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all var(--dnt-transition-fast);
+        }
+
+        .dnt-portal-btn:hover {
+            background-color: var(--dnt-color-white);
+            color: var(--dnt-color-primary);
+        }
+
+        /* Mobile Toggle */
+        .dnt-mobile-toggle {
+            display: none;
+            color: var(--dnt-color-white);
+            padding: 8px;
+            background: rgba(0,0,0,0.1);
+            border-radius: var(--dnt-border-radius-sm);
+        }
+
+        /* ==========================================================================
+           7. MARQUEE / LATEST NEWS SCROLLER
+           ========================================================================== */
+        .dnt-news-ticker-section {
+            background-color: var(--dnt-color-white);
+            border-bottom: 1px solid var(--dnt-color-gray-200);
+            display: flex;
+            align-items: center;
+            height: 50px;
+            overflow: hidden;
+        }
+
+        .dnt-ticker-title {
+            background-color: var(--dnt-color-secondary);
+            color: var(--dnt-color-white);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 2;
+            flex-shrink: 0;
+            gap: 8px;
+        }
+
+        .dnt-ticker-title::after {
+            content: '';
+            position: absolute;
+            right: -14px;
+            top: 0;
+            width: 0;
+            height: 0;
+            border-top: 25px solid transparent;
+            border-bottom: 25px solid transparent;
+            border-left: 15px solid var(--dnt-color-secondary);
+            z-index: 1;
+        }
+
+        .dnt-ticker-content {
+            flex-grow: 1;
+            padding: 0 20px;
+            background-color: var(--dnt-color-gray-50);
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .dnt-ticker-content marquee {
+            font-weight: 600;
+            color: var(--dnt-color-primary-dark);
+            font-size: 1.05rem;
+        }
+
+        .dnt-ticker-item {
+            margin-right: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dnt-ticker-item::before {
+            content: '♦';
+            color: var(--dnt-color-secondary);
+            font-size: 1.2rem;
+        }
+
+        /* ==========================================================================
+           8. HERO BANNER SECTION
+           ========================================================================== */
+        .dnt-hero-section {
+            position: relative;
+            background-color: var(--dnt-color-gray-900);
+            overflow: hidden;
+            margin-bottom: 60px;
+        }
+
+        /* Hero Background SVG Placeholder */
+        .dnt-hero-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .dnt-hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(0, 77, 56, 0.9) 0%, rgba(0, 106, 78, 0.7) 50%, rgba(0,0,0,0.4) 100%);
+            z-index: 2;
+        }
+
+        .dnt-hero-content-wrapper {
+            position: relative;
+            z-index: 3;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .dnt-hero-text-box {
+            max-width: 650px;
+            color: var(--dnt-color-white);
+            animation: dnt-slideInLeft 1s ease-out forwards;
+            margin: auto;
+            text-align: center;
+        }
+
+        .dnt-hero-badge {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--dnt-color-accent);
+            padding: 6px 16px;
+            border-radius: var(--dnt-border-radius-full);
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: var(--dnt-spacing-lg);
+            backdrop-filter: blur(4px);
+        }
+
+        .dnt-hero-title {
+            font-size: 3.5rem;
+            color: var(--dnt-color-white);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: var(--dnt-spacing-md);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .dnt-hero-title span {
+            color: var(--dnt-color-accent);
+        }
+
+        .dnt-hero-desc {
+            font-size: 1.25rem;
+            margin-bottom: var(--dnt-spacing-xl);
+            opacity: 0.9;
+            line-height: 1.7;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .dnt-hero-buttons {
+            display: flex;
+            gap: var(--dnt-spacing-md);
+            justify-content: center;
+        }
+
+        .dnt-hero-buttons a{ 
+            display: flex;
+        }
+        /* ==========================================================================
+           9. MAIN LAYOUT (Left Content + Right Sidebar)
+           ========================================================================== */
+        .dnt-main-wrapper {
+            padding: var(--dnt-spacing-xxxl) 0;
+            display: flex;
+            gap: var(--dnt-spacing-xl);
+            align-items: flex-start;
+        }
+
+        .dnt-content-area {
+            flex: 1;
+            min-width: 0; /* Prevent flex blowout */
+        }
+
+        .dnt-sidebar-area {
+            width: 380px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: var(--dnt-spacing-lg);
+        }
+
+        /* ==========================================================================
+           10. WIDGETS & SIDEBAR COMPONENTS
+           ========================================================================== */
+        .dnt-widget {
+            background-color: var(--dnt-color-white);
+            border-radius: var(--dnt-border-radius-md);
+            box-shadow: var(--dnt-shadow-md);
+            overflow: hidden;
+            border: 1px solid var(--dnt-color-gray-200);
+        }
+
+        .dnt-widget-header {
+            background-color: var(--dnt-color-primary);
+            color: var(--dnt-color-white);
+            padding: 16px 20px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 3px solid var(--dnt-color-secondary);
+        }
+
+        .dnt-widget-header-accent {
+            background-color: var(--dnt-color-secondary);
+            border-bottom-color: var(--dnt-color-primary);
+        }
+
+        .dnt-widget-body {
+            padding: 20px;
+        }
+
+        /* Notice Board Widget Specifics */
+        .dnt-notice-scroller {
+            height: 350px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        /* Custom Scrollbar for Notice Board */
+        .dnt-notice-scroller::-webkit-scrollbar { width: 6px; }
+        .dnt-notice-scroller::-webkit-scrollbar-track { background: var(--dnt-color-gray-100); border-radius: 10px; }
+        .dnt-notice-scroller::-webkit-scrollbar-thumb { background: var(--dnt-color-gray-400); border-radius: 10px; }
+        .dnt-notice-scroller::-webkit-scrollbar-thumb:hover { background: var(--dnt-color-primary); }
+
+        .dnt-notice-item {
+            display: flex;
+            gap: 16px;
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+            border-bottom: 1px dashed var(--dnt-color-gray-300);
+            transition: transform var(--dnt-transition-fast);
+        }
+
+        .dnt-notice-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .dnt-notice-item:hover {
+            transform: translateX(5px);
+        }
+
+        .dnt-notice-date {
+            background-color: var(--dnt-color-primary-light);
+            color: var(--dnt-color-primary-dark);
+            min-width: 65px;
+            height: 65px;
+            border-radius: var(--dnt-border-radius-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: 1px solid rgba(0, 106, 78, 0.2);
+            flex-shrink: 0;
+        }
+
+        .dnt-notice-date .dnt-day {
+            font-size: 18px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .dnt-notice-date .dnt-month {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .dnt-notice-content h4 {
+            font-size: 1rem;
+            margin-bottom: 6px;
+            line-height: 1.4;
+            color: var(--dnt-color-gray-800);
+        }
+
+        .dnt-notice-content h4 a {
+            transition: color var(--dnt-transition-fast);
+        }
+
+        .dnt-notice-content h4 a:hover {
+            color: var(--dnt-color-secondary);
+        }
+
+        .dnt-notice-meta {
+            font-size: 0.8rem;
+            color: var(--dnt-color-gray-500);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .dnt-widget-footer {
+            background-color: var(--dnt-color-gray-50);
+            padding: 12px 20px;
+            text-align: center;
+            border-top: 1px solid var(--dnt-color-gray-200);
+        }
+
+        .dnt-widget-footer a {
+            color: var(--dnt-color-primary);
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .dnt-widget-footer a:hover {
+            color: var(--dnt-color-secondary);
+        }
+
+        /* Person Message Widget (Headmaster/Chairman) */
+        .dnt-person-widget {
+            text-align: center;
+        }
+
+        .dnt-person-img-wrapper {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 20px;
+            border-radius: var(--dnt-border-radius-full);
+            border: 4px solid var(--dnt-color-primary-light);
+            padding: 4px;
+            background-color: var(--dnt-color-white);
+            box-shadow: var(--dnt-shadow-md);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .dnt-person-img-svg {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: var(--dnt-color-gray-200);
+        }
+
+        .dnt-person-name {
+            font-size: 1.3rem;
+            color: var(--dnt-color-primary-dark);
+            margin-bottom: 4px;
+        }
+
+        .dnt-person-designation {
+            color: var(--dnt-color-secondary);
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+
+        .dnt-person-quote {
+            position: relative;
+            font-style: italic;
+            color: var(--dnt-color-gray-600);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            padding: 0 10px;
+        }
+
+        .dnt-person-quote::before, .dnt-person-quote::after {
+            content: '"';
+            font-size: 2rem;
+            color: var(--dnt-color-gray-300);
+            position: absolute;
+            font-family: serif;
+        }
+
+        .dnt-person-quote::before { top: -10px; left: -10px; }
+        .dnt-person-quote::after { bottom: -20px; right: -10px; }
+
+        /* Important Links Widget */
+        .dnt-links-list li {
+            margin-bottom: 10px;
+        }
+
+        .dnt-links-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .dnt-links-list a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background-color: var(--dnt-color-gray-50);
+            border: 1px solid var(--dnt-color-gray-200);
+            border-radius: var(--dnt-border-radius-sm);
+            color: var(--dnt-color-gray-800);
+            font-weight: 600;
+            transition: all var(--dnt-transition-fast);
+        }
+
+        .dnt-links-list a::before {
+            content: '➤';
+            color: var(--dnt-color-primary);
+        }
+
+        .dnt-links-list a:hover {
+            background-color: var(--dnt-color-primary);
+            color: var(--dnt-color-white);
+            border-color: var(--dnt-color-primary);
+            transform: translateX(5px);
+        }
+
+        .dnt-links-list a:hover::before {
+            color: var(--dnt-color-white);
+        }
+
+        /* ==========================================================================
+           11. ABOUT SECTION (Left Content Area)
+           ========================================================================== */
+        .dnt-about-box {
+            background-color: var(--dnt-color-white);
+            padding: var(--dnt-spacing-xl);
+            border-radius: var(--dnt-border-radius-md);
+            box-shadow: var(--dnt-shadow-sm);
+            border: 1px solid var(--dnt-color-gray-200);
+            margin-bottom: var(--dnt-spacing-xl);
+        }
+
+        .dnt-about-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--dnt-color-gray-100);
+        }
+
+        .dnt-about-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--dnt-color-primary-light);
+            color: var(--dnt-color-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dnt-about-title {
+            font-size: 1.8rem;
+            color: var(--dnt-color-primary-dark);
+            margin-bottom: 0;
+        }
+
+        .dnt-about-text {
+            text-align: justify;
+            font-size: 1.05rem;
+            color: var(--dnt-color-gray-700);
+        }
+
+        .dnt-about-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .dnt-about-feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background-color: var(--dnt-color-gray-50);
+            padding: 16px;
+            border-radius: var(--dnt-border-radius-sm);
+            border-left: 4px solid var(--dnt-color-primary);
+        }
+
+        .dnt-about-feature-item h4 {
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+            color: var(--dnt-color-gray-900);
+        }
+
+        .dnt-about-feature-item p {
+            font-size: 0.9rem;
+            margin-bottom: 0;
+            color: var(--dnt-color-gray-600);
+        }
+
+        /* ==========================================================================
+           12. QUICK LINKS GRID (Cta Cards)
+           ========================================================================== */
+        .dnt-quick-action-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: var(--dnt-spacing-xl);
+        }
+
+        .dnt-qa-card {
+            background-color: var(--dnt-color-white);
+            border: 1px solid var(--dnt-color-gray-200);
+            border-radius: var(--dnt-border-radius-md);
+            padding: 24px;
+            text-align: center;
+            transition: all var(--dnt-transition-normal);
+            position: relative;
+            overflow: hidden;
+            display: block;
+            color: var(--dnt-color-gray-800);
+        }
+
+        .dnt-qa-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--dnt-color-primary);
+            transform: scaleX(0);
+            transition: transform var(--dnt-transition-normal);
+            transform-origin: left;
+        }
+
+        .dnt-qa-card:hover {
+            box-shadow: var(--dnt-shadow-lg);
+            transform: translateY(-5px);
+            border-color: var(--dnt-color-primary-light);
+        }
+
+        .dnt-qa-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .dnt-qa-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            background-color: var(--dnt-color-primary-light);
+            color: var(--dnt-color-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--dnt-transition-normal);
+        }
+
+        .dnt-qa-card:hover .dnt-qa-icon {
+            background-color: var(--dnt-color-primary);
+            color: var(--dnt-color-white);
+        }
+
+        .dnt-qa-title {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .dnt-qa-desc {
+            font-size: 0.9rem;
+            color: var(--dnt-color-gray-500);
+            margin-bottom: 0;
+        }
+
+        /* ==========================================================================
+           13. STATISTICS / COUNTER SECTION
+           ========================================================================== */
+        .dnt-stats-wrapper {
+            background: linear-gradient(135deg, var(--dnt-color-primary-dark) 0%, var(--dnt-color-primary) 100%);
+            padding: 30px 0;
+            position: relative;
+            border-radius: var(--dnt-border-radius-md);
+            margin-bottom: var(--dnt-spacing-xl);
+            overflow: hidden;
+        }
+
+        /* SVG Pattern Overlay */
+        .dnt-stats-pattern {
+            position: absolute;
+            inset: 0;
+            opacity: 0.1;
+            z-index: 1;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .dnt-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .dnt-stat-box {
+            text-align: center;
+            color: var(--dnt-color-white);
+            padding: 20px;
+        }
+
+        .dnt-stat-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 16px;
+            fill: #fff;
+        }
+
+        .dnt-stat-number {
+            font-size: 40px;
+            font-weight: 800;
+            margin-bottom: 4px;
+            font-family: var(--dnt-font-heading);
+        }
+
+        .dnt-stat-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* ==========================================================================
+           14. ACADEMIC FACILITIES SECTION
+           ========================================================================== */
+        .dnt-facilities-section {
+            background-color: var(--dnt-color-white);
+            padding: var(--dnt-spacing-xxxl) 0;
+            border-top: 1px solid var(--dnt-color-gray-200);
+            border-bottom: 1px solid var(--dnt-color-gray-200);
+        }
+
+        .dnt-facility-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .dnt-facility-card {
+            background-color: var(--dnt-color-gray-50);
+            border-radius: var(--dnt-border-radius-md);
+            overflow: hidden;
+            transition: all var(--dnt-transition-normal);
+            border: 1px solid var(--dnt-color-gray-200);
+        }
+
+        .dnt-facility-card:hover {
+            box-shadow: var(--dnt-shadow-lg);
+            transform: translateY(-5px);
+        }
+
+        .dnt-facility-img {
+            height: 180px;
+            position: relative;
+            background-color: var(--dnt-color-primary-light);
+        }
+
+        /* SVG Image Placeholder */
+        .dnt-facility-img-svg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .dnt-facility-content {
+            padding: 24px;
+            text-align: center;
+        }
+
+        .dnt-facility-icon {
+            width: 48px;
+            height: 48px;
+            background-color: var(--dnt-color-white);
+            color: var(--dnt-color-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: -48px auto 16px;
+            position: relative;
+            z-index: 10;
+            box-shadow: var(--dnt-shadow-md);
+            border: 2px solid var(--dnt-color-primary-light);
+        }
+
+        .dnt-facility-title {
+            font-size: 1.25rem;
+            color: var(--dnt-color-gray-900);
+            margin-bottom: 12px;
+        }
+
+        .dnt-facility-desc {
+            font-size: 0.95rem;
+            color: var(--dnt-color-gray-600);
+            margin-bottom: 0;
+        }
+
+        /* ==========================================================================
+           15. TEACHERS DIRECTORY PREVIEW
+           ========================================================================== */
+        .dnt-teachers-section {
+            padding: var(--dnt-spacing-xxxl) 0;
+            background-color: var(--dnt-color-bg-main);
+        }
+
+        .dnt-teacher-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+        .dnt-teacher-card {
+            background-color: var(--dnt-color-white);
+            border-radius: var(--dnt-border-radius-lg);
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: var(--dnt-shadow-sm);
+            transition: all var(--dnt-transition-normal);
+            border-bottom: 4px solid transparent;
+        }
+        .dnt-teacher-card:hover {
+            box-shadow: var(--dnt-shadow-lg);
+            transform: translateY(-10px);
+            border-bottom-color: var(--dnt-color-primary);
+        }
+        .dnt-teacher-img {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid var(--dnt-color-primary-light);
+            background-color: var(--dnt-color-gray-100);
+        }
+        .dnt-teacher-img-svg {
+            width: 100%;
+            height: 100%;
+        }
+        .dnt-teacher-name {
+            font-size: 1.25rem;
+            color: var(--dnt-color-gray-900);
+            margin-bottom: 4px;
+        }
+        .dnt-teacher-subject {
+            color: var(--dnt-color-secondary);
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+        }
+        .dnt-teacher-degree {
+            font-size: 0.85rem;
+            color: var(--dnt-color-gray-500);
+            margin-bottom: 16px;
+        }
+        .dnt-teacher-social {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .dnt-social-icon {
+            width: 32px;
+            height: 32px;
+            background-color: var(--dnt-color-gray-100);
+            color: var(--dnt-color-gray-600);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--dnt-transition-fast);
+        }
+        .dnt-social-icon:hover {
+            background-color: var(--dnt-color-primary);
+            color: var(--dnt-color-white);
+        }
+        .dnt-gallery-section {
+            padding: var(--dnt-spacing-xxxl) 0;
+            background-color: var(--dnt-color-white);
+        }
+        .dnt-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        .dnt-gallery-item {
+            position: relative;
+            border-radius: var(--dnt-border-radius-md);
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            background-color: var(--dnt-color-gray-200);
+            cursor: pointer;
+        }
+        .dnt-gallery-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 106, 78, 0.8);
+            opacity: 0;
+            transition: opacity var(--dnt-transition-normal);
+            z-index: 1;
+        }
+        .dnt-gallery-item:hover::before {
+            opacity: 1;
+        }
+        .dnt-gallery-svg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .dnt-gallery-item:hover .dnt-gallery-svg {
+            transform: scale(1.1);
+        }
+        .dnt-gallery-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--dnt-color-white);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all var(--dnt-transition-normal);
+        }
+        .dnt-gallery-item:hover .dnt-gallery-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .dnt-gallery-icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 10px;
+        }
+        .dnt-gallery-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dnt-color-white);
+        }
+        .dnt-footer {
+            background-color: var(--dnt-color-gray-900);
+            color: var(--dnt-color-gray-300);
+            font-size: 0.95rem;
+            border-top: 5px solid var(--dnt-color-primary);
+        }
+        .dnt-footer-top {
+            padding: 80px 0 50px;
+        }
+        .dnt-footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 40px;
+        }
+        .dnt-footer-brand {
+            margin-bottom: 24px;
+        }
+        .dnt-footer-logo-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .dnt-footer-logo {
+            width: 60px;
+            height: 60px;
+        }
+        .dnt-footer-brand-title {
+            color: var(--dnt-color-white);
+            font-size: 1.5rem;
+            margin-bottom: 0;
+        }
+        .dnt-footer-desc {
+            line-height: 1.8;
+            margin-bottom: 24px;
+            color: var(--dnt-color-gray-400);
+        }
+        .dnt-footer-social {
+            display: flex;
+            gap: 12px;
+        }
+        .dnt-fs-icon {
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255,255,255,0.1);
+            color: var(--dnt-color-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--dnt-transition-fast);
+        }
+        .dnt-fs-icon:hover {
+            background-color: var(--dnt-color-primary);
+            transform: translateY(-3px);
+        }
+        .dnt-footer-widget h4 {
+            color: var(--dnt-color-white);
+            font-size: 18px;
+            margin-bottom: 15px;
+            position: relative;
+            padding-bottom: 12px;
+        }
+    
+        .dnt-footer-links li {
+            margin-bottom: 12px;
+        }
+        .dnt-footer-links a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--dnt-color-gray-400);
+        }
+        .dnt-footer-links a::before {
+            content: '›';
+            color: var(--dnt-color-primary);
+            font-size: 1.5rem;
+            line-height: 1;
+            transition: transform var(--dnt-transition-fast);
+        }
+        .dnt-footer-links a:hover {
+            color: var(--dnt-color-accent);
+        }
+        .dnt-footer-links a:hover::before {
+            transform: translateX(4px);
+            color: var(--dnt-color-accent);
+        }
+        .dnt-contact-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+            color: var(--dnt-color-gray-400);
+            line-height: 1.5;
+        }
+        .dnt-contact-icon {
+            color: var(--dnt-color-accent);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .dnt-footer-bottom {
+            background-color: #0b0f19;
+            padding: 24px 0;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .dnt-footer-bottom-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .dnt-copyright {
+            margin-bottom: 0;
+        }
+        .dnt-footer-bottom-links {
+            display: flex;
+            gap: 20px;
+        }
+        .dnt-footer-bottom-links a:hover {
+            color: var(--dnt-color-white);
+        }
+        @keyframes dnt-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(244, 42, 65, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(244, 42, 65, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(244, 42, 65, 0); }
+        }
+        @keyframes dnt-slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @media (max-width: 1200px) {
+            .dnt-main-wrapper { flex-direction: column; }
+            .dnt-sidebar-area { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+            .dnt-facility-grid { grid-template-columns: repeat(2, 1fr); }
+            .dnt-teacher-grid { grid-template-columns: repeat(3, 1fr); }
+            .dnt-gallery-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 992px) {
+            .dnt-hero-title { font-size: 2.8rem; }
+            .dnt-qa-grid, .dnt-quick-action-grid { grid-template-columns: repeat(2, 1fr); }
+            .dnt-stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .dnt-footer-grid { grid-template-columns: repeat(2, 1fr); }
+            .dnt-teacher-grid { grid-template-columns: repeat(2, 1fr); }
+            .dnt-brand-wrapper { flex-direction: column; text-align: center; gap: 20px; }
+            .dnt-brand-left { flex-direction: column; }
+            .dnt-brand-eiin { align-self: center; }
+            .dnt-nav-menu { display: none; }
+            .dnt-mobile-toggle { display: block; }
+        }
+        @media (max-width: 768px) {
+            .dnt-topbar-wrapper { flex-direction: column; gap: 10px; }
+            .dnt-sidebar-area { grid-template-columns: 1fr; }
+            .dnt-qa-grid, .dnt-quick-action-grid { grid-template-columns: 1fr; }
+            .dnt-facility-grid { grid-template-columns: 1fr; }
+            .dnt-teacher-grid { grid-template-columns: 1fr; }
+            .dnt-gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            .dnt-footer-grid { grid-template-columns: 1fr; }
+            .dnt-footer-bottom-wrapper { flex-direction: column; gap: 15px; text-align: center; }
+            .dnt-hero-title { font-size: 2.2rem; }
+            .dnt-hero-buttons { flex-direction: column; }
+        }
+        @media (max-width: 480px) {
+            .dnt-stats-grid { grid-template-columns: 1fr; }
+            .dnt-gallery-grid { grid-template-columns: 1fr; }
+        }
+
+         /* ==========================================================================           
+           ৪. পেজ ব্যানার (Breadcrumb)           
+           ========================================================================== */
+        .dnt-page-banner {
+            background: linear-gradient(rgba(0, 77, 56, 0.85), rgba(0, 106, 78, 0.95));
+            padding: 90px 0; color: #fff; text-align: center;
+        }
+        .dnt-page-title {
+	font-size: 30px;
+	margin-bottom: 20px;
+	font-weight: 800;
+	color: #fff;
+}
+        .dnt-breadcrumb { display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 1rem; font-weight: bold; }
+        .dnt-breadcrumb a { color: var(--dnt-color-accent); display: flex;gap: 5px;}
+        .dnt-breadcrumb a:hover { text-decoration: underline; }
+
+        /* ==========================================================================           
+           ৫. মেইন কন্টেন্ট লেআউট           
+           ========================================================================== */
+        .dnt-page-section { padding: 50px 0; background: var(--dnt-color-bg-main); }
+        .dnt-page-grid { display: grid; grid-template-columns: 1fr 340px; gap: 30px; }
+        
+        /* বাম পাশের কন্টেন্ট */
+        .dnt-page-content { background: var(--dnt-color-white); padding: 35px; border-radius: var(--dnt-radius-md); box-shadow: var(--dnt-shadow-sm); border: 1px solid var(--dnt-color-gray-200); }
+        .dnt-section-heading { color: var(--dnt-color-primary-dark); font-size: 1.8rem; margin-bottom: 25px; border-bottom: 2px solid var(--dnt-color-gray-100); padding-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+        .dnt-section-heading i { color: var(--dnt-color-primary); }
+
+        /* যোগাযোগ ইনফো গ্রিড */
+        .dnt-contact-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+        .dnt-contact-card {
+            background-color: var(--dnt-color-gray-50);
+            border: 1px solid var(--dnt-color-gray-200);
+            border-radius: var(--dnt-radius-md);
+            padding: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+        .dnt-contact-card-icon {
+            background-color: var(--dnt-color-primary-light);
+            color: var(--dnt-color-primary);
+            width: 45px;
+            height: 45px;
+            border-radius: var(--dnt-radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            border: 1px solid rgba(0, 106, 78, 0.15);
+        }
+        .dnt-contact-card-details h4 {
+            font-size: 1.1rem;
+            color: var(--dnt-color-gray-900);
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+        .dnt-contact-card-details p {
+            font-size: 0.95rem;
+            color: var(--dnt-color-gray-600);
+            line-height: 1.5;
+        }
+
+        /* যোগাযোগ ফরম ডিজাইন */
+        .dnt-contact-form-wrapper {
+            background-color: var(--dnt-color-white);
+            border: 1px solid var(--dnt-color-gray-200);
+            border-radius: var(--dnt-radius-md);
+            padding: 25px;
+            margin-bottom: 35px;
+            border-top: 3px solid var(--dnt-color-primary);
+        }
+        .dnt-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .dnt-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .dnt-form-group label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--dnt-color-gray-800);
+        }
+        .dnt-form-group label span { color: var(--dnt-color-secondary); }
+        .dnt-form-control {
+            padding: 10px 12px;
+            font-size: 0.95rem;
+            border: 1px solid var(--dnt-color-gray-300);
+            border-radius: var(--dnt-radius-sm);
+            background-color: var(--dnt-color-white);
+            color: var(--dnt-color-gray-700);
+            outline: none;
+            transition: var(--dnt-transition);
+            font-family: inherit;
+        }
+        .dnt-form-control:focus {
+            border-color: var(--dnt-color-primary);
+            box-shadow: 0 0 0 3px rgba(0, 106, 78, 0.15);
+        }
+        textarea.dnt-form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+        .dnt-form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            border-top: 1px solid var(--dnt-color-gray-200);
+            padding-top: 15px;
+        }
+
+        /* গুগল ম্যাপ এরিয়া */
+        .dnt-map-container {
+            width: 100%;
+            height: 300px;
+            border: 1px solid var(--dnt-color-gray-200);
+            border-radius: var(--dnt-radius-md);
+            overflow: hidden;
+            background-color: var(--dnt-color-gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dnt-color-gray-400);
+            position: relative;
+        }
+        .dnt-map-placeholder {
+            text-align: center;
+        }
+        .dnt-map-placeholder i {
+            font-size: 3rem;
+            color: var(--dnt-color-secondary);
+            margin-bottom: 10px;
+        }
+        .dnt-map-placeholder p {
+            font-weight: bold;
+            color: var(--dnt-color-gray-600);
+        }
+
+        /* ডান পাশের সাইডবার */
+        .dnt-widget { background: #fff; border-radius: var(--dnt-radius-md); border: 1px solid var(--dnt-color-gray-200); margin-bottom: 25px; box-shadow: var(--dnt-shadow-sm); overflow: hidden; }
+        .dnt-widget-header { background: var(--dnt-color-primary); color: #fff; padding: 14px 20px; font-size: 1.15rem; font-weight: bold; display: flex; align-items: center; gap: 10px; border-bottom: 3px solid var(--dnt-color-secondary); }
+        .dnt-widget-menu li { border-bottom: 1px solid var(--dnt-color-gray-100); }
+        .dnt-widget-menu li a { display: flex; align-items: center; gap: 10px; padding: 14px 20px; color: var(--dnt-color-gray-700); font-weight: 600; font-size: 0.95rem; }
+        .dnt-widget-menu li a i { color: var(--dnt-color-primary); transition: var(--dnt-transition); }
+        .dnt-widget-menu li a:hover, .dnt-widget-menu li.active a { background: var(--dnt-color-primary-light); color: var(--dnt-color-primary); padding-left: 24px; }
+        .dnt-widget-menu li a:hover i { transform: translateX(3px); }
+
+        /* এক নজরে বক্স */
+        .dnt-info-box { padding: 20px; }
+        .dnt-info-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .dnt-info-item:last-child { margin-bottom: 0; }
+        .dnt-info-item i { font-size: 1.4rem; color: var(--dnt-color-secondary); width: 25px; text-align: center; }
+        .dnt-info-text h5 { color: var(--dnt-color-gray-500); font-size: 0.85rem; margin-bottom: 2px; }
+        .dnt-info-text p { color: var(--dnt-color-gray-900); font-weight: bold; font-size: 0.95rem; }
+
+
+        /* ==========================================================================           
+           ৫. মেইন কন্টেন্ট লেআউট           
+           ========================================================================== */
+        .dnt-page-section { padding: 50px 0; background: var(--dnt-color-bg-main); }
+        .dnt-page-grid { display: grid; grid-template-columns: 1fr 340px; gap: 30px; }
+        
+        /* বাম পাশের কন্টেন্ট */
+        .dnt-page-content { background: var(--dnt-color-white); padding: 35px; border-radius: var(--dnt-radius-md); box-shadow: var(--dnt-shadow-sm); border: 1px solid var(--dnt-color-gray-200); }
+        .dnt-section-heading { color: var(--dnt-color-primary-dark); font-size: 1.8rem; margin-bottom: 25px; border-bottom: 2px solid var(--dnt-color-gray-100); padding-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+        .dnt-section-heading i { color: var(--dnt-color-primary); }
+
+        /* ক্যাটাগরি ফিল্টার ট্যাব */
+        .dnt-gallery-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--dnt-color-gray-200);
+            padding-bottom: 15px;
+        }
+        .dnt-filter-btn {
+            padding: 8px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--dnt-color-gray-700);
+            background: var(--dnt-color-gray-100);
+            border: 1px solid var(--dnt-color-gray-200);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--dnt-transition);
+        }
+        .dnt-filter-btn:hover, .dnt-filter-btn.active {
+            background-color: var(--dnt-color-primary);
+            color: var(--dnt-color-white);
+            border-color: var(--dnt-color-primary);
+        }
+
+        /* ইমেজ গ্যালারি গ্রিড */
+        .dnt-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .dnt-gallery-item {
+            background: var(--dnt-color-white);
+            border: 1px solid var(--dnt-color-gray-200);
+            border-radius: var(--dnt-radius-md);
+            overflow: hidden;
+            box-shadow: var(--dnt-shadow-sm);
+            transition: var(--dnt-transition);
+        }
+        .dnt-gallery-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--dnt-shadow-md);
+        }
+        
+        /* ছবি প্লেসহোল্ডার এবং হোভার ইফেক্ট */
+        .dnt-gallery-thumb {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            background-color: var(--dnt-color-gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dnt-color-gray-400);
+            font-size: 2.5rem;
+            overflow: hidden;
+        }
+        /* বাস্তব ছবির জন্য ক্লাসের স্টাইলিং (প্রয়োজন হলে) */
+        .dnt-gallery-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--dnt-transition);
+        }
+        .dnt-gallery-item:hover .dnt-gallery-thumb img {
+            transform: scale(1.08);
+        }
+        
+        /* ইমেজ হোভার ওভারলে */
+        .dnt-gallery-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 77, 56, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--dnt-transition);
+        }
+        .dnt-gallery-item:hover .dnt-gallery-overlay {
+            opacity: 1;
+        }
+        .dnt-gallery-overlay i {
+            color: var(--dnt-color-white);
+            font-size: 1.8rem;
+            background: var(--dnt-color-secondary);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--dnt-shadow-md);
+        }
+
+        /* ক্যাপশন টেক্সট */
+        .dnt-gallery-info {
+            padding: 12px 15px;
+            border-top: 1px solid var(--dnt-color-gray-100);
+        }
+        .dnt-gallery-title {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--dnt-color-gray-900);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .dnt-gallery-tag {
+            font-size: 0.8rem;
+            color: var(--dnt-color-secondary);
+            font-weight: 600;
+        }
+
+
+        /* ==========================================================================
+           5. MAIN CONTENT LAYOUT
+           ========================================================================== */
+        .dnt-page-section { padding: 80px 0; background: var(--dnt-color-bg-main); }
+        .dnt-page-grid { display: grid; grid-template-columns: 1fr 350px; gap: 40px; }
+
+        /* Left Content - Teachers Directory */
+        .dnt-page-content { background: var(--dnt-color-white); padding: 40px; border-radius: var(--dnt-radius-md); box-shadow: var(--dnt-shadow-sm); border: 1px solid var(--dnt-color-gray-200); }
+        
+        .dnt-section-heading { color: var(--dnt-color-primary-dark); font-size: 2rem; margin-bottom: 20px; border-bottom: 2px solid var(--dnt-color-gray-100); padding-bottom: 10px; display: flex; align-items: center; gap: 15px; }
+        .dnt-section-heading i { color: var(--dnt-color-primary); }
+        .dnt-intro-text { font-size: 1.05rem; color: var(--dnt-color-gray-700); line-height: 1.8; margin-bottom: 30px; text-align: justify; }
+
+        /* Department Titles */
+        .dnt-dept-title { font-size: 1.5rem; color: var(--dnt-color-primary-dark); margin: 40px 0 20px; padding-left: 15px; border-left: 5px solid var(--dnt-color-secondary); background: var(--dnt-color-gray-50); padding: 10px 15px; border-radius: 0 var(--dnt-radius-sm) var(--dnt-radius-sm) 0; }
+        .dnt-dept-title:first-of-type { margin-top: 10px; }
+
+        /* Teachers Grid */
+        .dnt-teacher-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; }
+        
+        .dnt-teacher-card { display: flex; flex-direction: column; align-items: center; background: var(--dnt-color-gray-50); border: 1px solid var(--dnt-color-gray-200); border-radius: var(--dnt-radius-md); padding: 30px 20px; text-align: center; transition: var(--dnt-transition); border-bottom: 4px solid var(--dnt-color-primary); box-shadow: var(--dnt-shadow-sm); }
+        .dnt-teacher-card:hover { transform: translateY(-5px); box-shadow: var(--dnt-shadow-lg); background: var(--dnt-color-white); border-bottom-color: var(--dnt-color-secondary); }
+        
+        .dnt-teacher-img { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--dnt-color-primary-light); background-color: var(--dnt-color-gray-200); margin-bottom: 15px; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; color: var(--dnt-color-gray-400); box-shadow: var(--dnt-shadow-sm); overflow: hidden; transition: var(--dnt-transition); }
+        .dnt-teacher-card:hover .dnt-teacher-img { color: var(--dnt-color-primary); border-color: var(--dnt-color-primary); }
+        
+        .dnt-teacher-name { font-size: 1.25rem; color: var(--dnt-color-gray-900); font-weight: bold; margin-bottom: 5px; }
+        .dnt-teacher-desig { font-size: 0.95rem; color: var(--dnt-color-secondary); font-weight: bold; margin-bottom: 10px; background: #fde9eb; display: inline-block; padding: 4px 12px; border-radius: 20px; }
+        .dnt-teacher-edu { font-size: 0.9rem; color: var(--dnt-color-gray-600); margin-bottom: 15px; padding: 0 10px; }
+        
+        .dnt-teacher-social { width: 100%; display: flex; justify-content: center; gap: 10px; border-top: 1px dashed var(--dnt-color-gray-300); padding-top: 15px; }
+        .dnt-teacher-social a { width: 35px; height: 35px; border-radius: 50%; background: var(--dnt-color-white); border: 1px solid var(--dnt-color-gray-300); color: var(--dnt-color-gray-600); display: flex; align-items: center; justify-content: center; transition: var(--dnt-transition); }
+        .dnt-teacher-social a:hover { background: var(--dnt-color-primary); color: var(--dnt-color-white); border-color: var(--dnt-color-primary); }
+
+        /* ==========================================================================           
+           ৫. মেইন কন্টেন্ট লেআউট           
+           ========================================================================== */
+        .dnt-page-section { padding: 50px 0; background: var(--dnt-color-bg-main); }
+        .dnt-page-grid { display: grid; grid-template-columns: 1fr 340px; gap: 30px; }
+        
+        /* বাম পাশের কন্টেন্ট */
+        .dnt-page-content { background: var(--dnt-color-white); padding: 35px; border-radius: var(--dnt-radius-md); box-shadow: var(--dnt-shadow-sm); border: 1px solid var(--dnt-color-gray-200); }
+        .dnt-section-heading { color: var(--dnt-color-primary-dark); font-size: 1.8rem; margin-bottom: 20px; border-bottom: 2px solid var(--dnt-color-gray-100); padding-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+        .dnt-section-heading i { color: var(--dnt-color-primary); }
+        .dnt-intro-text { font-size: 1.05rem; color: var(--dnt-color-gray-600); line-height: 1.8; margin-bottom: 35px; text-align: justify; }
+
+        /* নোটিশ বক্স ও ভর্তি কার্ড ডিজাইন */
+        .dnt-notice-alert {
+            background-color: #fffbeb;
+            border: 1px solid #fef3c7;
+            border-left: 5px solid var(--dnt-color-accent);
+            padding: 20px;
+            border-radius: var(--dnt-radius-md);
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+            color: #b45309;
+        }
+
+        .dnt-gb-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 35px; }
+        .dnt-gb-card { background: var(--dnt-color-gray-50); border: 1px solid var(--dnt-color-gray-200); border-radius: var(--dnt-radius-md); text-align: center; padding: 25px 15px; transition: var(--dnt-transition); border-top: 4px solid var(--dnt-color-primary); }
+        .dnt-gb-card:hover { transform: translateY(-4px); box-shadow: var(--dnt-shadow-md); background: var(--dnt-color-white); }
+        
+        .dnt-gb-img { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 15px; background: var(--dnt-color-primary-light); color: var(--dnt-color-primary); display: flex; align-items: center; justify-content: center; font-size: 2.2rem; border: 3px solid var(--dnt-color-white); box-shadow: var(--dnt-shadow-sm); }
+        .dnt-gb-name { font-size: 1.2rem; color: var(--dnt-color-gray-900); font-weight: bold; margin-bottom: 6px; }
+        .dnt-gb-role { font-size: 0.9rem; color: var(--dnt-color-secondary); font-weight: bold; margin-bottom: 10px; background: #fde9eb; display: inline-block; padding: 3px 14px; border-radius: 20px; }
+        .dnt-gb-desc { font-size: 0.88rem; color: var(--dnt-color-gray-600); line-height: 1.5; }
+        
+        .dnt-gb-category-title { font-size: 1.35rem; color: var(--dnt-color-primary-dark); margin: 35px 0 20px; border-bottom: 2px dashed var(--dnt-color-gray-200); padding-bottom: 6px; font-weight: 700; }
+
+        /* টাইমলাইন ব্লক */
+        .dnt-timeline-box { background: var(--dnt-color-gray-50); border: 1px solid var(--dnt-color-gray-200); padding: 25px; border-radius: var(--dnt-radius-md); }
+        .dnt-timeline-box .dnt-info-item { border-bottom: 1px dashed var(--dnt-color-gray-200); padding-bottom: 15px; margin-bottom: 15px; }
+        .dnt-timeline-box .dnt-info-item:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+
+        /* ডকুমেন্ট লিস্ট */
+        .dnt-doc-list li { margin-bottom: 12px; font-size: 0.98rem; display: flex; align-items: flex-start; gap: 10px; }
+        .dnt-doc-list li i { color: var(--dnt-color-primary); margin-top: 5px; }
+
+        /* ==========================================================================           
+           ৫. মেইন কন্টেন্ট লেআউট           
+           ========================================================================== */
+        .dnt-page-section { padding: 50px 0; background: var(--dnt-color-bg-main); }
+        .dnt-page-grid { display: grid; grid-template-columns: 1fr 340px; gap: 30px; }
+        
+        /* বাম পাশের কন্টেন্ট */
+        .dnt-page-content { background: var(--dnt-color-white); padding: 35px; border-radius: var(--dnt-radius-md); box-shadow: var(--dnt-shadow-sm); border: 1px solid var(--dnt-color-gray-200); }
+        .dnt-section-heading { color: var(--dnt-color-primary-dark); font-size: 1.8rem; margin-top: 30px; margin-bottom: 20px; border-bottom: 2px solid var(--dnt-color-gray-100); padding-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+        .dnt-section-heading:first-of-type { margin-top: 0; }
+        .dnt-section-heading i { color: var(--dnt-color-primary); }
+
+        .dnt-intro-text { font-size: 1.05rem; line-height: 1.8; color: var(--dnt-color-gray-700); margin-bottom: 20px; text-align: justify; }
+
+        /* ইমেজ প্লেসহোল্ডার */
+        .dnt-lab-banner-img {
+            width: 100%;
+            height: 320px;
+            background-color: var(--dnt-color-gray-100);
+            border: 1px solid var(--dnt-color-gray-200);
+            border-radius: var(--dnt-radius-md);
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--dnt-color-gray-400);
+            font-size: 4rem;
+            position: relative;
+        }
+        .dnt-lab-banner-img span { font-size: 1.1rem; color: var(--dnt-color-gray-500); margin-top: 10px; font-weight: bold; }
+
+        /* ল্যাব ইন্সট্রুমেন্ট গ্রিড */
+        .dnt-instrument-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+        .dnt-instrument-card {
+            background: var(--dnt-color-gray-50);
+            border: 1px solid var(--dnt-color-gray-200);
+            border-radius: var(--dnt-radius-md);
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .dnt-ins-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--dnt-color-primary-light);
+            color: var(--dnt-color-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+        .dnt-ins-info h4 { font-size: 1.05rem; color: var(--dnt-color-gray-900); margin-bottom: 4px; font-weight: 700; }
+        .dnt-ins-info p { font-size: 0.88rem; color: var(--dnt-color-gray-600); }
+
+        /* ল্যাব নিয়মাবলী লিস্ট */
+        .dnt-rules-list { display: flex; flex-direction: column; gap: 12px; }
+        .dnt-rules-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 1rem; color: var(--dnt-color-gray-700); }
+        .dnt-rules-list li i { color: var(--dnt-color-secondary); margin-top: 5px; font-size: 0.95rem; }
+
+        /* ডান পাশের সাইডবার */
+        .dnt-widget { background: #fff; border-radius: var(--dnt-radius-md); border: 1px solid var(--dnt-color-gray-200); margin-bottom: 25px; box-shadow: var(--dnt-shadow-sm); overflow: hidden; }
+        .dnt-widget-header { background: var(--dnt-color-primary); color: #fff; padding: 14px 20px; font-size: 1.15rem; font-weight: bold; display: flex; align-items: center; gap: 10px; border-bottom: 3px solid var(--dnt-color-secondary); }
+        .dnt-widget-menu li { border-bottom: 1px solid var(--dnt-color-gray-100); }
+        .dnt-widget-menu li a { display: flex; align-items: center; gap: 10px; padding: 14px 20px; color: var(--dnt-color-gray-700); font-weight: 600; font-size: 0.95rem; }
+        .dnt-widget-menu li a i { color: var(--dnt-color-primary); transition: var(--dnt-transition); }
+        .dnt-widget-menu li a:hover, .dnt-widget-menu li.active a { background: var(--dnt-color-primary-light); color: var(--dnt-color-primary); padding-left: 24px; }
+        .dnt-widget-menu li a:hover i { transform: translateX(3px); }
+
+        /* এক নজরে বক্স */
+        .dnt-info-box { padding: 20px; }
+        .dnt-info-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .dnt-info-item:last-child { margin-bottom: 0; }
+        .dnt-info-item i { font-size: 1.4rem; color: var(--dnt-color-secondary); width: 25px; text-align: center; }
+        .dnt-info-text h5 { color: var(--dnt-color-gray-500); font-size: 0.85rem; margin-bottom: 2px; }
+        .dnt-info-text p { color: var(--dnt-color-gray-900); font-weight: bold; font-size: 0.95rem; }
+
+         /* ==========================================================================
+           5. MAIN HISTORY LAYOUT
+           ========================================================================== */
+        .dnt-history-section { padding: 80px 0; background: var(--dnt-color-bg-main); }
+        .dnt-history-grid { display: grid; grid-template-columns: 1fr 350px; gap: 40px; }
+
+        /* Left Content - History Details */
+        .dnt-history-content { background: var(--dnt-color-white); padding: 40px; border-radius: var(--dnt-radius-md); box-shadow: var(--dnt-shadow-sm); border: 1px solid var(--dnt-color-gray-200); }
+        .dnt-history-content h2 { color: var(--dnt-color-primary-dark); font-size: 2rem; margin-bottom: 25px; border-bottom: 2px solid var(--dnt-color-gray-100); padding-bottom: 10px; display: flex; align-items: center; gap: 15px; }
+        .dnt-history-content h2 i { color: var(--dnt-color-primary); }
+        .dnt-history-content p { font-size: 1.05rem; line-height: 1.8; margin-bottom: 20px; color: var(--dnt-color-gray-700); text-align: justify; }
+        .dnt-history-content img { width: 100%; height: 400px; object-fit: cover; margin: 30px 0; }
+        
+        .dnt-quote-box { background: var(--dnt-color-primary-light); padding: 25px; border-left: 5px solid var(--dnt-color-primary); font-style: italic; font-size: 1.1rem; color: var(--dnt-color-primary-dark); margin: 30px 0; border-radius: 0 var(--dnt-radius-sm) var(--dnt-radius-sm) 0; }
+
+        /* Timeline Section */
+        .dnt-timeline-container { margin-top: 50px; }
+        .dnt-timeline { position: relative; margin-top: 30px; padding-left: 30px; }
+        .dnt-timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--dnt-color-primary-light); border-radius: 4px; }
+        
+        .dnt-timeline-item { position: relative; margin-bottom: 30px; }
+        .dnt-timeline-item::before { content: ''; position: absolute; left: -36px; top: 5px; width: 16px; height: 16px; border-radius: 50%; background: var(--dnt-color-primary); border: 4px solid var(--dnt-color-white); box-shadow: 0 0 0 2px var(--dnt-color-primary-light); }
+        .dnt-timeline-year { font-size: 1.4rem; font-weight: 800; color: var(--dnt-color-secondary); margin-bottom: 5px; }
+        .dnt-timeline-title { font-size: 1.2rem; color: var(--dnt-color-gray-900); font-weight: bold; margin-bottom: 10px; }
+        .dnt-timeline-desc { font-size: 1rem; color: var(--dnt-color-gray-600); }
+
+        /* Founders Section */
+        .dnt-founders-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px; }
+        .dnt-founder-card { display: flex; align-items: center; gap: 15px; background: var(--dnt-color-gray-50); padding: 15px; border-radius: var(--dnt-radius-md); border: 1px solid var(--dnt-color-gray-200); }
+        .dnt-founder-icon { width: 60px; height: 60px; background: var(--dnt-color-gray-200); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--dnt-color-gray-500); flex-shrink: 0; }
+        .dnt-founder-info h4 { color: var(--dnt-color-primary-dark); font-size: 1.1rem; margin-bottom: 5px; }
+        .dnt-founder-info p { font-size: 0.9rem; color: var(--dnt-color-secondary); font-weight: bold; margin-bottom: 0; }
+
+        /* ==========================================================================
+           5. MAIN CONTENT LAYOUT
+           ========================================================================== */
+        .dnt-page-section { padding: 80px 0; background: var(--dnt-color-bg-main); }
+        .dnt-page-grid { display: grid; grid-template-columns: 1fr 350px; gap: 40px; }
+
+        /* Left Content - Staff Profiles */
+        .dnt-page-content { background: var(--dnt-color-white); padding: 40px; border-radius: var(--dnt-radius-md); box-shadow: var(--dnt-shadow-sm); border: 1px solid var(--dnt-color-gray-200); }
+        
+        .dnt-section-heading { color: var(--dnt-color-primary-dark); font-size: 2rem; margin-bottom: 20px; border-bottom: 2px solid var(--dnt-color-gray-100); padding-bottom: 10px; display: flex; align-items: center; gap: 15px; }
+        .dnt-section-heading i { color: var(--dnt-color-primary); }
+        .dnt-intro-text { font-size: 1.05rem; color: var(--dnt-color-gray-700); line-height: 1.8; margin-bottom: 40px; text-align: justify; }
+
+        /* Staff Grid */
+        .dnt-staff-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; }
+        
+        .dnt-staff-card { display: flex; flex-direction: column; align-items: center; background: var(--dnt-color-gray-50); border: 1px solid var(--dnt-color-gray-200); border-radius: var(--dnt-radius-md); padding: 30px 20px; text-align: center; transition: var(--dnt-transition); border-top: 4px solid var(--dnt-color-primary); }
+        .dnt-staff-card:hover { transform: translateY(-5px); box-shadow: var(--dnt-shadow-md); background: var(--dnt-color-white); border-top-color: var(--dnt-color-secondary); }
+        
+        .dnt-staff-img { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--dnt-color-primary-light); background-color: var(--dnt-color-gray-200); margin-bottom: 15px; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; color: var(--dnt-color-gray-400); box-shadow: var(--dnt-shadow-sm); overflow: hidden; }
+        .dnt-staff-img img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .dnt-staff-name { font-size: 1.3rem; color: var(--dnt-color-gray-900); font-weight: bold; margin-bottom: 5px; }
+        .dnt-staff-desig { font-size: 0.95rem; color: var(--dnt-color-secondary); font-weight: bold; margin-bottom: 15px; background: #fde9eb; display: inline-block; padding: 4px 12px; border-radius: 20px; }
+        
+        .dnt-staff-contact { width: 100%; border-top: 1px dashed var(--dnt-color-gray-300); padding-top: 15px; }
+        .dnt-staff-contact p { font-size: 0.9rem; color: var(--dnt-color-gray-600); margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .dnt-staff-contact p i { color: var(--dnt-color-primary); }
+
+
+         /* ==========================================================================           
+           ৫. মেইন কন্টেন্ট লেআউট           
+           ========================================================================== */
+        .dnt-page-section { padding: 50px 0; background: var(--dnt-color-bg-main); }
+        .dnt-page-grid { display: grid; grid-template-columns: 1fr 340px; gap: 30px; }
+        
+        /* বাম পাশের কন্টেন্ট */
+        .dnt-page-content { background: var(--dnt-color-white); padding: 35px; border-radius: var(--dnt-radius-md); box-shadow: var(--dnt-shadow-sm); border: 1px solid var(--dnt-color-gray-200); }
+        .dnt-section-heading { color: var(--dnt-color-primary-dark); font-size: 1.6rem; margin-top: 35px; margin-bottom: 20px; border-bottom: 2px solid var(--dnt-color-gray-100); padding-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+        .dnt-section-heading:first-of-type { margin-top: 0; }
+        .dnt-section-heading i { color: var(--dnt-color-primary); }
+
+        .dnt-intro-text { font-size: 1.05rem; line-height: 1.8; color: var(--dnt-color-gray-700); margin-bottom: 25px; text-align: justify; }
+
+        /* দৈনন্দিন প্রধান কার্যক্রম (রুটিন) টেবিল */
+        .dnt-routine-table-wrapper { overflow-x: auto; margin-bottom: 30px; border: 1px solid var(--dnt-color-gray-300); border-radius: var(--dnt-radius-sm); }
+        .dnt-routine-table { width: 100%; border-collapse: collapse; font-size: 0.98rem; text-align: center; }
+        .dnt-routine-table th { background-color: var(--dnt-color-primary-light); color: var(--dnt-color-primary-dark); padding: 12px; font-weight: bold; border-bottom: 2px solid var(--dnt-color-primary); border-right: 1px solid var(--dnt-color-gray-300); }
+        .dnt-routine-table td { padding: 12px; border: 1px solid var(--dnt-color-gray-300); color: var(--dnt-color-gray-800); }
+        .dnt-routine-table tbody tr:nth-child(even) { background-color: var(--dnt-color-gray-5); }
+        .dnt-routine-table tbody tr:hover { background-color: #f1f7f5; }
+        
+        /* ব্রেক বা বিশেষ পিরিয়ড ইন্ডিকেটর রো */
+        .dnt-row-highlight { background-color: #fffaf0 !important; font-weight: bold; color: #b7791f !important; }
+        .dnt-row-highlight td { color: #b7791f !important; }
+
+        /* টাইমলাইন বা দৈনিক ধাপের স্টাইল */
+        .dnt-activity-timeline { display: flex; flex-direction: column; gap: 20px; margin-top: 25px; }
+        .dnt-timeline-item { display: flex; gap: 20px; position: relative; }
+        .dnt-timeline-item::before { content: ''; position: absolute; left: 15px; top: 30px; bottom: -20px; width: 2px; background: var(--dnt-color-gray-200); }
+        .dnt-timeline-item:last-child::before { display: none; }
+        
+        .dnt-timeline-icon { 
+            width: 32px; 
+            height: 32px; 
+            border-radius: 50%; 
+            background: var(--dnt-color-primary-light); 
+            color: var(--dnt-color-primary); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 0.9rem; 
+            flex-shrink: 0; 
+            border: 2px solid var(--dnt-color-primary);
+            z-index: 2;
+        }
+        .dnt-timeline-content { background: var(--dnt-color-gray-5); border: 1px solid var(--dnt-color-gray-200); padding: 15px 20px; border-radius: var(--dnt-radius-sm); width: 100%; }
+        .dnt-timeline-content h4 { font-size: 1.1rem; color: var(--dnt-color-gray-900); font-weight: bold; margin-bottom: 5px; }
+        .dnt-timeline-content p { font-size: 0.95rem; color: var(--dnt-color-gray-600); }
+
+        /* বিশেষ হাইলাইট বক্স (হলুদ/গোল্ডেন বর্ডার) */
+        .dnt-highlight-box {
+            background-color: #fffbeb;
+            border: 1px solid #fef3c7;
+            border-left: 4px solid var(--dnt-color-accent);
+            padding: 20px;
+            margin-top: 25px;
+            border-radius: 0 var(--dnt-radius-md) var(--dnt-radius-md) 0;
+        }
+        .dnt-highlight-box h4 {
+            color: #b45309;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+        }
+        .dnt-highlight-box p {
+            font-size: 0.95rem;
+            color: var(--dnt-color-gray-700);
+            line-height: 1.6;
+        }
+
+         /* ==========================================================================           
+           ৫. মেইন কন্টেন্ট লেআউট           
+           ========================================================================== */
+        .dnt-page-section { padding: 50px 0; background: var(--dnt-color-bg-main); }
+        .dnt-page-grid { display: grid; grid-template-columns: 1fr 340px; gap: 30px; }
+        
+        /* বাম পাশের কন্টেন্ট */
+        .dnt-page-content { background: var(--dnt-color-white); padding: 35px; border-radius: var(--dnt-radius-md); box-shadow: var(--dnt-shadow-sm); border: 1px solid var(--dnt-color-gray-200); }
+        .dnt-section-heading { color: var(--dnt-color-primary-dark); font-size: 1.6rem; margin-top: 35px; margin-bottom: 20px; border-bottom: 2px solid var(--dnt-color-gray-100); padding-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+        .dnt-section-heading:first-of-type { margin-top: 0; }
+        .dnt-section-heading i { color: var(--dnt-color-primary); }
+
+        .dnt-intro-text { font-size: 1.05rem; line-height: 1.8; color: var(--dnt-color-gray-700); margin-bottom: 20px; text-align: justify; }
+
+        /* টেবিল স্টাইল */
+        .dnt-table-wrapper { overflow-x: auto; margin-bottom: 25px; border: 1px solid var(--dnt-color-gray-300); border-radius: var(--dnt-radius-sm); }
+        .dnt-table { width: 100%; border-collapse: collapse; font-size: 0.98rem; text-align: center; }
+        .dnt-table th { background-color: var(--dnt-color-primary-light); color: var(--dnt-color-primary-dark); padding: 12px; font-weight: bold; border-bottom: 2px solid var(--dnt-color-primary); border-right: 1px solid var(--dnt-color-gray-300); }
+        .dnt-table td { padding: 12px; border: 1px solid var(--dnt-color-gray-300); color: var(--dnt-color-gray-800); }
+        .dnt-table tbody tr:nth-child(even) { background-color: var(--dnt-color-gray-50); }
+        .dnt-table tbody tr:hover { background-color: #f1f7f5; }
+
+        /* পরীক্ষা ধাপসমূহ বা কার্ড */
+        .dnt-exam-step-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+        .dnt-exam-card { background: var(--dnt-color-gray-50); border: 1px solid var(--dnt-color-gray-200); border-top: 3px solid var(--dnt-color-primary); padding: 15px; border-radius: var(--dnt-radius-sm); text-align: center; }
+        .dnt-exam-card h4 { color: var(--dnt-color-gray-900); font-weight: bold; margin-bottom: 6px; font-size: 1.05rem; }
+        .dnt-exam-card p { font-size: 0.9rem; color: var(--dnt-color-gray-600); }
+
+        /* সাধারণ নিয়ম তালিকা */
+        .dnt-rule-list { display: flex; flex-direction: column; gap: 12px; }
+        .dnt-rule-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 1rem; }
+        .dnt-rule-list li i { color: var(--dnt-color-secondary); margin-top: 5px; font-size: 0.95rem; }
+
+        /* ডান পাশের সাইডবার */
+        .dnt-widget { background: #fff; border-radius: var(--dnt-radius-md); border: 1px solid var(--dnt-color-gray-200); margin-bottom: 25px; box-shadow: var(--dnt-shadow-sm); overflow: hidden; }
+        .dnt-widget-header { background: var(--dnt-color-primary); color: #fff; padding: 14px 20px; font-size: 1.15rem; font-weight: bold; display: flex; align-items: center; gap: 10px; border-bottom: 3px solid var(--dnt-color-secondary); }
+        .dnt-widget-menu li { border-bottom: 1px solid var(--dnt-color-gray-100); }
+        .dnt-widget-menu li a { display: flex; align-items: center; gap: 10px; padding: 14px 20px; color: var(--dnt-color-gray-700); font-weight: 600; font-size: 0.95rem; }
+        .dnt-widget-menu li a i { color: var(--dnt-color-primary); transition: var(--dnt-transition); }
+        .dnt-widget-menu li a:hover, .dnt-widget-menu li.active a { background: var(--dnt-color-primary-light); color: var(--dnt-color-primary); padding-left: 24px; }
+        .dnt-widget-menu li a:hover i { transform: translateX(3px); }
+
+        /* এক নজরে বক্স */
+        .dnt-info-box { padding: 20px; }
+        .dnt-info-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .dnt-info-item:last-child { margin-bottom: 0; }
+        .dnt-info-item i { font-size: 1.4rem; color: var(--dnt-color-secondary); width: 25px; text-align: center; }
+        .dnt-info-text h5 { color: var(--dnt-color-gray-500); font-size: 0.85rem; margin-bottom: 2px; }
+        .dnt-info-text p { color: var(--dnt-color-gray-900); font-weight: bold; font-size: 0.95rem; }
+
+         /* ==========================================================================           
+           ৫. মেইন কন্টেন্ট লেআউট           
+           ========================================================================== */
+        .dnt-page-section { padding: 50px 0; background: var(--dnt-color-bg-main); }
+        .dnt-page-grid { display: grid; grid-template-columns: 1fr 340px; gap: 30px; }
+        
+        /* বাম পাশের কন্টেন্ট */
+        .dnt-page-content { background: var(--dnt-color-white); padding: 35px; border-radius: var(--dnt-radius-md); box-shadow: var(--dnt-shadow-sm); border: 1px solid var(--dnt-color-gray-200); }
+        .dnt-section-heading { color: var(--dnt-color-primary-dark); font-size: 1.6rem; margin-top: 35px; margin-bottom: 20px; border-bottom: 2px solid var(--dnt-color-gray-100); padding-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+        .dnt-section-heading:first-of-type { margin-top: 0; }
+        .dnt-section-heading i { color: var(--dnt-color-primary); }
+
+        .dnt-intro-text { font-size: 1.05rem; line-height: 1.8; color: var(--dnt-color-gray-700); margin-bottom: 25px; text-align: justify; }
+
+        /* ইউনিফর্ম সেকশন গ্রিড (ছাত্র ও ছাত্রী আলাদা কার্ড) */
+        .dnt-uniform-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 30px; }
+        .dnt-uniform-box { 
+            background: var(--dnt-color-gray-50); 
+            border: 1px solid var(--dnt-color-gray-200); 
+            border-top: 4px solid var(--dnt-color-primary);
+            border-radius: var(--dnt-radius-md);
+            padding: 25px;
+        }
+        .dnt-uniform-box.dnt-girls { border-top-color: var(--dnt-color-secondary); }
+        
+        .dnt-box-title { 
+            font-size: 1.3rem; 
+            font-weight: bold; 
+            color: var(--dnt-color-gray-900); 
+            margin-bottom: 15px; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+        }
+        .dnt-uniform-box.dnt-boys .dnt-box-title i { color: var(--dnt-color-primary); }
+        .dnt-uniform-box.dnt-girls .dnt-box-title i { color: var(--dnt-color-secondary); }
+
+        .dnt-uniform-list { display: flex; flex-direction: column; gap: 10px; }
+        .dnt-uniform-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.98rem; color: var(--dnt-color-gray-700); }
+        .dnt-uniform-list li i { margin-top: 5px; font-size: 0.85rem; color: var(--dnt-color-gray-500); }
+
+        /* সাধারণ অ্যাকসেন্ট ব্লক */
+        .dnt-notice-block {
+            background-color: var(--dnt-color-primary-light);
+            border: 1px solid var(--dnt-color-primary);
+            border-left: 4px solid var(--dnt-color-primary);
+            padding: 20px;
+            border-radius: 0 var(--dnt-radius-md) var(--dnt-radius-md) 0;
+            margin-top: 25px;
+        }
+        .dnt-notice-block h4 {
+            color: var(--dnt-color-primary-dark);
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+        }
+        .dnt-notice-block p {
+            font-size: 0.95rem;
+            color: var(--dnt-color-gray-700);
+            line-height: 1.6;
+        }
+
+         /* ==========================================================================           
+           ৫. মেইন কন্টেন্ট লেআউট           
+           ========================================================================== */
+        .dnt-page-section { padding: 50px 0; background: var(--dnt-color-bg-main); }
+        .dnt-page-grid { display: grid; grid-template-columns: 1fr 340px; gap: 30px; }
+        
+        /* বাম পাশের কন্টেন্ট */
+        .dnt-page-content { background: var(--dnt-color-white); padding: 35px; border-radius: var(--dnt-radius-md); box-shadow: var(--dnt-shadow-sm); border: 1px solid var(--dnt-color-gray-200); }
+        .dnt-section-heading { color: var(--dnt-color-primary-dark); font-size: 1.6rem; margin-top: 35px; margin-bottom: 20px; border-bottom: 2px solid var(--dnt-color-gray-100); padding-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+        .dnt-section-heading:first-of-type { margin-top: 0; }
+        .dnt-section-heading i { color: var(--dnt-color-primary); }
+
+        .dnt-intro-text { font-size: 1.05rem; line-height: 1.8; color: var(--dnt-color-gray-700); margin-bottom: 25px; text-align: justify; }
+
+        /* রুলস কার্ড বা ব্লক */
+        .dnt-rule-block {
+            background-color: var(--dnt-color-gray-50);
+            border: 1px solid var(--dnt-color-gray-200);
+            border-left: 4px solid var(--dnt-color-primary);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 0 var(--dnt-radius-md) var(--dnt-radius-md) 0;
+        }
+        .dnt-rule-block-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.15rem;
+            color: var(--dnt-color-gray-900);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .dnt-rule-block-header i {
+            color: var(--dnt-color-primary);
+        }
+        .dnt-rule-block ul {
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+        .dnt-rule-block ul li {
+            margin-bottom: 8px;
+            font-size: 0.98rem;
+            color: var(--dnt-color-gray-700);
+            line-height: 1.6;
+        }
+        .dnt-rule-block ul li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* বিশেষ সতর্কবার্তা উইজেট (লাল বর্ডার) */
+        .dnt-warning-block {
+            background-color: #fff5f5;
+            border: 1px solid #feb2b2;
+            border-left: 4px solid var(--dnt-color-secondary);
+            border-radius: 0 var(--dnt-radius-md) var(--dnt-radius-md) 0;
+            padding: 20px;
+            margin-top: 25px;
+        }
+        .dnt-warning-block h4 {
+            color: var(--dnt-color-secondary-dark);
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+        }
+        .dnt-warning-block p {
+            font-size: 0.95rem;
+            color: var(--dnt-color-gray-700);
+            line-height: 1.6;
+        }
+
+         /* ==========================================================================           
+           ৫. মেইন কন্টেন্ট লেআউট           
+           ========================================================================== */
+        .dnt-page-section { padding: 50px 0; background: var(--dnt-color-bg-main); }
+        .dnt-page-grid { display: grid; grid-template-columns: 1fr 340px; gap: 30px; }
+        
+        /* বাম পাশের কন্টেন্ট */
+        .dnt-page-content { background: var(--dnt-color-white); padding: 35px; border-radius: var(--dnt-radius-md); box-shadow: var(--dnt-shadow-sm); border: 1px solid var(--dnt-color-gray-200); }
+        .dnt-section-heading { color: var(--dnt-color-primary-dark); font-size: 1.6rem; margin-top: 35px; margin-bottom: 20px; border-bottom: 2px solid var(--dnt-color-gray-100); padding-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+        .dnt-section-heading:first-of-type { margin-top: 0; }
+        .dnt-section-heading i { color: var(--dnt-color-primary); }
+
+        .dnt-intro-text { font-size: 1.05rem; line-height: 1.8; color: var(--dnt-color-gray-700); margin-bottom: 25px; text-align: justify; }
+
+        /* দৈনন্দিন প্রধান কার্যক্রম (রুটিন) টেবিল */
+        .dnt-routine-table-wrapper { overflow-x: auto; margin-bottom: 30px; border: 1px solid var(--dnt-color-gray-300); border-radius: var(--dnt-radius-sm); }
+        .dnt-routine-table { width: 100%; border-collapse: collapse; font-size: 0.98rem; text-align: center; }
+        .dnt-routine-table th { background-color: var(--dnt-color-primary-light); color: var(--dnt-color-primary-dark); padding: 12px; font-weight: bold; border-bottom: 2px solid var(--dnt-color-primary); border-right: 1px solid var(--dnt-color-gray-300); }
+        .dnt-routine-table td { padding: 12px; border: 1px solid var(--dnt-color-gray-300); color: var(--dnt-color-gray-800); }
+        .dnt-routine-table tbody tr:nth-child(even) { background-color: var(--dnt-color-gray-5); }
+        .dnt-routine-table tbody tr:hover { background-color: #f1f7f5; }
+        
+        /* ব্রেক বা বিশেষ পিরিয়ড ইন্ডিকেটর রো */
+        .dnt-row-highlight { background-color: #fffaf0 !important; font-weight: bold; color: #b7791f !important; }
+        .dnt-row-highlight td { color: #b7791f !important; }
+
+        /* টাইমলাইন বা দৈনিক ধাপের স্টাইল */
+        .dnt-activity-timeline { display: flex; flex-direction: column; gap: 20px; margin-top: 25px; }
+        .dnt-timeline-item { display: flex; gap: 20px; position: relative; }
+        .dnt-timeline-item::before { content: ''; position: absolute; left: 15px; top: 30px; bottom: -20px; width: 2px; background: var(--dnt-color-gray-200); }
+        .dnt-timeline-item:last-child::before { display: none; }
+        
+        .dnt-timeline-icon { 
+            width: 32px; 
+            height: 32px; 
+            border-radius: 50%; 
+            background: var(--dnt-color-primary-light); 
+            color: var(--dnt-color-primary); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 0.9rem; 
+            flex-shrink: 0; 
+            border: 2px solid var(--dnt-color-primary);
+            z-index: 2;
+        }
+        .dnt-timeline-content { background: var(--dnt-color-gray-5); border: 1px solid var(--dnt-color-gray-200); padding: 15px 20px; border-radius: var(--dnt-radius-sm); width: 100%; }
+        .dnt-timeline-content h4 { font-size: 1.1rem; color: var(--dnt-color-gray-900); font-weight: bold; margin-bottom: 5px; }
+        .dnt-timeline-content p { font-size: 0.95rem; color: var(--dnt-color-gray-600); }
+
+        /* বিশেষ হাইলাইট বক্স (হলুদ/গোল্ডেন বর্ডার) */
+        .dnt-highlight-box {
+            background-color: #fffbeb;
+            border: 1px solid #fef3c7;
+            border-left: 4px solid var(--dnt-color-accent);
+            padding: 20px;
+            margin-top: 25px;
+            border-radius: 0 var(--dnt-radius-md) var(--dnt-radius-md) 0;
+        }
+        .dnt-highlight-box h4 {
+            color: #b45309;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+        }
+        .dnt-highlight-box p {
+            font-size: 0.95rem;
+            color: var(--dnt-color-gray-700);
+            line-height: 1.6;
+        }
+
+         /* ==========================================================================           
+           ৫. মেইন কন্টেন্ট লেআউট           
+           ========================================================================== */
+        .dnt-page-section { padding: 50px 0; background: var(--dnt-color-bg-main); }
+        .dnt-page-grid { display: grid; grid-template-columns: 1fr 340px; gap: 30px; }
+        
+        /* বাম পাশের কন্টেন্ট */
+        .dnt-page-content { background: var(--dnt-color-white); padding: 35px; border-radius: var(--dnt-radius-md); box-shadow: var(--dnt-shadow-sm); border: 1px solid var(--dnt-color-gray-200); }
+        .dnt-section-heading { color: var(--dnt-color-primary-dark); font-size: 1.6rem; margin-top: 35px; margin-bottom: 20px; border-bottom: 2px solid var(--dnt-color-gray-100); padding-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+        .dnt-section-heading:first-of-type { margin-top: 0; }
+        .dnt-section-heading i { color: var(--dnt-color-primary); }
+
+        .dnt-intro-text { font-size: 1.05rem; line-height: 1.8; color: var(--dnt-color-gray-700); margin-bottom: 25px; text-align: justify; }
+
+        /* দৈনন্দিন প্রধান কার্যক্রম (রুটিন) টেবিল */
+        .dnt-routine-table-wrapper { overflow-x: auto; margin-bottom: 30px; border: 1px solid var(--dnt-color-gray-300); border-radius: var(--dnt-radius-sm); }
+        .dnt-routine-table { width: 100%; border-collapse: collapse; font-size: 0.98rem; text-align: center; }
+        .dnt-routine-table th { background-color: var(--dnt-color-primary-light); color: var(--dnt-color-primary-dark); padding: 12px; font-weight: bold; border-bottom: 2px solid var(--dnt-color-primary); border-right: 1px solid var(--dnt-color-gray-300); }
+        .dnt-routine-table td { padding: 12px; border: 1px solid var(--dnt-color-gray-300); color: var(--dnt-color-gray-800); }
+        .dnt-routine-table tbody tr:nth-child(even) { background-color: var(--dnt-color-gray-5); }
+        .dnt-routine-table tbody tr:hover { background-color: #f1f7f5; }
+        
+        /* ব্রেক বা বিশেষ পিরিয়ড ইন্ডিকেটর রো */
+        .dnt-row-highlight { background-color: #fffaf0 !important; font-weight: bold; color: #b7791f !important; }
+        .dnt-row-highlight td { color: #b7791f !important; }
+
+        /* টাইমলাইন বা দৈনিক ধাপের স্টাইল */
+        .dnt-activity-timeline { display: flex; flex-direction: column; gap: 20px; margin-top: 25px; }
+        .dnt-timeline-item { display: flex; gap: 20px; position: relative; }
+        .dnt-timeline-item::before { content: ''; position: absolute; left: 15px; top: 30px; bottom: -20px; width: 2px; background: var(--dnt-color-gray-200); }
+        .dnt-timeline-item:last-child::before { display: none; }
+        
+        .dnt-timeline-icon { 
+            width: 32px; 
+            height: 32px; 
+            border-radius: 50%; 
+            background: var(--dnt-color-primary-light); 
+            color: var(--dnt-color-primary); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 0.9rem; 
+            flex-shrink: 0; 
+            border: 2px solid var(--dnt-color-primary);
+            z-index: 2;
+        }
+        .dnt-timeline-content { background: var(--dnt-color-gray-5); border: 1px solid var(--dnt-color-gray-200); padding: 15px 20px; border-radius: var(--dnt-radius-sm); width: 100%; }
+        .dnt-timeline-content h4 { font-size: 1.1rem; color: var(--dnt-color-gray-900); font-weight: bold; margin-bottom: 5px; }
+        .dnt-timeline-content p { font-size: 0.95rem; color: var(--dnt-color-gray-600); }
+
+        /* বিশেষ হাইলাইট বক্স (হলুদ/গোল্ডেন বর্ডার) */
+        .dnt-highlight-box {
+            background-color: #fffbeb;
+            border: 1px solid #fef3c7;
+            border-left: 4px solid var(--dnt-color-accent);
+            padding: 20px;
+            margin-top: 25px;
+            border-radius: 0 var(--dnt-radius-md) var(--dnt-radius-md) 0;
+        }
+        .dnt-highlight-box h4 {
+            color: #b45309;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+        }
+        .dnt-highlight-box p {
+            font-size: 0.95rem;
+            color: var(--dnt-color-gray-700);
+            line-height: 1.6;
+        }
+
+        /* ==========================================================================
+           5. MAIN CONTENT LAYOUT
+           ========================================================================== */
+        .dnt-page-section { padding: 80px 0; background: var(--dnt-color-bg-main); }
+        .dnt-page-grid { display: grid; grid-template-columns: 1fr 350px; gap: 40px; }
+
+        /* Left Content - Principal Message */
+        .dnt-page-content { background: var(--dnt-color-white); padding: 40px; border-radius: var(--dnt-radius-md); box-shadow: var(--dnt-shadow-sm); border: 1px solid var(--dnt-color-gray-200); }
+        
+        .dnt-section-heading { color: var(--dnt-color-primary-dark); font-size: 2rem; margin-bottom: 25px; border-bottom: 2px solid var(--dnt-color-gray-100); padding-bottom: 10px; display: flex; align-items: center; gap: 15px; }
+        .dnt-section-heading i { color: var(--dnt-color-primary); }
+
+        .dnt-principal-box { margin-bottom: 30px; }
+        .dnt-principal-img { 
+            float: left; 
+            margin-right: 30px; 
+            margin-bottom: 20px; 
+            width: 250px; 
+            border-radius: var(--dnt-radius-md); 
+            border: 5px solid var(--dnt-color-primary-light); 
+            box-shadow: var(--dnt-shadow-md); 
+        }
+        
+        /* Clearing float */
+        .dnt-clearfix::after { content: ""; display: table; clear: both; }
+
+        .dnt-message-text { font-size: 1.05rem; color: var(--dnt-color-gray-700); line-height: 1.8; text-align: justify; margin-bottom: 20px; }
+        
+        .dnt-message-quote {
+            background: var(--dnt-color-gray-50);
+            border-left: 5px solid var(--dnt-color-secondary);
+            padding: 20px 25px;
+            font-style: italic;
+            font-size: 1.15rem;
+            color: var(--dnt-color-primary-dark);
+            margin: 30px 0;
+            border-radius: 0 var(--dnt-radius-sm) var(--dnt-radius-sm) 0;
+        }
+
+        .dnt-signature-box { margin-top: 40px; text-align: left; }
+        .dnt-signature-name { font-size: 1.4rem; font-weight: bold; color: var(--dnt-color-primary-dark); margin-bottom: 5px; }
+        .dnt-signature-desig { font-size: 1rem; color: var(--dnt-color-secondary); font-weight: bold; margin-bottom: 5px; }
+        .dnt-signature-inst { font-size: 0.95rem; color: var(--dnt-color-gray-600); }
+
+        /* ==========================================================================
+           5. MAIN CONTENT LAYOUT
+           ========================================================================== */
+        .dnt-page-section { padding: 80px 0; background: var(--dnt-color-bg-main); }
+        .dnt-page-grid { display: grid; grid-template-columns: 1fr 350px; gap: 40px; }
+
+        /* Left Content - Chairman Message */
+        .dnt-page-content { background: var(--dnt-color-white); padding: 40px; border-radius: var(--dnt-radius-md); box-shadow: var(--dnt-shadow-sm); border: 1px solid var(--dnt-color-gray-200); }
+        
+        .dnt-section-heading { color: var(--dnt-color-primary-dark); font-size: 2rem; margin-bottom: 25px; border-bottom: 2px solid var(--dnt-color-gray-100); padding-bottom: 10px; display: flex; align-items: center; gap: 15px; }
+        .dnt-section-heading i { color: var(--dnt-color-primary); }
+
+        .dnt-chairman-box { margin-bottom: 30px; }
+        .dnt-chairman-img { 
+            float: left; 
+            margin-right: 30px; 
+            margin-bottom: 20px; 
+            width: 250px; 
+            border-radius: var(--dnt-radius-md); 
+            border: 5px solid var(--dnt-color-gray-200); 
+            box-shadow: var(--dnt-shadow-md); 
+        }
+        
+        /* Clearing float */
+        .dnt-clearfix::after { content: ""; display: table; clear: both; }
+
+        .dnt-message-text { font-size: 1.05rem; color: var(--dnt-color-gray-700); line-height: 1.8; text-align: justify; margin-bottom: 20px; }
+        
+        .dnt-message-quote {
+            background: #fff9c4; /* Light accent background */
+            border-left: 5px solid var(--dnt-color-accent);
+            padding: 20px 25px;
+            font-style: italic;
+            font-size: 1.15rem;
+            color: var(--dnt-color-gray-900);
+            margin: 30px 0;
+            border-radius: 0 var(--dnt-radius-sm) var(--dnt-radius-sm) 0;
+        }
+
+        .dnt-signature-box { margin-top: 40px; text-align: left; }
+        .dnt-signature-name { font-size: 1.4rem; font-weight: bold; color: var(--dnt-color-primary-dark); margin-bottom: 5px; }
+        .dnt-signature-desig { font-size: 1rem; color: var(--dnt-color-secondary); font-weight: bold; margin-bottom: 5px; }
+        .dnt-signature-inst { font-size: 0.95rem; color: var(--dnt-color-gray-600); }
+
+        /* ==========================================================================
+           5. MAIN CONTENT LAYOUT
+           ========================================================================== */
+        .dnt-page-section { padding: 80px 0; background: var(--dnt-color-bg-main); }
+        .dnt-page-grid { display: grid; grid-template-columns: 1fr 350px; gap: 40px; }
+
+        /* Left Content - Governing Body */
+        .dnt-page-content { background: var(--dnt-color-white); padding: 40px; border-radius: var(--dnt-radius-md); box-shadow: var(--dnt-shadow-sm); border: 1px solid var(--dnt-color-gray-200); }
+        
+        .dnt-section-heading { color: var(--dnt-color-primary-dark); font-size: 2rem; margin-bottom: 20px; border-bottom: 2px solid var(--dnt-color-gray-100); padding-bottom: 10px; display: flex; align-items: center; gap: 15px; }
+        .dnt-section-heading i { color: var(--dnt-color-primary); }
+        .dnt-intro-text { font-size: 1.05rem; color: var(--dnt-color-gray-700); line-height: 1.8; margin-bottom: 40px; text-align: justify; }
+
+        /* Governing Body Cards */
+        .dnt-gb-chairman { margin-bottom: 40px; display: flex; justify-content: center; }
+        .dnt-gb-chairman .dnt-gb-card { max-width: 350px; width: 100%; border-top: 5px solid var(--dnt-color-secondary); }
+        
+        .dnt-gb-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 40px; }
+        
+        .dnt-gb-card { background: var(--dnt-color-gray-50); border: 1px solid var(--dnt-color-gray-200); border-radius: var(--dnt-radius-md); text-align: center; padding: 25px 20px; transition: var(--dnt-transition); border-top: 4px solid var(--dnt-color-primary); }
+        .dnt-gb-card:hover { transform: translateY(-5px); box-shadow: var(--dnt-shadow-md); background: var(--dnt-color-white); }
+        
+        .dnt-gb-img { width: 110px; height: 110px; border-radius: 50%; margin: 0 auto 15px; background: var(--dnt-color-primary-light); color: var(--dnt-color-primary); display: flex; align-items: center; justify-content: center; font-size: 3rem; border: 3px solid var(--dnt-color-white); box-shadow: var(--dnt-shadow-sm); }
+        
+        .dnt-gb-name { font-size: 1.15rem; color: var(--dnt-color-gray-900); font-weight: bold; margin-bottom: 5px; }
+        .dnt-gb-role { font-size: 0.95rem; color: var(--dnt-color-secondary); font-weight: bold; margin-bottom: 10px; background: #fde9eb; display: inline-block; padding: 4px 12px; border-radius: 20px; }
+        .dnt-gb-desc { font-size: 0.85rem; color: var(--dnt-color-gray-600); }
+
+        /* Sub-sections within Governing body */
+        .dnt-gb-category-title { font-size: 1.4rem; color: var(--dnt-color-primary-dark); margin: 30px 0 20px; border-bottom: 1px dashed var(--dnt-color-gray-300); padding-bottom: 5px; }
+
+           /* ==========================================================================
+           5. MAIN CONTENT LAYOUT
+           ========================================================================== */
+        .dnt-page-section { padding: 80px 0; background: var(--dnt-color-bg-main); }
+        .dnt-page-grid { display: grid; grid-template-columns: 1fr 350px; gap: 40px; }
+
+        /* Left Content - Infrastructure */
+        .dnt-page-content { background: var(--dnt-color-white); padding: 40px; border-radius: var(--dnt-radius-md); box-shadow: var(--dnt-shadow-sm); border: 1px solid var(--dnt-color-gray-200); }
+        
+        .dnt-section-heading { color: var(--dnt-color-primary-dark); font-size: 2rem; margin-bottom: 20px; border-bottom: 2px solid var(--dnt-color-gray-100); padding-bottom: 10px; display: flex; align-items: center; gap: 15px; }
+        .dnt-section-heading i { color: var(--dnt-color-primary); }
+        .dnt-intro-text { font-size: 1.05rem; color: var(--dnt-color-gray-700); line-height: 1.8; margin-bottom: 40px; text-align: justify; }
+
+        /* Infrastructure Grid */
+        .dnt-infra-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; }
+        
+        .dnt-infra-card { background: var(--dnt-color-gray-50); border: 1px solid var(--dnt-color-gray-200); border-radius: var(--dnt-radius-md); overflow: hidden; transition: var(--dnt-transition); }
+        .dnt-infra-card:hover { transform: translateY(-5px); box-shadow: var(--dnt-shadow-lg); background: var(--dnt-color-white); }
+        
+        .dnt-infra-img-wrapper { position: relative; height: 200px; }
+        .dnt-infra-img-wrapper img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--dnt-radius-md) var(--dnt-radius-md) 0 0; }
+        
+        .dnt-infra-icon { position: absolute; bottom: -25px; left: 50%; transform: translateX(-50%); width: 60px; height: 60px; background: var(--dnt-color-white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: var(--dnt-color-primary); box-shadow: var(--dnt-shadow-md); border: 2px solid var(--dnt-color-primary-light); }
+        
+        .dnt-infra-details { padding: 40px 20px 25px; text-align: center; }
+        .dnt-infra-details h3 { font-size: 1.3rem; color: var(--dnt-color-gray-900); margin-bottom: 10px; font-weight: bold; }
+        .dnt-infra-details p { font-size: 0.95rem; color: var(--dnt-color-gray-600); line-height: 1.6; margin-bottom: 0; }
+
+        /* Full Width Feature */
+        .dnt-infra-full-card { display: flex; align-items: center; gap: 30px; background: var(--dnt-color-gray-50); border: 1px solid var(--dnt-color-gray-200); border-radius: var(--dnt-radius-md); overflow: hidden; margin-bottom: 30px; margin-top: 30px; }
+        .dnt-infra-full-card img { width: 50%; height: 300px; object-fit: cover; border-radius: 0; }
+        .dnt-infra-full-text { padding: 30px; width: 50%; }
+        .dnt-infra-full-text h3 { font-size: 1.5rem; color: var(--dnt-color-primary-dark); margin-bottom: 15px; }
+        .dnt-infra-full-text p { font-size: 1.05rem; color: var(--dnt-color-gray-700); line-height: 1.7; }
+        .dnt-infra-full-text ul { margin-top: 15px; padding-left: 20px; }
+        .dnt-infra-full-text ul li { margin-bottom: 8px; list-style-type: disc; color: var(--dnt-color-gray-600); }
+
+        /* ==========================================================================           
+           ৫. মেইন কন্টেন্ট লেআউট           
+           ========================================================================== */
+        .dnt-page-section { padding: 50px 0; background: var(--dnt-color-bg-main); }
+        .dnt-page-grid { display: grid; grid-template-columns: 1fr 340px; gap: 30px; }
+        
+        /* বাম পাশের কন্টেন্ট */
+        .dnt-page-content { background: var(--dnt-color-white); padding: 35px; border-radius: var(--dnt-radius-md); box-shadow: var(--dnt-shadow-sm); border: 1px solid var(--dnt-color-gray-200); }
+        .dnt-section-heading { color: var(--dnt-color-primary-dark); font-size: 1.8rem; margin-bottom: 20px; border-bottom: 2px solid var(--dnt-color-gray-100); padding-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+        .dnt-section-heading i { color: var(--dnt-color-primary); }
+        .dnt-intro-text { font-size: 1.05rem; color: var(--dnt-color-gray-600); line-height: 1.8; margin-bottom: 35px; text-align: justify; }
+
+        /* গভর্নিং বডি কার্ড ডিজাইন */
+        .dnt-gb-chairman { margin-bottom: 35px; display: flex; justify-content: center; }
+        .dnt-gb-chairman .dnt-gb-card { max-width: 340px; width: 100%; border-top: 5px solid var(--dnt-color-secondary); }
+        
+        .dnt-gb-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 35px; }
+        .dnt-gb-card { background: var(--dnt-color-gray-50); border: 1px solid var(--dnt-color-gray-200); border-radius: var(--dnt-radius-md); text-align: center; padding: 25px 15px; transition: var(--dnt-transition); border-top: 4px solid var(--dnt-color-primary); }
+        .dnt-gb-card:hover { transform: translateY(-4px); box-shadow: var(--dnt-shadow-md); background: var(--dnt-color-white); }
+        
+        .dnt-gb-img { width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 15px; background: var(--dnt-color-primary-light); color: var(--dnt-color-primary); display: flex; align-items: center; justify-content: center; font-size: 2.8rem; border: 3px solid var(--dnt-color-white); box-shadow: var(--dnt-shadow-sm); }
+        .dnt-gb-name { font-size: 1.15rem; color: var(--dnt-color-gray-900); font-weight: bold; margin-bottom: 6px; }
+        .dnt-gb-role { font-size: 0.9rem; color: var(--dnt-color-secondary); font-weight: bold; margin-bottom: 10px; background: #fde9eb; display: inline-block; padding: 3px 14px; border-radius: 20px; }
+        .dnt-gb-desc { font-size: 0.85rem; color: var(--dnt-color-gray-600); }
+        
+        .dnt-gb-category-title { font-size: 1.35rem; color: var(--dnt-color-primary-dark); margin: 35px 0 20px; border-bottom: 2px dashed var(--dnt-color-gray-200); padding-bottom: 6px; font-weight: 700; }
+
+         /* ==========================================================================           
+           ৫. মেইন কন্টেন্ট লেআউট           
+           ========================================================================== */
+        .dnt-page-section { padding: 50px 0; background: var(--dnt-color-bg-main); }
+        .dnt-page-grid { display: grid; grid-template-columns: 1fr 340px; gap: 30px; }
+        
+        /* বাম পাশের কন্টেন্ট */
+        .dnt-page-content { background: var(--dnt-color-white); padding: 35px; border-radius: var(--dnt-radius-md); box-shadow: var(--dnt-shadow-sm); border: 1px solid var(--dnt-color-gray-200); }
+        .dnt-section-heading { color: var(--dnt-color-primary-dark); font-size: 1.6rem; margin-top: 35px; margin-bottom: 20px; border-bottom: 2px solid var(--dnt-color-gray-100); padding-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+        .dnt-section-heading:first-of-type { margin-top: 0; }
+        .dnt-section-heading i { color: var(--dnt-color-primary); }
+
+        .dnt-intro-text { font-size: 1.05rem; line-height: 1.8; color: var(--dnt-color-gray-700); margin-bottom: 25px; text-align: justify; }
+
+        /* দৈনন্দিন প্রধান কার্যক্রম (রুটিন) টেবিল */
+        .dnt-routine-table-wrapper { overflow-x: auto; margin-bottom: 30px; border: 1px solid var(--dnt-color-gray-300); border-radius: var(--dnt-radius-sm); }
+        .dnt-routine-table { width: 100%; border-collapse: collapse; font-size: 0.98rem; text-align: center; }
+        .dnt-routine-table th { background-color: var(--dnt-color-primary-light); color: var(--dnt-color-primary-dark); padding: 12px; font-weight: bold; border-bottom: 2px solid var(--dnt-color-primary); border-right: 1px solid var(--dnt-color-gray-300); }
+        .dnt-routine-table td { padding: 12px; border: 1px solid var(--dnt-color-gray-300); color: var(--dnt-color-gray-800); }
+        .dnt-routine-table tbody tr:nth-child(even) { background-color: var(--dnt-color-gray-5); }
+        .dnt-routine-table tbody tr:hover { background-color: #f1f7f5; }
+        
+        /* ব্রেক বা বিশেষ পিরিয়ড ইন্ডিকেটর রো */
+        .dnt-row-highlight { background-color: #fffaf0 !important; font-weight: bold; color: #b7791f !important; }
+        .dnt-row-highlight td { color: #b7791f !important; }
+
+        /* টাইমলাইন বা দৈনিক ধাপের স্টাইল */
+        .dnt-activity-timeline { display: flex; flex-direction: column; gap: 20px; margin-top: 25px; }
+        .dnt-timeline-item { display: flex; gap: 20px; position: relative; }
+        .dnt-timeline-item::before { content: ''; position: absolute; left: 15px; top: 30px; bottom: -20px; width: 2px; background: var(--dnt-color-gray-200); }
+        .dnt-timeline-item:last-child::before { display: none; }
+        
+        .dnt-timeline-icon { 
+            width: 32px; 
+            height: 32px; 
+            border-radius: 50%; 
+            background: var(--dnt-color-primary-light); 
+            color: var(--dnt-color-primary); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 0.9rem; 
+            flex-shrink: 0; 
+            border: 2px solid var(--dnt-color-primary);
+            z-index: 2;
+        }
+        .dnt-timeline-content { background: var(--dnt-color-gray-5); border: 1px solid var(--dnt-color-gray-200); padding: 15px 20px; border-radius: var(--dnt-radius-sm); width: 100%; }
+        .dnt-timeline-content h4 { font-size: 1.1rem; color: var(--dnt-color-gray-900); font-weight: bold; margin-bottom: 5px; }
+        .dnt-timeline-content p { font-size: 0.95rem; color: var(--dnt-color-gray-600); }
+
+        /* বিশেষ হাইলাইট বক্স (হলুদ/গোল্ডেন বর্ডার) */
+        .dnt-highlight-box {
+            background-color: #fffbeb;
+            border: 1px solid #fef3c7;
+            border-left: 4px solid var(--dnt-color-accent);
+            padding: 20px;
+            margin-top: 25px;
+            border-radius: 0 var(--dnt-radius-md) var(--dnt-radius-md) 0;
+        }
+        .dnt-highlight-box h4 {
+            color: #b45309;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+        }
+        .dnt-highlight-box p {
+            font-size: 0.95rem;
+            color: var(--dnt-color-gray-700);
+            line-height: 1.6;
+        }
+
+         /* ==========================================================================           
+           ৫. মেইন কন্টেন্ট লেআউট           
+           ========================================================================== */
+        .dnt-page-section { padding: 50px 0; background: var(--dnt-color-bg-main); }
+        .dnt-page-grid { display: grid; grid-template-columns: 1fr 340px; gap: 30px; }
+        
+        /* বাম পাশের কন্টেন্ট */
+        .dnt-page-content { background: var(--dnt-color-white); padding: 35px; border-radius: var(--dnt-radius-md); box-shadow: var(--dnt-shadow-sm); border: 1px solid var(--dnt-color-gray-200); }
+        .dnt-section-heading { color: var(--dnt-color-primary-dark); font-size: 1.6rem; margin-top: 35px; margin-bottom: 20px; border-bottom: 2px solid var(--dnt-color-gray-100); padding-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+        .dnt-section-heading:first-of-type { margin-top: 0; }
+        .dnt-section-heading i { color: var(--dnt-color-primary); }
+
+        .dnt-intro-text { font-size: 1.05rem; line-height: 1.8; color: var(--dnt-color-gray-700); margin-bottom: 25px; text-align: justify; }
+
+        /* দৈনন্দিন প্রধান কার্যক্রম (রুটিন) টেবিল */
+        .dnt-routine-table-wrapper { overflow-x: auto; margin-bottom: 30px; border: 1px solid var(--dnt-color-gray-300); border-radius: var(--dnt-radius-sm); }
+        .dnt-routine-table { width: 100%; border-collapse: collapse; font-size: 0.98rem; text-align: center; }
+        .dnt-routine-table th { background-color: var(--dnt-color-primary-light); color: var(--dnt-color-primary-dark); padding: 12px; font-weight: bold; border-bottom: 2px solid var(--dnt-color-primary); border-right: 1px solid var(--dnt-color-gray-300); }
+        .dnt-routine-table td { padding: 12px; border: 1px solid var(--dnt-color-gray-300); color: var(--dnt-color-gray-800); }
+        .dnt-routine-table tbody tr:nth-child(even) { background-color: var(--dnt-color-gray-5); }
+        .dnt-routine-table tbody tr:hover { background-color: #f1f7f5; }
+        
+        /* ব্রেক বা বিশেষ পিরিয়ড ইন্ডিকেটর রো */
+        .dnt-row-highlight { background-color: #fffaf0 !important; font-weight: bold; color: #b7791f !important; }
+        .dnt-row-highlight td { color: #b7791f !important; }
+
+        /* টাইমলাইন বা দৈনিক ধাপের স্টাইল */
+        .dnt-activity-timeline { display: flex; flex-direction: column; gap: 20px; margin-top: 25px; }
+        .dnt-timeline-item { display: flex; gap: 20px; position: relative; }
+        .dnt-timeline-item::before { content: ''; position: absolute; left: 15px; top: 30px; bottom: -20px; width: 2px; background: var(--dnt-color-gray-200); }
+        .dnt-timeline-item:last-child::before { display: none; }
+        
+        .dnt-timeline-icon { 
+            width: 32px; 
+            height: 32px; 
+            border-radius: 50%; 
+            background: var(--dnt-color-primary-light); 
+            color: var(--dnt-color-primary); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 0.9rem; 
+            flex-shrink: 0; 
+            border: 2px solid var(--dnt-color-primary);
+            z-index: 2;
+        }
+        .dnt-timeline-content { background: var(--dnt-color-gray-5); border: 1px solid var(--dnt-color-gray-200); padding: 15px 20px; border-radius: var(--dnt-radius-sm); width: 100%; }
+        .dnt-timeline-content h4 { font-size: 1.1rem; color: var(--dnt-color-gray-900); font-weight: bold; margin-bottom: 5px; }
+        .dnt-timeline-content p { font-size: 0.95rem; color: var(--dnt-color-gray-600); }
+
+        /* বিশেষ হাইলাইট বক্স (হলুদ/গোল্ডেন বর্ডার) */
+        .dnt-highlight-box {
+            background-color: #fffbeb;
+            border: 1px solid #fef3c7;
+            border-left: 4px solid var(--dnt-color-accent);
+            padding: 20px;
+            margin-top: 25px;
+            border-radius: 0 var(--dnt-radius-md) var(--dnt-radius-md) 0;
+        }
+        .dnt-highlight-box h4 {
+            color: #b45309;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+        }
+        .dnt-highlight-box p {
+            font-size: 0.95rem;
+            color: var(--dnt-color-gray-700);
+            line-height: 1.6;
+        }
+
+        /* ডান পাশের সাইডবার */
+        .dnt-widget { background: #fff; border-radius: var(--dnt-radius-md); border: 1px solid var(--dnt-color-gray-200); margin-bottom: 25px; box-shadow: var(--dnt-shadow-sm); overflow: hidden; }
+        .dnt-widget-header { background: var(--dnt-color-primary); color: #fff; padding: 14px 20px; font-size: 1.15rem; font-weight: bold; display: flex; align-items: center; gap: 10px; border-bottom: 3px solid var(--dnt-color-secondary); }
+        .dnt-widget-menu li { border-bottom: 1px solid var(--dnt-color-gray-100); }
+        .dnt-widget-menu li a { display: flex; align-items: center; gap: 10px; padding: 14px 20px; color: var(--dnt-color-gray-700); font-weight: 600; font-size: 0.95rem; }
+        .dnt-widget-menu li a i { color: var(--dnt-color-primary); transition: var(--dnt-transition); }
+        .dnt-widget-menu li a:hover, .dnt-widget-menu li.active a { background: var(--dnt-color-primary-light); color: var(--dnt-color-primary); padding-left: 24px; }
+        .dnt-widget-menu li a:hover i { transform: translateX(3px); }
+
+        /* এক নজরে বক্স */
+        .dnt-info-box { padding: 20px; }
+        .dnt-info-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .dnt-info-item:last-child { margin-bottom: 0; }
+        .dnt-info-item i { font-size: 1.4rem; color: var(--dnt-color-secondary); width: 25px; text-align: center; }
+        .dnt-info-text h5 { color: var(--dnt-color-gray-500); font-size: 0.85rem; margin-bottom: 2px; }
+        .dnt-info-text p { color: var(--dnt-color-gray-900); font-weight: bold; font-size: 0.95rem; }
+
+         /* ==========================================================================           
+           ৫. মেইন কন্টেন্ট লেআউট           
+           ========================================================================== */
+        .dnt-page-section { padding: 50px 0; background: var(--dnt-color-bg-main); }
+        .dnt-page-grid { display: grid; grid-template-columns: 1fr 340px; gap: 30px; }
+        
+        /* বাম পাশের কন্টেন্ট */
+        .dnt-page-content { background: var(--dnt-color-white); padding: 35px; border-radius: var(--dnt-radius-md); box-shadow: var(--dnt-shadow-sm); border: 1px solid var(--dnt-color-gray-200); }
+        .dnt-section-heading { color: var(--dnt-color-primary-dark); font-size: 1.8rem; margin-bottom: 20px; border-bottom: 2px solid var(--dnt-color-gray-100); padding-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+        .dnt-section-heading i { color: var(--dnt-color-primary); }
+
+        /* ফিল্টার ফরম ডিজাইন */
+        .dnt-filter-card {
+            background-color: var(--dnt-color-gray-50);
+            border: 1px solid var(--dnt-color-gray-200);
+            border-radius: var(--dnt-radius-md);
+            padding: 25px;
+            margin-bottom: 35px;
+            border-top: 3px solid var(--dnt-color-primary);
+        }
+        .dnt-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .dnt-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .dnt-form-group label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--dnt-color-gray-800);
+        }
+        .dnt-form-group label span {
+            color: var(--dnt-color-secondary);
+        }
+        .dnt-form-control {
+            padding: 10px 12px;
+            font-size: 0.95rem;
+            border: 1px solid var(--dnt-color-gray-300);
+            border-radius: var(--dnt-radius-sm);
+            background-color: var(--dnt-color-white);
+            color: var(--dnt-color-gray-700);
+            outline: none;
+            transition: var(--dnt-transition);
+            font-family: inherit;
+        }
+        .dnt-form-control:focus {
+            border-color: var(--dnt-color-primary);
+            box-shadow: 0 0 0 3px rgba(0, 106, 78, 0.15);
+        }
+        .dnt-form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            border-top: 1px solid var(--dnt-color-gray-200);
+            padding-top: 15px;
+        }
+
+        /* ফলাফল টেবিল ডিজাইন */
+        .dnt-table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--dnt-color-gray-200);
+            border-radius: var(--dnt-radius-md);
+            background: var(--dnt-color-white);
+        }
+        .dnt-results-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 0.95rem;
+            min-width: 600px;
+        }
+        .dnt-results-table th {
+            background-color: var(--dnt-color-primary-light);
+            color: var(--dnt-color-primary-dark);
+            font-weight: bold;
+            padding: 14px 16px;
+            border-bottom: 2px solid var(--dnt-color-gray-200);
+        }
+        .dnt-results-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--dnt-color-gray-100);
+            color: var(--dnt-color-gray-800);
+        }
+        .dnt-results-table tr:last-child td {
+            border-bottom: none;
+        }
+        .dnt-results-table tr:hover {
+            background-color: var(--dnt-color-gray-50);
+        }
+        
+        /* ব্যাজ ডিজাইন */
+        .dnt-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border-radius: 20px;
+        }
+        .dnt-badge-success { background-color: #e6f4ea; color: #137333; }
+        .dnt-badge-danger { background-color: #fce8e6; color: #c5221f; }
+
+        .dnt-brand-codes {
+    background-color: var(--dnt-color-bg-main);
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: 1px solid var(--dnt-color-gray-200);
+    font-size: 0.95rem;
+    color: var(--dnt-color-gray-800);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.dnt-code-divider {
+    color: var(--dnt-color-gray-400);
+}
+.dnt-event-content svg {
+	width: 16px;
+	fill: #111;
+}
+/* মোবাইলে ডান দিকের কোডগুলো ঠিকমতো দেখানোর জন্য */
+@media (max-width: 768px) {
+    .dnt-brand-codes {
+        flex-direction: column;
+        gap: 4px;
+        text-align: center;
+        padding: 10px;
+    }
+    .dnt-code-divider {
+        display: none;
+    }
+}
+
+.dnt-speech-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.dnt-widget.dnt-person-widget {
+  /* ৫০% জায়গা থেকে গ্যাপের অর্ধেক (১৫px) বাদ দেওয়া হয়েছে */
+  flex: 1 1 calc(50% - 15px); 
+}
+.dnt-widget-menu svg {
+	width: 24px;
+	margin-right: 0 !important;
+}
+/* মোবাইলের জন্য এক কলামে দেখাতে চাইলে */
+@media (max-width: 768px) {
+  .dnt-widget.dnt-person-widget {
+    flex: 1 1 100%;
+  }
+}
+/* ==========================================================================
+   EVENTS SECTION (NO HOVER - Content Below Image)
+   ========================================================================== */
+.dnt-events-section { padding: 80px 0; background-color: #f9fafb; }
+.dnt-event-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; }
+
+.dnt-event-item { 
+    background: #fff; 
+    border-radius: 8px; 
+    overflow: hidden; 
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    display: flex; 
+    flex-direction: column;
+}
+
+/* ইমেজ এরিয়া */
+.dnt-event-img { 
+    height: 180px; 
+    width: 100%; 
+    background-size: cover; 
+    background-position: center; 
+}
+
+/* কন্টেন্ট এরিয়া (ইমেজের নিচে) */
+.dnt-event-content { padding: 20px 15px; text-align: center; }
+.dnt-event-content h4 { 
+    font-size: 1.1rem; 
+    margin-bottom: 10px; 
+    color: #111827; 
+    font-weight: 700; 
+    line-height: 1.4;
+}
+.dnt-event-content p { 
+    font-size: 0.85rem; 
+    color: #6b7280; 
+    margin: 0; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 6px; 
+}
+
+/* বাটন স্টাইল */
+.dnt-event-btn {
+    display: block;
+    margin: 0 15px 20px 15px;
+    padding: 10px;
+    text-align: center;
+    background: #e6f3ef;
+    color: #006a4e;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+.dnt-event-btn:hover { background: #006a4e; color: #fff; }
+
+@media (max-width: 992px) { .dnt-event-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 768px) { .dnt-event-grid { grid-template-columns: 1fr; } }
