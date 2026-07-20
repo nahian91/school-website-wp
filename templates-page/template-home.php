@@ -21,17 +21,66 @@ $total_teachers = $total_teachers_count ? intval( $total_teachers_count ) : 75;
 ?>
 
 <!-- News Ticker Section -->
-<div class="dnt-news-ticker-section">
-    <div class="dnt-ticker-title">
-        <svg class="dnt-icon-sm" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
-        সর্বশেষ খবর
+<div class="dnt-news-ticker-section" 
+     onmouseover="var m=this.querySelector('marquee'); if(m) m.stop();" 
+     onmouseout="var m=this.querySelector('marquee'); if(m) m.start();" 
+     style="display: flex; align-items: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); font-family: 'Hind Siliguri', system-ui, sans-serif; cursor: pointer;">
+    
+    <!-- Title Badge -->
+    <div class="dnt-ticker-title" style="background: #006a4e; color: #ffffff; padding: 10px 18px; font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; white-space: nowrap; flex-shrink: 0; z-index: 2;">
+        <svg class="dnt-icon-sm" viewBox="0 0 24 24" style="width:16px; height:16px; fill:currentColor;"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+        <?php esc_html_e( 'সর্বশেষ খবর', 'ggisc' ); ?>
     </div>
-    <div class="dnt-ticker-content">
-        <marquee behavior="scroll" direction="left" scrollamount="6" onmouseover="this.stop();" onmouseout="this.start();">
-            <span class="dnt-ticker-item">বার্ষিক ক্রীড়া ও সাংস্কৃতিক প্রতিযোগিতা ২০২৬-এর রেজিস্ট্রেশন চলছে, আজই নাম নিবন্ধন করুন।</span>
-            <span class="dnt-ticker-item">আগামী ২০ জুলাই থেকে ২০২৬ শিক্ষাবর্ষের অর্ধবার্ষিক পরীক্ষা শুরু হতে যাচ্ছে, রুটিন ওয়েবসাইট থেকে সংগ্রহ করুন।</span>
-            <span class="dnt-ticker-item">শিক্ষা মন্ত্রণালয়ের নির্দেশনা অনুযায়ী বিদ্যালয় প্রাঙ্গণে বৃক্ষরোপণ কর্মসূচি ২০২৬ সম্পন্ন হয়েছে।</span>
-            <span class="dnt-ticker-item">এসএসসি ২০২৬ ব্যাচের শিক্ষার্থীদের বিশেষ কোচিং ক্লাসের সময়সূচী পরিবর্তন করা হয়েছে।</span>
+
+    <!-- Scrolling Viewport -->
+    <div class="dnt-ticker-content" style="flex: 1; overflow: hidden; background: #f8fafc; padding: 8px 0; display: flex; align-items: center;">
+        <marquee behavior="scroll" direction="left" scrollamount="5" style="vertical-align: middle;">
+            <?php
+            global $wpdb;
+            $table_notices = $wpdb->prefix . 'sms_notices';
+
+            // Bengali Number Converter Helper
+            if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
+                function dnt_convert_to_bangla_nums( $str ) {
+                    $eng = array('0','1','2','3','4','5','6','7','8','9','January','February','March','April','May','June','July','August','September','October','November','December');
+                    $ban = array('০','১','২','৩','৪','৫','৬','৭','৮','৯','জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর');
+                    return str_replace($eng, $ban, $str);
+                }
+            }
+
+            // Fetch latest 5 published notices
+            $ticker_notices = $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT * FROM {$table_notices} WHERE status = %s ORDER BY id DESC LIMIT 5",
+                    'Published'
+                )
+            );
+
+            if ( ! empty( $ticker_notices ) ) :
+                foreach ( $ticker_notices as $notice ) :
+                    $date_raw = ( ! empty( $notice->event_date ) && $notice->event_date !== '1970-01-01' ) 
+                        ? $notice->event_date 
+                        : $notice->created_at;
+
+                    $formatted_date = date_i18n( 'j F, Y', strtotime( $date_raw ) );
+                    $bangla_date    = dnt_convert_to_bangla_nums( $formatted_date );
+                    $notice_url     = home_url( '/single-notice/?id=' . absint( $notice->id ) );
+            ?>
+                    <span style="display: inline-flex; align-items: center; margin-right: 35px; font-size: 0.95rem;">
+                        <a href="<?php echo esc_url( $notice_url ); ?>" style="text-decoration: none; color: #1e293b; font-weight: 600; transition: color 0.2s;" onmouseover="this.style.color='#006a4e';" onmouseout="this.style.color='#1e293b';">
+                            <strong style="color: #006a4e; margin-right: 5px;">[<?php echo esc_html( $bangla_date ); ?>]</strong>
+                            <?php echo esc_html( $notice->title ); ?>
+                        </a>
+                        <span style="margin-left: 20px; color: #94a3b8;">✦</span>
+                    </span>
+            <?php 
+                endforeach;
+            else : 
+            ?>
+                <span style="font-size: 0.95rem; color: #64748b; font-weight: 600;">
+                    <?php esc_html_e( 'প্রতিষ্ঠানের সকল সাম্প্রতিক নোটিশ জানতে ওয়েবসাইট ভিজিট করুন।', 'ggisc' ); ?>
+                </span>
+            <?php endif; ?>
         </marquee>
     </div>
 </div>
