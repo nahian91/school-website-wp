@@ -125,7 +125,7 @@ get_header(); ?>
                 </ul>
             </main>
 
-            <?php include ('sidebar.php');?>
+            <?php get_sidebar();?>
 
         </div>
     </section>

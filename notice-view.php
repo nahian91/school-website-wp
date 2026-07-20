@@ -228,7 +228,7 @@
                         <p style="color: #475569;">
                             ধন্যবাদান্তে,<br>
                             <span style="font-size: 1.2rem; font-weight: bold; color: var(--dnt-color-primary-dark, #1e293b); display: inline-block; margin-top: 5px;">অধ্যক্ষ</span><br>
-                            আদর্শ উচ্চ বিদ্যালয় ও কলেজ।
+                            Green Gems International School & College।
                         </p>
 
                         <!-- আধুনিক এটাচমেন্ট বক্স -->

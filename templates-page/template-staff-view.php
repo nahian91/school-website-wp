@@ -338,11 +338,11 @@
                                 <ul class="exp-list">
                                     <li>
                                         <p class="exp-title">প্রধান হিসাবরক্ষক</p>
-                                        <span class="exp-meta">আদর্শ উচ্চ বিদ্যালয় ও কলেজ (২০১৮ - বর্তমান)</span>
+                                        <span class="exp-meta">Green Gems International School & College (২০১৮ - বর্তমান)</span>
                                     </li>
                                     <li>
                                         <p class="exp-title">সহকারী হিসাবরক্ষক</p>
-                                        <span class="exp-meta">আদর্শ উচ্চ বিদ্যালয় ও কলেজ (২০১২ - ২০১৮)</span>
+                                        <span class="exp-meta">Green Gems International School & College (২০১২ - ২০১৮)</span>
                                     </li>
                                     <li>
                                         <p class="exp-title">অফিস সহকারী</p>

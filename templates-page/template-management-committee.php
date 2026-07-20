@@ -119,7 +119,7 @@ get_header(); ?>
 
             </main>
 
-            <?php include ('sidebar.php');?>
+            <?php get_sidebar();?>
 
         </div>
     </section>
