@@ -246,3 +246,122 @@ class DNT_Navbar_Walker extends Walker_Nav_Menu {
         $output .= "\n$indent<ul class=\"dnt-dropdown-menu\">\n";
     }
 }
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/**
+ * Handle Student & Guardian Custom Database Portal Authentication
+ */
+add_action( 'admin_post_nopriv_dnt_login_handler', 'dnt_process_portal_student_login' );
+add_action( 'admin_post_dnt_login_handler', 'dnt_process_portal_student_login' );
+
+function dnt_process_portal_student_login() {
+    global $wpdb;
+
+    // 1. Verify Nonce Security Token
+    if ( ! isset( $_POST['dnt_login_nonce'] ) || ! wp_verify_nonce( $_POST['dnt_login_nonce'], 'dnt_login_nonce_action' ) ) {
+        wp_safe_redirect( add_query_arg( 'login', 'nonce', home_url( '/custom-login' ) ) );
+        exit;
+    }
+
+    // 2. Validate Session Math Captcha
+    if ( ! session_id() ) {
+        session_start();
+    }
+    $user_captcha = isset( $_POST['captcha'] ) ? intval( $_POST['captcha'] ) : 0;
+    $session_ans  = isset( $_SESSION['dnt_login_captcha_ans'] ) ? intval( $_SESSION['dnt_login_captcha_ans'] ) : -1;
+
+    if ( $user_captcha !== $session_ans ) {
+        wp_safe_redirect( add_query_arg( 'login', 'captcha', home_url( '/custom-login' ) ) );
+        exit;
+    }
+
+    // 3. Extract Inputs
+    $login_id  = isset( $_POST['log'] ) ? sanitize_text_field( trim( $_POST['log'] ) ) : '';
+    $dob_input = isset( $_POST['pwd'] ) ? sanitize_text_field( trim( $_POST['pwd'] ) ) : '';
+    $user_role = isset( $_POST['user_role'] ) ? sanitize_text_field( $_POST['user_role'] ) : 'student';
+
+    if ( empty( $login_id ) || empty( $dob_input ) ) {
+        wp_safe_redirect( add_query_arg( 'login', 'empty', home_url( '/custom-login' ) ) );
+        exit;
+    }
+
+    // 4. Query `wp_sms_students` Table
+    $table_students = $wpdb->prefix . 'sms_students';
+    $student_match  = null;
+
+    if ( $user_role === 'student' ) {
+        // Query by Student ID and DOB
+        $student_match = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT * FROM {$table_students} WHERE student_id = %s AND (dob = %s OR joining_date = %s) AND status = 'Active'",
+                $login_id,
+                $dob_input,
+                $dob_input
+            )
+        );
+    } else {
+        // Query Guardian by Phone and Student DOB
+        $student_match = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT * FROM {$table_students} WHERE (phone = %s OR father_phone = %s OR mother_phone = %s) AND dob = %s AND status = 'Active'",
+                $login_id,
+                $login_id,
+                $login_id,
+                $dob_input
+            )
+        );
+    }
+
+    // 5. Authenticate or Sync User Account
+    if ( $student_match ) {
+        $user_id = ! empty( $student_match->user_id ) ? absint( $student_match->user_id ) : 0;
+
+        // Fallback: Check if WP User exists by student username
+        if ( ! $user_id ) {
+            $wp_user = get_user_by( 'login', $student_match->student_id );
+            if ( $wp_user ) {
+                $user_id = $wp_user->ID;
+            }
+        }
+
+        // Auto-create WP user account if it doesn't exist yet
+        if ( ! $user_id ) {
+            $username  = sanitize_user( $student_match->student_id );
+            $email     = ! empty( $student_match->email ) ? sanitize_email( $student_match->email ) : $username . '@ggisc.edu.bd';
+            $random_pw = wp_generate_password( 16, true );
+
+            $user_id = wp_create_user( $username, $random_pw, $email );
+
+            if ( ! is_wp_error( $user_id ) ) {
+                $user_obj = new WP_User( $user_id );
+                $user_obj->set_role( $user_role === 'student' ? 'student' : 'guardian' );
+
+                update_user_meta( $user_id, 'student_db_id', $student_match->id );
+                update_user_meta( $user_id, 'student_id', $student_match->student_id );
+                
+                $wpdb->update( $table_students, array( 'user_id' => $user_id ), array( 'id' => $student_match->id ) );
+            }
+        }
+
+        // Log the user into WordPress session
+        if ( $user_id && ! is_wp_error( $user_id ) ) {
+            wp_clear_auth_cookie();
+            wp_set_current_user( $user_id );
+            wp_set_auth_cookie( $user_id, true );
+
+            unset( $_SESSION['dnt_login_captcha_ans'] );
+
+            if ( $user_role === 'student' ) {
+                wp_safe_redirect( home_url( '/student-dashboard' ) );
+            } else {
+                wp_safe_redirect( home_url( '/guardian-dashboard' ) );
+            }
+            exit;
+        }
+    }
+
+    // Direct error back to form on mismatch
+    wp_safe_redirect( add_query_arg( 'login', 'failed', home_url( '/custom-login' ) ) );
+    exit;
+}
