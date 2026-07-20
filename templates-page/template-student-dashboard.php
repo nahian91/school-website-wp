@@ -1,34 +1,48 @@
 <?php
 /* Template Name: Student Dashboard */
-if (!is_user_logged_in()) { wp_redirect(home_url('/login')); exit; }
+
+if ( ! is_user_logged_in() ) { 
+    wp_safe_redirect( home_url( '/login' ) ); 
+    exit; 
+}
+
 get_header();
 
-$current_user = wp_get_current_user();
+global $wpdb;
+$current_user   = wp_get_current_user();
+$wp_user_id     = $current_user->ID;
+
+// Fetch Student Profile from plugin DB
+$table_students = $wpdb->prefix . 'sms_students';
+$table_results  = $wpdb->prefix . 'sms_results';
+$table_exams    = $wpdb->prefix . 'sms_exams';
+$table_notices  = $wpdb->prefix . 'sms_notices';
+
+$student = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table_students} WHERE wp_user_id = %d AND status = 'Active'", $wp_user_id ) );
+$student_id = $student ? absint( $student->id ) : 0;
 ?>
 
-<!-- ৪. পেজ ব্যানার ও ব্রেডক্রাম্ব -->
-    <section class="dnt-page-banner" style="background-image: url('<?php echo get_template_directory_uri();?>/assets/img/breadcrumb.jpg');">
-        <div class="dnt-container">
-            <h1 class="dnt-page-title">শিক্ষার্থী ড্যাশবোর্ড </h1>
-            <div class="dnt-breadcrumb">
-                <a href="<?php echo site_url();?>">
-                    <svg class="dnt-icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                    </svg> প্রথম পাতা
-                </a> 
-                <span>
-                    <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="opacity:0.7;">
-                        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
-                    </svg>
-                </span> 
-                <span style="color:var(--dnt-color-gray-300);">শিক্ষার্থী ড্যাশবোর্ড</span>
-            </div>
+<!-- Page Banner & Breadcrumb -->
+<section class="dnt-page-banner" style="background-image: url('<?php echo esc_url( get_template_directory_uri() . '/assets/img/breadcrumb.jpg' ); ?>');">
+    <div class="dnt-container">
+        <h1 class="dnt-page-title"><?php esc_html_e( 'শিক্ষার্থী ড্যাশবোর্ড', 'ggisc' ); ?></h1>
+        <div class="dnt-breadcrumb">
+            <a href="<?php echo esc_url( home_url( '/' ) ); ?>">
+                <svg class="dnt-icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg> <?php esc_html_e( 'প্রথম পাতা', 'ggisc' ); ?>
+            </a> 
+            <span>
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="opacity:0.7;">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                </svg>
+            </span> 
+            <span style="color:var(--dnt-color-gray-300);"><?php esc_html_e( 'শিক্ষার্থী ড্যাশবোর্ড', 'ggisc' ); ?></span>
         </div>
-    </section>
+    </div>
+</section>
 
-<!-- ==========================================================================
-     ULTRA-PROFESSIONAL WC STYLE STUDENT DASHBOARD CSS
-     ========================================================================== -->
+<!-- Dashboard CSS Engine -->
 <style>
     :root {
         --dnt-wc-brand: #006a4e;
@@ -51,11 +65,11 @@ $current_user = wp_get_current_user();
 
     .dnt-wc-account-layout {
         display: flex;
-        gap: 50px;
+        gap: 40px;
         align-items: flex-start;
     }
 
-    /* Left WooCommerce Sidebar Navigation */
+    /* Navigation Sidebar */
     .dnt-wc-account-nav {
         width: 25%;
         flex-shrink: 0;
@@ -116,7 +130,7 @@ $current_user = wp_get_current_user();
         flex-shrink: 0;
     }
 
-    /* Right Side Content Engine */
+    /* Content Viewport */
     .dnt-wc-account-content {
         width: 75%;
         background: var(--dnt-wc-card-bg);
@@ -127,10 +141,7 @@ $current_user = wp_get_current_user();
         min-height: 450px;
     }
 
-    .dnt-wc-pane {
-        display: none;
-    }
-    
+    .dnt-wc-pane { display: none; }
     .dnt-wc-pane.is-active {
         display: block;
         animation: wcSlideUp 0.35s cubic-bezier(0.4, 0, 0.2, 1);
@@ -141,7 +152,6 @@ $current_user = wp_get_current_user();
         to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Overview Header Card */
     .dnt-wc-profile-overview {
         background: radial-gradient(circle at top right, var(--dnt-wc-brand-light) 0%, transparent 70%);
         border: 1px solid var(--dnt-wc-border-clr);
@@ -154,7 +164,7 @@ $current_user = wp_get_current_user();
     }
 
     .dnt-wc-user-meta h2 {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         color: var(--dnt-wc-text-main);
         margin: 0 0 6px 0;
         font-weight: 700;
@@ -165,7 +175,6 @@ $current_user = wp_get_current_user();
         font-size: 0.95rem;
     }
 
-    /* Notification/Alert Component */
     .dnt-wc-notice-banner {
         background-color: #fff;
         border: 1px solid var(--dnt-wc-border-clr);
@@ -178,7 +187,6 @@ $current_user = wp_get_current_user();
         margin-bottom: 35px;
     }
 
-    /* Sub Grid Cards */
     .dnt-wc-metric-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -231,7 +239,6 @@ $current_user = wp_get_current_user();
         gap: 4px;
     }
 
-    /* Tables Styles */
     .dnt-wc-table-wrapper {
         overflow-x: auto;
         margin-top: 15px;
@@ -255,7 +262,6 @@ $current_user = wp_get_current_user();
         color: var(--dnt-wc-text-main);
     }
 
-    /* Responsive Architecture */
     @media (max-width: 992px) {
         .dnt-wc-account-layout { flex-direction: column; gap: 30px; }
         .dnt-wc-account-nav, .dnt-wc-account-content { width: 100%; }
@@ -271,106 +277,118 @@ $current_user = wp_get_current_user();
     <div class="dnt-container">
         <div class="dnt-wc-account-layout">
             
-            <!-- LEFT NAVIGATION SIDEBAR -->
+            <!-- Left Navigation Sidebar -->
             <nav class="dnt-wc-account-nav">
                 <ul class="dnt-wc-tabs-trigger">
                     <li class="dnt-wc-nav-item is-active" data-target="wc-dashboard">
                         <a>
                             <svg class="dnt-wc-nav-svg" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                            ড্যাশবোর্ড
+                            <?php esc_html_e( 'ড্যাশবোর্ড', 'ggisc' ); ?>
                         </a>
                     </li>
                     <li class="dnt-wc-nav-item" data-target="wc-routine">
                         <a>
                             <svg class="dnt-wc-nav-svg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                            ক্লাস রুটিন
+                            <?php esc_html_e( 'ক্লাস রুটিন', 'ggisc' ); ?>
                         </a>
                     </li>
                     <li class="dnt-wc-nav-item" data-target="wc-results">
                         <a>
-                            <svg class="dnt-wc-nav-svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                            পরীক্ষার ফলাফল
+                            <svg class="dnt-wc-nav-svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                            <?php esc_html_e( 'পরীক্ষার ফলাফল', 'ggisc' ); ?>
                         </a>
                     </li>
                     <li class="dnt-wc-nav-item" data-target="wc-notices">
                         <a>
                             <svg class="dnt-wc-nav-svg" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-                            নোটিশ বোর্ড
+                            <?php esc_html_e( 'নোটিশ বোর্ড', 'ggisc' ); ?>
                         </a>
                     </li>
                     <li class="dnt-logout-item">
-                        <a href="<?php echo wp_logout_url(home_url()); ?>">
+                        <a href="<?php echo esc_url( wp_logout_url( home_url() ) ); ?>">
                             <svg class="dnt-wc-nav-svg" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                            লগআউট
+                            <?php esc_html_e( 'লগআউট', 'ggisc' ); ?>
                         </a>
                     </li>
                 </ul>
             </nav>
 
-            <!-- RIGHT CONTENT CARD -->
+            <!-- Right Content Viewport -->
             <main class="dnt-wc-account-content">
                 
                 <!-- PANE 1: DASHBOARD OVERVIEW -->
                 <div id="wc-dashboard" class="dnt-wc-pane is-active">
                     <div class="dnt-wc-profile-overview">
                         <div class="dnt-wc-user-meta">
-                            <h2>আসসালামু আলাইকুম, <?php echo esc_html($current_user->display_name); ?></h2>
-                            <p>স্টুডেন্ট আইডি পোর্টাল: <span style="font-weight: 700; color: var(--dnt-wc-text-main);"><?php echo esc_html($current_user->user_login); ?></span></p>
+                            <h2><?php printf( esc_html__( 'আসসালামু আলাইকুম, %s', 'ggisc' ), esc_html( $student ? $student->full_name : $current_user->display_name ) ); ?></h2>
+                            <p>
+                                <?php esc_html_e( 'স্টুডেন্ট আইডি:', 'ggisc' ); ?> 
+                                <span style="font-weight: 700; color: var(--dnt-wc-text-main);"><?php echo esc_html( $student ? $student->student_id : $current_user->user_login ); ?></span>
+                                <?php if ( $student ) : ?>
+                                    | <?php esc_html_e( 'শ্রেণি:', 'ggisc' ); ?> <strong><?php echo esc_html( $student->class_name ); ?></strong> (<?php echo esc_html( $student->section_name ); ?>)
+                                    | <?php esc_html_e( 'রোল:', 'ggisc' ); ?> <strong><?php echo esc_html( $student->roll_no ); ?></strong>
+                                <?php endif; ?>
+                            </p>
                         </div>
                     </div>
 
                     <p style="color: var(--dnt-wc-text-sub); margin-bottom: 25px;">
-                        আপনার স্টুডেন্ট ড্যাশবোর্ড প্যানেল থেকে আপনি খুব সহজেই দৈনিক ক্লাস মডিউল ও রুটিন শিডিউল দেখতে পারেন, প্রাতিষ্ঠানিক পরীক্ষার ফলাফল ও গ্রেডশিট ডাউনলোড করতে পারেন এবং নোটিশ বোর্ডের গুরুত্বপূর্ণ বিষয়গুলো তদারকি করতে পারেন।
+                        <?php esc_html_e( 'আপনার স্টুডেন্ট ড্যাশবোর্ড প্যানেল থেকে আপনি খুব সহজেই দৈনিক ক্লাস মডিউল ও রুটিন শিডিউল দেখতে পারেন, প্রাতিষ্ঠানিক পরীক্ষার ফলাফল ও গ্রেডশিট ডাউনলোড করতে পারেন এবং নোটিশ বোর্ডের গুরুত্বপূর্ণ বিষয়গুলো তদারকি করতে পারেন।', 'ggisc' ); ?>
                     </p>
 
-                    <!-- WooCommerce Custom Notice Box Component -->
-                    <div class="dnt-wc-notice-banner">
-                        <span style="display: flex; align-items: center; gap: 12px; font-size: 0.95rem; color: var(--dnt-wc-text-main); font-weight: 600;">
-                            <svg style="color: var(--dnt-wc-brand); width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:2;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                            সর্বশেষ নোটিশ: আগামীকাল পবিত্র আশুরা উপলক্ষে বিদ্যালয়ের সমস্ত কার্যক্রম বন্ধ থাকবে।
-                        </span>
-                        <a class="dnt-wc-notice-shortcut" style="color: var(--dnt-wc-brand); font-weight: 700; text-decoration: none; font-size: 0.9rem; cursor: pointer; white-space: nowrap;">বিস্তারিত &rarr;</a>
-                    </div>
+                    <!-- Dynamic Recent Notice Flash Banner -->
+                    <?php
+                    $latest_notice = $wpdb->get_row( "SELECT * FROM {$table_notices} WHERE status = 'Published' ORDER BY id DESC LIMIT 1" );
+                    if ( $latest_notice ) :
+                    ?>
+                        <div class="dnt-wc-notice-banner">
+                            <span style="display: flex; align-items: center; gap: 12px; font-size: 0.95rem; color: var(--dnt-wc-text-main); font-weight: 600;">
+                                <svg style="color: var(--dnt-wc-brand); width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:2;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                <strong><?php esc_html_e( 'সর্বশেষ নোটিশ:', 'ggisc' ); ?></strong> <?php echo esc_html( $latest_notice->title ); ?>
+                            </span>
+                            <a class="dnt-wc-notice-shortcut" style="color: var(--dnt-wc-brand); font-weight: 700; text-decoration: none; font-size: 0.9rem; cursor: pointer; white-space: nowrap;"><?php esc_html_e( 'বিস্তারিত', 'ggisc' ); ?> &rarr;</a>
+                        </div>
+                    <?php endif; ?>
 
-                    <!-- Metric Card Navigation Links -->
+                    <!-- Metric Cards -->
                     <div class="dnt-wc-metric-grid">
                         <div class="dnt-wc-metric-card dnt-wc-quick-link" data-destination="wc-routine">
                             <div>
                                 <div class="dnt-wc-card-head">
                                     <svg style="color: var(--dnt-wc-brand); width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:2;" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                                    <h3>ক্লাস রুটিন</h3>
+                                    <h3><?php esc_html_e( 'ক্লাস রুটিন', 'ggisc' ); ?></h3>
                                 </div>
-                                <p>আজকের দিনের ক্লাস সূচী ও সময় সারণী সংক্রান্ত তথ্যাদি দ্রুত জেনে নিন।</p>
+                                <p><?php esc_html_e( 'আজকের দিনের ক্লাস সূচী ও সময় সারণী সংক্রান্ত তথ্যাদি দ্রুত জেনে নিন।', 'ggisc' ); ?></p>
                             </div>
-                            <span class="dnt-wc-card-link-btn">রুটিন শিট দেখুন &rarr;</span>
+                            <span class="dnt-wc-card-link-btn"><?php esc_html_e( 'রুটিন শিট দেখুন', 'ggisc' ); ?> &rarr;</span>
                         </div>
 
                         <div class="dnt-wc-metric-card dnt-wc-quick-link" data-destination="wc-results">
                             <div>
                                 <div class="dnt-wc-card-head">
                                     <svg style="color: var(--dnt-wc-brand); width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:2;" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                                    <h3>পরীক্ষার ফলাফল</h3>
+                                    <h3><?php esc_html_e( 'পরীক্ষার ফলাফল', 'ggisc' ); ?></h3>
                                 </div>
-                                <p>সাম্প্রতিক টার্ম এবং সেমিস্টার ফাইনাল পরীক্ষার প্রোগ্রেস ও মার্কশিট দেখুন।</p>
+                                <p><?php esc_html_e( 'সাম্প্রতিক টার্ম এবং সেমিস্টার ফাইনাল পরীক্ষার প্রোগ্রেস ও মার্কশিট দেখুন।', 'ggisc' ); ?></p>
                             </div>
-                            <span class="dnt-wc-card-link-btn">গ্রেড রিপোর্ট &rarr;</span>
+                            <span class="dnt-wc-card-link-btn"><?php esc_html_e( 'গ্রেড রিপোর্ট', 'ggisc' ); ?> &rarr;</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- PANE 2: ROUTINE -->
                 <div id="wc-routine" class="dnt-wc-pane">
-                    <h3 style="margin: 0 0 8px 0; font-size: 1.3rem; color: var(--dnt-wc-text-main); font-weight: 700;">শ্রেণি পাঠদান রুটিন</h3>
-                    <p style="color: var(--dnt-wc-text-sub); margin-bottom: 25px; font-size: 0.95rem;">নিয়মিত আপডেট হওয়া দৈনিক ক্লাসের অফিশিয়াল সময়সূচী:</p>
+                    <h3 style="margin: 0 0 8px 0; font-size: 1.3rem; color: var(--dnt-wc-text-main); font-weight: 700;"><?php esc_html_e( 'শ্রেণি পাঠদান রুটিন', 'ggisc' ); ?></h3>
+                    <p style="color: var(--dnt-wc-text-sub); margin-bottom: 25px; font-size: 0.95rem;"><?php esc_html_e( 'নিয়মিত আপডেট হওয়া দৈনিক ক্লাসের অফিশিয়াল সময়সূচী:', 'ggisc' ); ?></p>
                     
                     <div class="dnt-wc-table-wrapper">
                         <table class="dnt-wc-data-table">
                             <thead>
                                 <tr>
-                                    <th>সময়</th>
-                                    <th>বিষয়</th>
-                                    <th>শিক্ষক</th>
-                                    <th>কক্ষ নম্বর</th>
+                                    <th><?php esc_html_e( 'সময়', 'ggisc' ); ?></th>
+                                    <th><?php esc_html_e( 'বিষয়', 'ggisc' ); ?></th>
+                                    <th><?php esc_html_e( 'শিক্ষক', 'ggisc' ); ?></th>
+                                    <th><?php esc_html_e( 'কক্ষ নম্বর', 'ggisc' ); ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -397,43 +415,80 @@ $current_user = wp_get_current_user();
                     </div>
                 </div>
 
-                <!-- PANE 3: RESULTS -->
+                <!-- PANE 3: RESULTS (Dynamic Queries) -->
                 <div id="wc-results" class="dnt-wc-pane">
-                    <h3 style="margin: 0 0 8px 0; font-size: 1.3rem; color: var(--dnt-wc-text-main); font-weight: 700;">পরীক্ষার ফলাফল শিট</h3>
-                    <p style="color: var(--dnt-wc-text-sub); margin-bottom: 25px; font-size: 0.95rem;">অ্যাকাডেমিক সেমিস্টার সমূহের চূড়ান্ত প্রোগ্রেসিভ রিপোর্ট:</p>
+                    <h3 style="margin: 0 0 8px 0; font-size: 1.3rem; color: var(--dnt-wc-text-main); font-weight: 700;"><?php esc_html_e( 'পরীক্ষার ফলাফল শিট', 'ggisc' ); ?></h3>
+                    <p style="color: var(--dnt-wc-text-sub); margin-bottom: 25px; font-size: 0.95rem;"><?php esc_html_e( 'অ্যাকাডেমিক সেমিস্টার সমূহের নম্বর ও প্রোগ্রেসিভ রিপোর্ট:', 'ggisc' ); ?></p>
                     
                     <div class="dnt-wc-table-wrapper">
                         <table class="dnt-wc-data-table">
                             <thead>
                                 <tr>
-                                    <th>পরীক্ষার নাম</th>
-                                    <th>অর্জিত জিপিএ (GPA)</th>
-                                    <th>ফলাফল স্ট্যাটাস</th>
-                                    <th>অ্যাকশন</th>
+                                    <th><?php esc_html_e( 'বিষয়', 'ggisc' ); ?></th>
+                                    <th><?php esc_html_e( 'মোট নম্বর', 'ggisc' ); ?></th>
+                                    <th><?php esc_html_e( 'প্রাপ্ত নম্বর', 'ggisc' ); ?></th>
+                                    <th><?php esc_html_e( 'গ্রেড', 'ggisc' ); ?></th>
+                                    <th><?php esc_html_e( 'GPA', 'ggisc' ); ?></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>প্রথম সাময়িক পরীক্ষা ২০২৬</td>
-                                    <td><strong>৫.০০</strong></td>
-                                    <td><span style="color:#16a34a; font-weight:700;">উত্তীর্ণ</span></td>
-                                    <td><a href="#" style="color: var(--dnt-wc-brand); font-weight: 700; text-decoration: none;">ডাউনলোড (PDF)</a></td>
-                                </tr>
+                                <?php
+                                if ( $student_id > 0 ) {
+                                    $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$table_results} WHERE student_id = %d ORDER BY id DESC", $student_id ) );
+                                    if ( ! empty( $results ) ) {
+                                        foreach ( $results as $res ) {
+                                            ?>
+                                            <tr>
+                                                <td><strong><?php echo esc_html( $res->subject_name ); ?></strong></td>
+                                                <td><?php echo esc_html( $res->total_marks ); ?></td>
+                                                <td><span style="color:#16a34a; font-weight:700;"><?php echo esc_html( $res->obtained_marks ); ?></span></td>
+                                                <td><span class="badge" style="background:#006a4e; color:#fff; padding:3px 8px; border-radius:4px;"><?php echo esc_html( $res->grade ); ?></span></td>
+                                                <td><strong><?php echo esc_html( $res->gpa ); ?></strong></td>
+                                            </tr>
+                                            <?php
+                                        }
+                                    } else {
+                                        echo '<tr><td colspan="5" class="text-center text-muted py-4">' . esc_html__( 'এখনো কোনো ফলাফল প্রকাশিত হয়নি।', 'ggisc' ) . '</td></tr>';
+                                    }
+                                } else {
+                                    echo '<tr><td colspan="5" class="text-center text-muted py-4">' . esc_html__( 'আপনার আইডির সাথে কোনো সক্রিয় স্টুডেন্ট প্রোফাইল যুক্ত নেই।', 'ggisc' ) . '</td></tr>';
+                                }
+                                ?>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- PANE 4: NOTICES -->
+                <!-- PANE 4: NOTICES (Dynamic Queries) -->
                 <div id="wc-notices" class="dnt-wc-pane">
-                    <h3 style="margin: 0 0 20px 0; font-size: 1.3rem; color: var(--dnt-wc-text-main); font-weight: 700;">প্রাতিষ্ঠানিক নোটিশ বোর্ড</h3>
+                    <h3 style="margin: 0 0 20px 0; font-size: 1.3rem; color: var(--dnt-wc-text-main); font-weight: 700;"><?php esc_html_e( 'প্রাতিষ্ঠানিক নোটিশ বোর্ড', 'ggisc' ); ?></h3>
                     
-                    <div style="border: 1px solid var(--dnt-wc-border-clr); padding: 20px; border-radius: var(--dnt-wc-radius); background: #fff;">
-                        <span style="color: var(--dnt-wc-danger); font-size: 0.85rem; font-weight: 700; background: var(--dnt-wc-danger-light); padding: 4px 8px; border-radius: 4px;">জরুরি নোটিশ</span>
-                        <h4 style="margin: 12px 0 6px 0; font-size: 1.15rem; color: var(--dnt-wc-text-main); font-weight: 700;">পবিত্র আশুরা উপলক্ষে সাধারণ ছুটি ঘোষণা</h4>
-                        <small style="color: var(--dnt-wc-text-sub); display: block; margin-bottom: 12px;">প্রকাশের তারিখ: ২০ জুলাই, ২০২৬</small>
-                        <p style="margin: 0; color: #475569; font-size: 0.95rem; line-height: 1.6;">আগামীকাল পবিত্র আশুরা উপলক্ষে বিদ্যালয়ের সকল প্রশাসনিক ও একাডেমিক ক্লাসের কার্যক্রম সম্পূর্ণ স্থগিত থাকবে। পরবর্তী কার্যদিবস থেকে সাধারণ সূচী অনুযায়ী যথানিয়মে ক্লাস পরিচালিত হবে।</p>
-                    </div>
+                    <?php
+                    $notices = $wpdb->get_results( "SELECT * FROM {$table_notices} WHERE status = 'Published' ORDER BY id DESC LIMIT 5" );
+                    if ( ! empty( $notices ) ) :
+                        foreach ( $notices as $notice ) :
+                            $date_raw = ( ! empty( $notice->event_date ) && $notice->event_date !== '1970-01-01' ) ? $notice->event_date : $notice->created_at;
+                            $pub_date = date_i18n( 'd F, Y', strtotime( $date_raw ) );
+                    ?>
+                        <div style="border: 1px solid var(--dnt-wc-border-clr); padding: 20px; border-radius: var(--dnt-wc-radius); background: #fff; margin-bottom: 15px;">
+                            <span style="color: var(--dnt-wc-brand); font-size: 0.85rem; font-weight: 700; background: var(--dnt-wc-brand-light); padding: 4px 8px; border-radius: 4px;">
+                                <?php echo esc_html( $notice->notice_type ?: 'নোটিশ' ); ?>
+                            </span>
+                            <h4 style="margin: 12px 0 6px 0; font-size: 1.15rem; color: var(--dnt-wc-text-main); font-weight: 700;"><?php echo esc_html( $notice->title ); ?></h4>
+                            <small style="color: var(--dnt-wc-text-sub); display: block; margin-bottom: 12px;"><?php esc_html_e( 'প্রকাশের তারিখ:', 'ggisc' ); ?> <?php echo esc_html( $pub_date ); ?></small>
+                            <p style="margin: 0; color: #475569; font-size: 0.95rem; line-height: 1.6;"><?php echo wp_kses_post( wpautop( $notice->description ) ); ?></p>
+                            <?php if ( ! empty( $notice->attachment_url ) ) : ?>
+                                <a href="<?php echo esc_url( $notice->attachment_url ); ?>" target="_blank" style="display:inline-block; margin-top:10px; color:var(--dnt-wc-brand); font-weight:700; text-decoration:none;">
+                                    <?php esc_html_e( 'সংযুক্ত ফাইল ডাউনলোড করুন &rarr;', 'ggisc' ); ?>
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                    <?php 
+                        endforeach;
+                    else : 
+                    ?>
+                        <p class="text-muted"><?php esc_html_e( 'কোনো নোটিশ পাওয়া যায়নি।', 'ggisc' ); ?></p>
+                    <?php endif; ?>
                 </div>
 
             </main>
@@ -441,23 +496,18 @@ $current_user = wp_get_current_user();
     </div>
 </div>
 
-<!-- ==========================================================================
-     CORE TAB ENGINE JAVASCRIPT
-     ========================================================================== -->
-<script>
+<!-- Tab Navigation Script Engine -->
+<script type="text/javascript">
 document.addEventListener('DOMContentLoaded', function() {
     const navItems = document.querySelectorAll('.dnt-wc-nav-item');
     const contentPanes = document.querySelectorAll('.dnt-wc-pane');
     const quickLinks = document.querySelectorAll('.dnt-wc-quick-link');
     const noticeShortcut = document.querySelector('.dnt-wc-notice-shortcut');
 
-    // কোর ট্যাব ট্রান্সলেশন প্রসেসর
     function executeTabSwitch(targetId) {
-        // ১. অ্যাক্টিভ স্টেট ক্লিন-আপ
         navItems.forEach(item => item.classList.remove('is-active'));
         contentPanes.forEach(pane => pane.classList.remove('is-active'));
 
-        // ২. নির্দিষ্ট ট্যাবে ভিজ্যুয়াল স্টেট প্রদান
         const intendedNav = document.querySelector(`.dnt-wc-nav-item[data-target="${targetId}"]`);
         const intendedPane = document.getElementById(targetId);
 
@@ -468,7 +518,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // সাইডবার এলিমেন্ট ক্লিক ট্রিগার
     navItems.forEach(nav => {
         nav.addEventListener('click', function() {
             const target = this.getAttribute('data-target');
@@ -476,7 +525,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // ড্যাশবোর্ড ইন্টেরিয়র কার্ড ট্রিগার
     quickLinks.forEach(card => {
         card.addEventListener('click', function() {
             const destination = this.getAttribute('data-destination');
@@ -484,7 +532,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // নোটিশ ব্যানার শর্টকাট ট্রিগার
     if (noticeShortcut) {
         noticeShortcut.addEventListener('click', function() {
             executeTabSwitch('wc-notices');
@@ -492,3 +539,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
+<?php get_footer(); ?>

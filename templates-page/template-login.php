@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
-// Redirect logged-in users directly to their designated dashboard
+// 1. Redirect logged-in users directly to their designated dashboard
 if ( is_user_logged_in() ) {
     $current_user = wp_get_current_user();
     $user_roles   = (array) $current_user->roles;
@@ -19,8 +19,8 @@ if ( is_user_logged_in() ) {
     }
 }
 
-// Simple session-backed Math Captcha Setup
-if ( ! session_id() ) {
+// 2. Safe Session Initialization for Math Captcha
+if ( ! session_id() && ! headers_sent() ) {
     session_start();
 }
 $n1 = wp_rand( 1, 9 );
@@ -42,6 +42,7 @@ get_header();
         </div>
     </section>
 
+    <!-- MAIN LOGIN SECTION -->
     <section class="dnt-history-section" style="padding: 60px 0; background: #fdfdfd;">
         <div class="dnt-container dnt-history-grid">
             
@@ -114,10 +115,10 @@ get_header();
 
                         <!-- Captcha Box -->
                         <div style="margin-bottom:25px; padding:15px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:8px;">
-                            <label style="font-size: 12px; text-transform: uppercase; font-weight: 700; color: #64748b;">
+                            <label style="font-size: 12px; text-transform: uppercase; font-weight: 700; color: #64748b; display: block; margin-bottom: 5px;">
                                 <?php echo esc_html( sprintf( __( 'নিরাপত্তা যাচাই (%d + %d = ?)', 'ggisc' ), $n1, $n2 ) ); ?>
                             </label>
-                            <input type="number" name="captcha" style="width:100%; padding:12px; margin-top:5px; border:1px solid #cbd5e1; border-radius:6px; box-sizing:border-box;" required placeholder="<?php esc_attr_e( 'ফলাফল লিখুন', 'ggisc' ); ?>">
+                            <input type="number" name="captcha" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:6px; box-sizing:border-box;" required placeholder="<?php esc_attr_e( 'ফলাফল লিখুন', 'ggisc' ); ?>">
                         </div>
 
                         <button type="submit" style="width:100%; padding:15px; background:#f42a41; color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:700; transition:0.3s;" onmouseover="this.style.background='#d91b32';" onmouseout="this.style.background='#f42a41';">
@@ -131,6 +132,7 @@ get_header();
         </div>
     </section>
 
+    <!-- ROLE SWITCHER & INTERFACE INTERACTION SCRIPT -->
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', function() {
             const tabBtns      = document.querySelectorAll('.tab-btn');
@@ -152,7 +154,7 @@ get_header();
                     selectedRole.value = role;
 
                     if (role === 'student') {
-                        idLabel.textContent = '<?php echo esc_js( __( 'স্টুডент আইডি', 'ggisc' ) ); ?>';
+                        idLabel.textContent = '<?php echo esc_js( __( 'স্টুডেন্ট আইডি', 'ggisc' ) ); ?>';
                         idInput.placeholder = '<?php echo esc_js( __( 'আপনার আইডি', 'ggisc' ) ); ?>';
                     } else {
                         idLabel.textContent = '<?php echo esc_js( __( 'গার্ডিয়ান মোবাইল নম্বর', 'ggisc' ) ); ?>';

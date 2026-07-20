@@ -189,53 +189,87 @@ $total_teachers = $total_teachers_count ? intval( $total_teachers_count ) : 75;
     <!-- RIGHT SIDEBAR -->
     <aside class="dnt-sidebar-area">
         <!-- Notice Board Widget -->
-        <div class="dnt-widget">
-            <div class="dnt-widget-header">
-                <svg class="dnt-icon" viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-                নোটিশ বোর্ড
-            </div>
-            
-            <div class="dnt-widget-body" style="padding: 10px;">
-                <div class="dnt-notice-scroller">
-                    <?php
-                    // Dynamic WordPress Notice Posts Query
-                    $notice_query = new WP_Query( array(
-                        'post_type'      => array( 'post', 'notice' ),
-                        'posts_per_page' => 6,
-                        'orderby'        => 'date',
-                        'order'          => 'DESC',
-                    ) );
+<div class="dnt-widget">
+    <div class="dnt-widget-header">
+        <svg class="dnt-icon" viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        নোটিশ বোর্ড
+    </div>
+    
+    <div class="dnt-widget-body" style="padding: 10px;">
+        <div class="dnt-notice-scroller">
+            <?php
+            global $wpdb;
+            $table_notices = $wpdb->prefix . 'sms_notices';
 
-                    if ( $notice_query->have_posts() ) :
-                        while ( $notice_query->have_posts() ) : $notice_query->the_post();
-                    ?>
-                        <div class="dnt-notice-item">
-                            <div class="dnt-notice-date">
-                                <span class="dnt-day"><?php echo get_the_date('d'); ?></span>
-                                <span class="dnt-month"><?php echo get_the_date('M'); ?></span>
-                            </div>
-                            <div class="dnt-notice-content">
-                                <h4><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h4>
-                                <div class="dnt-notice-meta">
-                                    <svg class="dnt-icon-sm" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
-                                    প্রকাশিত: <?php echo human_time_diff( get_the_time('U'), current_time('timestamp') ) . ' আগে'; ?>
-                                </div>
-                            </div>
+            // Bengali Number & Month Helper Function
+            if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
+                function dnt_convert_to_bangla_nums( $str ) {
+                    $eng = array('0','1','2','3','4','5','6','7','8','9','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','January','February','March','April','June','July','August','September','October','November','December');
+                    $ban = array('০','১','২','৩','৪','৫','৬','৭','৮','৯','জানু','ফেব্রু','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টে','অক্টো','নভে','ডিসে','জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর');
+                    return str_replace($eng, $ban, $str);
+                }
+            }
+
+            // Fetch latest 5 published notices from custom SMS table
+            $notices = $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT * FROM {$table_notices} 
+                     WHERE status = %s AND (notice_type = %s OR notice_type = %s OR notice_type IS NULL)
+                     ORDER BY id DESC 
+                     LIMIT 5",
+                    'Published',
+                    'Notice',
+                    'General'
+                )
+            );
+
+            if ( ! empty( $notices ) ) :
+                foreach ( $notices as $notice ) :
+                    // Parse date or fallback to creation timestamp
+                    $date_raw   = ( ! empty( $notice->event_date ) && $notice->event_date !== '1970-01-01' ) 
+                        ? $notice->event_date 
+                        : $notice->created_at;
+                    
+                    $time_stamp = strtotime( $date_raw );
+                    $day_eng    = date_i18n( 'd', $time_stamp );
+                    $month_eng  = date_i18n( 'M', $time_stamp );
+
+                    $day_bn     = dnt_convert_to_bangla_nums( $day_eng );
+                    $month_bn   = dnt_convert_to_bangla_nums( $month_eng );
+
+                    // Public Frontend single notice link
+                    $view_url   = home_url( '/single-notice/?id=' . absint( $notice->id ) );
+            ?>
+                <div class="dnt-notice-item">
+                    <div class="dnt-notice-date">
+                        <span class="dnt-day"><?php echo esc_html( $day_bn ); ?></span>
+                        <span class="dnt-month"><?php echo esc_html( $month_bn ); ?></span>
+                    </div>
+                    <div class="dnt-notice-content">
+                        <h4>
+                            <a href="<?php echo esc_url( $view_url ); ?>">
+                                <?php echo esc_html( $notice->title ); ?>
+                            </a>
+                        </h4>
+                        <div class="dnt-notice-meta">
+                            <svg class="dnt-icon-sm" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                            প্রকাশিত: <?php echo esc_html( human_time_diff( $time_stamp, current_time( 'timestamp' ) ) . ' আগে' ); ?>
                         </div>
-                    <?php 
-                        endwhile; 
-                        wp_reset_postdata();
-                    else : 
-                    ?>
-                        <p class="text-center text-muted my-3">কোনো নোটিশ পাওয়া যায়নি।</p>
-                    <?php endif; ?>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="dnt-widget-footer">
-                <a href="<?php echo esc_url( site_url('/notice') ); ?>">সকল নোটিশ দেখুন <svg class="dnt-icon-sm" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></a>
-            </div>
+            <?php 
+                endforeach;
+            else : 
+            ?>
+                <p class="text-center text-muted my-3">কোনো নোটিশ পাওয়া যায়নি।</p>
+            <?php endif; ?>
         </div>
+    </div>
+            
+    <div class="dnt-widget-footer">
+        <a href="<?php echo esc_url( home_url( '/notice' ) ); ?>">সকল নোটিশ দেখুন <svg class="dnt-icon-sm" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></a>
+    </div>
+</div>
 
         <!-- Important Links Widget -->
         <div class="dnt-widget">
@@ -346,42 +380,80 @@ $total_teachers = $total_teachers_count ? intval( $total_teachers_count ) : 75;
         </div>
 
         <div class="dnt-event-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
-            <!-- Event 1 -->
-            <div class="dnt-event-item">
-                <div class="dnt-event-img" style="background-image: url('https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=400'); height: 160px; background-size: cover; background-position: center; border-radius: 8px 8px 0 0;"></div>
-                <div class="dnt-event-content" style="padding: 15px; background: #fff;">
-                    <h4 style="font-size: 1.1rem; margin-bottom: 8px;">বার্ষিক ক্রীড়া প্রতিযোগিতা</h4>
-                    <p style="color: #6b7280; font-size: 0.85rem;"><svg class="dnt-svg-icon dnt-icon-xs" viewBox="0 0 24 24"><path fill="currentColor" d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg> ২০ ফেব্রুয়ারি, ২০২৬</p>
-                </div>
-            </div>
+    <?php
+    global $wpdb;
+    $table_notices = $wpdb->prefix . 'sms_notices';
 
-            <!-- Event 2 -->
-            <div class="dnt-event-item">
-                <div class="dnt-event-img" style="background-image: url('https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=400'); height: 160px; background-size: cover; background-position: center; border-radius: 8px 8px 0 0;"></div>
-                <div class="dnt-event-content" style="padding: 15px; background: #fff;">
-                    <h4 style="font-size: 1.1rem; margin-bottom: 8px;">বিজ্ঞান ও প্রযুক্তি মেলা</h4>
-                    <p style="color: #6b7280; font-size: 0.85rem;"><svg class="dnt-svg-icon dnt-icon-xs" viewBox="0 0 24 24"><path fill="currentColor" d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg> ১৫ মার্চ, ২০২৬</p>
-                </div>
-            </div>
+    // 1. Fetch Latest 4 Published Academic Events
+    $events = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT * FROM {$table_notices} 
+             WHERE status = %s AND notice_type = %s 
+             ORDER BY id DESC 
+             LIMIT 4",
+            'Published',
+            'Event'
+        )
+    );
 
-            <!-- Event 3 -->
-            <div class="dnt-event-item">
-                <div class="dnt-event-img" style="background-image: url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=400'); height: 160px; background-size: cover; background-position: center; border-radius: 8px 8px 0 0;"></div>
-                <div class="dnt-event-content" style="padding: 15px; background: #fff;">
-                    <h4 style="font-size: 1.1rem; margin-bottom: 8px;">সাংস্কৃতিক ও নবীনবরণ</h4>
-                    <p style="color: #6b7280; font-size: 0.85rem;"><svg class="dnt-svg-icon dnt-icon-xs" viewBox="0 0 24 24"><path fill="currentColor" d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg> ১৪ এপ্রিল, ২০২৬</p>
-                </div>
-            </div>
+    // Default Fallback Image Stock
+    $default_images = array(
+        'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=400',
+        'https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=400',
+        'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=400',
+        'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=400'
+    );
 
-            <!-- Event 4 -->
-            <div class="dnt-event-item">
-                <div class="dnt-event-img" style="background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=400'); height: 160px; background-size: cover; background-position: center; border-radius: 8px 8px 0 0;"></div>
-                <div class="dnt-event-content" style="padding: 15px; background: #fff;">
-                    <h4 style="font-size: 1.1rem; margin-bottom: 8px;">এসএসসি বিদায় সংবর্ধনা</h4>
-                    <p style="color: #6b7280; font-size: 0.85rem;"><svg class="dnt-svg-icon dnt-icon-xs" viewBox="0 0 24 24"><path fill="currentColor" d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg> ৩০ নভেম্বর, ২০২৬</p>
-                </div>
+    // Bengali Number Conversion Helper
+    if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
+        function dnt_convert_to_bangla_nums( $str ) {
+            $eng = array('0','1','2','3','4','5','6','7','8','9','January','February','March','April','May','June','July','August','September','October','November','December');
+            $ban = array('০','১','২','৩','৪','৫','৬','৭','৮','৯','জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর');
+            return str_replace($eng, $ban, $str);
+        }
+    }
+
+    if ( ! empty( $events ) ) :
+        $img_index = 0;
+        foreach ( $events as $event ) :
+            // Determine Event Thumbnail (Attachment Image or Fallback)
+            $img_url = ! empty( $event->attachment_url ) ? $event->attachment_url : $default_images[$img_index % 4];
+            $img_index++;
+
+            // Format Event Date
+            $event_date_raw = ( ! empty( $event->event_date ) && $event->event_date !== '1970-01-01' ) 
+                ? $event->event_date 
+                : $event->created_at;
+
+            $formatted_date = date_i18n( 'j F, Y', strtotime( $event_date_raw ) );
+            $bangla_date    = dnt_convert_to_bangla_nums( $formatted_date );
+
+            // Public Frontend Event View Link
+            $event_url = home_url( '/single-event/?id=' . absint( $event->id ) );
+    ?>
+            <div class="dnt-event-item" style="border: 1px solid #eef2f6; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                <a href="<?php echo esc_url( $event_url ); ?>" style="text-decoration: none; color: inherit;">
+                    <div class="dnt-event-img" style="background-image: url('<?php echo esc_url( $img_url ); ?>'); height: 160px; background-size: cover; background-position: center; border-radius: 8px 8px 0 0;"></div>
+                    <div class="dnt-event-content" style="padding: 15px; background: #fff;">
+                        <h4 style="font-size: 1.1rem; margin-bottom: 8px; color: #1e293b; font-weight: 700; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;">
+                            <?php echo esc_html( $event->title ); ?>
+                        </h4>
+                        <p style="color: #6b7280; font-size: 0.85rem; margin: 0; display: flex; align-items: center; gap: 6px;">
+                            <svg class="dnt-svg-icon dnt-icon-xs" viewBox="0 0 24 24" style="width: 14px; height: 14px;"><path fill="currentColor" d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg> 
+                            <?php echo esc_html( $bangla_date ); ?>
+                        </p>
+                    </div>
+                </a>
             </div>
+    <?php 
+        endforeach;
+    else : 
+    ?>
+        <div style="grid-column: span 4; text-align: center; padding: 40px; background: #fff; border-radius: 8px; color: #64748b;">
+            <p>কোনো সাম্প্রতিক একাডেমি ইভেন্ট পাওয়া যায়নি।</p>
         </div>
+    <?php endif; ?>
+</div>
     </div>
 </section>
 

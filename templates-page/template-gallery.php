@@ -1,17 +1,16 @@
 <?php 
-
 /*
 Template Name: Gallery
 */
 
 get_header(); ?>
 
-    <!-- ৪. পেজ ব্যানার ও ব্রেডক্রাম্ব -->
-    <section class="dnt-page-banner" style="background-image: url('<?php echo get_template_directory_uri();?>/assets/img/breadcrumb.jpg');">
+    <!-- Page Banner -->
+    <section class="dnt-page-banner" style="background-image: url('<?php echo esc_url( get_template_directory_uri() . '/assets/img/breadcrumb.jpg' ); ?>');">
         <div class="dnt-container">
             <h1 class="dnt-page-title">গ্যালারি</h1>
             <div class="dnt-breadcrumb">
-                <a href="<?php echo site_url();?>">
+                <a href="<?php echo esc_url( site_url() ); ?>">
                     <svg class="dnt-icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                         <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
                     </svg> প্রথম পাতা
@@ -26,12 +25,9 @@ get_header(); ?>
         </div>
     </section>
 
-    <!-- ৫. মেইন কন্টেন্ট সেকশন -->
+    <!-- Main Content Section -->
     <section class="dnt-page-section">
-        <!-- ফুল উইডথ কন্টেইনার -->
         <div class="dnt-container">
-            
-            <!-- ফটো গ্যালারি গ্রিড (Full Width) -->
             <main class="dnt-page-content" style="width: 100%;">
                 <h2 class="dnt-section-heading">
                     <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" style="vertical-align: middle; margin-right: 8px;">
@@ -39,96 +35,309 @@ get_header(); ?>
                     </svg>
                     স্থিরচিত্র অ্যালবাম
                 </h2>
-                
-                <!-- ক্যাটাগরি ফিল্টার বাটনসমূহ -->
-                <div class="dnt-gallery-filter">
-                    <button class="dnt-filter-btn active">সব ছবি</button>
-                    <button class="dnt-filter-btn">ক্যাম্পাস ভিউ</button>
-                    <button class="dnt-filter-btn">ক্রীড়া প্রতিযোগিতা</button>
-                    <button class="dnt-filter-btn">সাংস্কৃতিক অনুষ্ঠান</button>
-                    <button class="dnt-filter-btn">পুরস্কার বিতরণী</button>
-                </div>
 
-                <!-- ছবির গ্রিড লেআউট (৯টি আইটেম) -->
-                <div class="dnt-gallery-grid">
-                    
-                    <!-- আইটেম ১ -->
-                    <div class="dnt-gallery-item">
-                        <div class="dnt-gallery-thumb">
-                            <img src="https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?q=80&w=800&auto=format&fit=crop" alt="Gallery Image 1">
-                            <div class="dnt-gallery-overlay"><a href="#"><svg viewBox="0 0 24 24" fill="#fff"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></a></div>
-                        </div>
-                        <div class="dnt-gallery-info"><div class="dnt-gallery-title">মূল একাডেমিক ভবন</div><div class="dnt-gallery-tag">ক্যাম্পাস</div></div>
+                <?php
+                global $wpdb;
+                $table_albums = $wpdb->prefix . 'sms_gallery_albums';
+                $table_photos = $wpdb->prefix . 'sms_gallery_photos';
+
+                // Fetch published albums
+                $albums = $wpdb->get_results( "SELECT * FROM {$table_albums} WHERE status = 'Published' ORDER BY id DESC" );
+
+                if ( ! empty( $albums ) ) :
+                    $categories = array_unique( array_filter( wp_list_pluck( $albums, 'category' ) ) );
+                ?>
+                    <!-- Category Filters -->
+                    <div class="dnt-gallery-filter">
+                        <button class="dnt-filter-btn active" data-filter="all">সব অ্যালবাম</button>
+                        <?php foreach ( $categories as $cat ) : ?>
+                            <button class="dnt-filter-btn" data-filter="<?php echo esc_attr( sanitize_title( $cat ) ); ?>">
+                                <?php echo esc_html( $cat ); ?>
+                            </button>
+                        <?php endforeach; ?>
                     </div>
 
-                    <!-- আইটেম ২ -->
-                    <div class="dnt-gallery-item">
-                        <div class="dnt-gallery-thumb">
-                            <img src="https://images.unsplash.com/photo-1523580494112-071d38458a5c?q=80&w=800&auto=format&fit=crop" alt="Gallery Image 2">
-                            <div class="dnt-gallery-overlay"><a href="#"><svg viewBox="0 0 24 24" fill="#fff"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></a></div>
-                        </div>
-                        <div class="dnt-gallery-info"><div class="dnt-gallery-title">পুরস্কার বিতরণী পর্ব</div><div class="dnt-gallery-tag">পুরস্কার</div></div>
+                    <!-- Album Grid -->
+                    <div class="dnt-gallery-grid">
+                        <?php foreach ( $albums as $album ) : 
+                            $album_id    = absint( $album->id );
+                            $photos      = $wpdb->get_results( $wpdb->prepare( "SELECT image_url FROM {$table_photos} WHERE album_id = %d ORDER BY id ASC", $album_id ) );
+                            $photo_urls  = wp_list_pluck( $photos, 'image_url' );
+                            
+                            $cover_image = ! empty( $album->cover_image ) ? $album->cover_image : ( ! empty( $photo_urls[0] ) ? $photo_urls[0] : get_template_directory_uri() . '/assets/img/placeholder.jpg' );
+                            $cat_slug    = ! empty( $album->category ) ? sanitize_title( $album->category ) : 'general';
+                            
+                            // Securely escape JSON string
+                            $json_photos = htmlspecialchars( wp_json_encode( array_values( $photo_urls ) ), ENT_QUOTES, 'UTF-8' );
+                        ?>
+                            <div class="dnt-gallery-item" data-category="<?php echo esc_attr( $cat_slug ); ?>">
+                                <div class="dnt-gallery-thumb dnt-open-album" 
+                                     style="cursor: pointer;"
+                                     data-title="<?php echo esc_attr( $album->title ); ?>" 
+                                     data-photos="<?php echo $json_photos; ?>">
+                                     
+                                    <img src="<?php echo esc_url( $cover_image ); ?>" alt="<?php echo esc_attr( $album->title ); ?>">
+                                    <div class="dnt-gallery-overlay">
+                                        <span class="dnt-icon-wrapper">
+                                            <svg viewBox="0 0 24 24" fill="#fff" width="28" height="28">
+                                                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="dnt-gallery-info dnt-open-album" 
+                                     style="cursor: pointer;" 
+                                     data-title="<?php echo esc_attr( $album->title ); ?>" 
+                                     data-photos="<?php echo $json_photos; ?>">
+                                    <div class="dnt-gallery-title"><?php echo esc_html( $album->title ); ?></div>
+                                    <div class="dnt-gallery-tag"><?php echo esc_html( $album->category ?: 'অ্যালবাম' ); ?> (<?php echo count( $photo_urls ); ?>টি ছবি)</div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
+                <?php else : ?>
+                    <p class="text-center text-muted py-5">কোনো গ্যালারি অ্যালবাম পাওয়া যায়নি।</p>
+                <?php endif; ?>
 
-                    <!-- আইটেম ৩ -->
-                    <div class="dnt-gallery-item">
-                        <div class="dnt-gallery-thumb">
-                            <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=800&auto=format&fit=crop" alt="Gallery Image 3">
-                            <div class="dnt-gallery-overlay"><a href="#"><svg viewBox="0 0 24 24" fill="#fff"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></a></div>
-                        </div>
-                        <div class="dnt-gallery-info"><div class="dnt-gallery-title">বার্ষিক ক্রীড়া প্রতিযোগিতা</div><div class="dnt-gallery-tag">ক্রীড়া</div></div>
-                    </div>
-
-                    <!-- আইটেম ৪ -->
-                    <div class="dnt-gallery-item">
-                        <div class="dnt-gallery-thumb">
-                            <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=800&auto=format&fit=crop" alt="Gallery Image 4">
-                            <div class="dnt-gallery-overlay"><a href="#"><svg viewBox="0 0 24 24" fill="#fff"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></a></div>
-                        </div>
-                        <div class="dnt-gallery-info"><div class="dnt-gallery-title">সাংস্কৃতিক অনুষ্ঠান</div><div class="dnt-gallery-tag">সাংস্কৃতিক</div></div>
-                    </div>
-
-                    <!-- আইটেম ৫ -->
-                    <div class="dnt-gallery-item">
-                        <div class="dnt-gallery-thumb">
-                            <img src="https://images.unsplash.com/photo-1564069114553-7215e1ff1890?q=80&w=800&auto=format&fit=crop" alt="Gallery Image 5">
-                            <div class="dnt-gallery-overlay"><a href="#"><svg viewBox="0 0 24 24" fill="#fff"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></a></div>
-                        </div>
-                        <div class="dnt-gallery-info"><div class="dnt-gallery-title">বিজ্ঞান মেলা প্রদর্শন</div><div class="dnt-gallery-tag">বিজ্ঞান</div></div>
-                    </div>
-
-
-                    <!-- আইটেম ৭ -->
-                    <div class="dnt-gallery-item">
-                        <div class="dnt-gallery-thumb">
-                            <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=800&auto=format&fit=crop" alt="Gallery Image 7">
-                            <div class="dnt-gallery-overlay"><a href="#"><svg viewBox="0 0 24 24" fill="#fff"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></a></div>
-                        </div>
-                        <div class="dnt-gallery-info"><div class="dnt-gallery-title">গ্রন্থাগার পরিদর্শন</div><div class="dnt-gallery-tag">লাইব্রেরি</div></div>
-                    </div>
-
-                    <!-- আইটেম ৮ -->
-                    <div class="dnt-gallery-item">
-                        <div class="dnt-gallery-thumb">
-                            <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=800&auto=format&fit=crop" alt="Gallery Image 8">
-                            <div class="dnt-gallery-overlay"><a href="#"><svg viewBox="0 0 24 24" fill="#fff"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></a></div>
-                        </div>
-                        <div class="dnt-gallery-info"><div class="dnt-gallery-title">শ্রেণিকক্ষ শিক্ষা কার্যক্রম</div><div class="dnt-gallery-tag">শিক্ষা</div></div>
-                    </div>
-
-                    <!-- আইটেম ৯ -->
-                    <div class="dnt-gallery-item">
-                        <div class="dnt-gallery-thumb">
-                            <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800&auto=format&fit=crop" alt="Gallery Image 9">
-                            <div class="dnt-gallery-overlay"><a href="#"><svg viewBox="0 0 24 24" fill="#fff"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></a></div>
-                        </div>
-                        <div class="dnt-gallery-info"><div class="dnt-gallery-title">শিক্ষক ও শিক্ষার্থীদের মিলনমেলা</div><div class="dnt-gallery-tag">অন্যান্য</div></div>
-                    </div>
-
-                </div>
             </main>
-
         </div>
     </section>
+
+    <!-- Popup Lightbox Modal Structure -->
+    <div id="dntAlbumModal" class="dnt-popup-modal">
+        <div class="dnt-popup-backdrop"></div>
+        <div class="dnt-popup-dialog">
+            <button class="dnt-popup-close" id="dntPopupClose">&times;</button>
+            <h3 id="dntPopupTitle" class="dnt-popup-title"></h3>
+            
+            <div class="dnt-popup-slider">
+                <button class="dnt-slide-nav dnt-prev-btn" id="dntSlidePrev">&#10094;</button>
+                <div class="dnt-slide-viewport">
+                    <img id="dntPopupImg" src="" alt="Album Photo">
+                </div>
+                <button class="dnt-slide-nav dnt-next-btn" id="dntSlideNext">&#10095;</button>
+            </div>
+            
+            <div class="dnt-slide-counter" id="dntSlideCounter">1 / 1</div>
+        </div>
+    </div>
+
+    <!-- Isolated Modal CSS Styles -->
+    <style>
+        .dnt-popup-modal {
+            display: none !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 9999999 !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        .dnt-popup-modal.is-visible {
+            display: flex !important;
+        }
+        .dnt-popup-backdrop {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.88) !important;
+            backdrop-filter: blur(5px) !important;
+        }
+        .dnt-popup-dialog {
+            position: relative !important;
+            z-index: 10 !important;
+            width: 90% !important;
+            max-width: 850px !important;
+            background: #0f172a !important;
+            border-radius: 12px !important;
+            padding: 24px !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7) !important;
+            color: #ffffff !important;
+            text-align: center !important;
+        }
+        .dnt-popup-close {
+            position: absolute !important;
+            top: 12px !important;
+            right: 18px !important;
+            background: transparent !important;
+            border: none !important;
+            color: #ffffff !important;
+            font-size: 36px !important;
+            cursor: pointer !important;
+            line-height: 1 !important;
+            transition: color 0.2s !important;
+        }
+        .dnt-popup-close:hover {
+            color: #10b981 !important;
+        }
+        .dnt-popup-title {
+            font-size: 1.25rem !important;
+            margin-bottom: 20px !important;
+            color: #f8fafc !important;
+            padding-right: 40px !important;
+            font-weight: 600 !important;
+        }
+        .dnt-popup-slider {
+            position: relative !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            min-height: 300px !important;
+            max-height: 65vh !important;
+        }
+        .dnt-slide-viewport {
+            width: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        .dnt-slide-viewport img {
+            max-width: 100% !important;
+            max-height: 60vh !important;
+            object-fit: contain !important;
+            border-radius: 8px !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3) !important;
+        }
+        .dnt-slide-nav {
+            position: absolute !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            background: rgba(15, 23, 42, 0.75) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            font-size: 22px !important;
+            width: 44px !important;
+            height: 44px !important;
+            cursor: pointer !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: all 0.2s !important;
+            z-index: 15 !important;
+        }
+        .dnt-slide-nav:hover {
+            background: #006a4e !important;
+            border-color: #006a4e !important;
+        }
+        .dnt-prev-btn { left: 8px !important; }
+        .dnt-next-btn { right: 8px !important; }
+        .dnt-slide-counter {
+            margin-top: 15px !important;
+            font-size: 0.95rem !important;
+            color: #94a3b8 !important;
+            font-weight: 500 !important;
+        }
+    </style>
+
+    <!-- Modal Execution Script -->
+    <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        // Category Filtering
+        const filterBtns = document.querySelectorAll('.dnt-filter-btn');
+        const galleryItems = document.querySelectorAll('.dnt-gallery-item');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const filter = this.getAttribute('data-filter');
+
+                galleryItems.forEach(item => {
+                    if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Modal Popup Elements
+        const modal = document.getElementById('dntAlbumModal');
+        const backdrop = document.querySelector('.dnt-popup-backdrop');
+        const closeBtn = document.getElementById('dntPopupClose');
+        const titleEl = document.getElementById('dntPopupTitle');
+        const imgEl = document.getElementById('dntPopupImg');
+        const counterEl = document.getElementById('dntSlideCounter');
+        const prevBtn = document.getElementById('dntSlidePrev');
+        const nextBtn = document.getElementById('dntSlideNext');
+
+        let albumPhotos = [];
+        let currentIdx = 0;
+
+        function renderSlide() {
+            if (albumPhotos.length > 0) {
+                imgEl.src = albumPhotos[currentIdx];
+                counterEl.textContent = (currentIdx + 1) + ' / ' + albumPhotos.length;
+            }
+        }
+
+        // Open Modal Handler
+        document.querySelectorAll('.dnt-open-album').forEach(elem => {
+            elem.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const albumTitle = this.getAttribute('data-title');
+                const photosAttr = this.getAttribute('data-photos');
+
+                try {
+                    albumPhotos = JSON.parse(photosAttr);
+                } catch(err) {
+                    albumPhotos = [];
+                }
+
+                if (!albumPhotos || albumPhotos.length === 0) {
+                    alert('এই অ্যালবামে কোনো ছবি পাওয়া যায়নি।');
+                    return;
+                }
+
+                currentIdx = 0;
+                titleEl.textContent = albumTitle;
+                renderSlide();
+                modal.classList.add('is-visible');
+                document.body.style.overflow = 'hidden'; // Stop background scrolling
+            });
+        });
+
+        function hideModal() {
+            modal.classList.remove('is-visible');
+            imgEl.src = '';
+            document.body.style.overflow = '';
+        }
+
+        closeBtn.addEventListener('click', hideModal);
+        backdrop.addEventListener('click', hideModal);
+
+        prevBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (albumPhotos.length > 0) {
+                currentIdx = (currentIdx - 1 + albumPhotos.length) % albumPhotos.length;
+                renderSlide();
+            }
+        });
+
+        nextBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (albumPhotos.length > 0) {
+                currentIdx = (currentIdx + 1) % albumPhotos.length;
+                renderSlide();
+            }
+        });
+
+        // Keyboard Controls
+        document.addEventListener('keydown', function(e) {
+            if (!modal.classList.contains('is-visible')) return;
+            if (e.key === 'Escape') hideModal();
+            if (e.key === 'ArrowLeft') prevBtn.click();
+            if (e.key === 'ArrowRight') nextBtn.click();
+        });
+    });
+    </script>
 
 <?php get_footer(); ?>
