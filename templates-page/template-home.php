@@ -95,7 +95,7 @@ if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
 ">
     <div class="dnt-container dnt-hero-content-wrapper" style="position: relative; z-index: 1;">
         <div class="dnt-hero-text-box">
-            <div class="dnt-hero-badge">স্থাপিত: ২০১৭ ইং <?php echo ! empty( $eiin_no ) ? ' | EIIN: ' . esc_html( $eiin_no ) : ''; ?></div>
+            <div class="dnt-hero-badge">স্থাপিত: ২০১৭ ইং</div>
             <h1 class="dnt-hero-title">শিক্ষাই জাতির মেরুদণ্ড, <br><span>সুশিক্ষাই আমাদের ব্রত</span></h1>
             <p class="dnt-hero-desc">সুশৃঙ্খল পরিবেশ, অভিজ্ঞ শিক্ষকমণ্ডলী এবং আধুনিক শিক্ষা ব্যবস্থার সমন্বয়ে আপনার সন্তানের উজ্জ্বল ভবিষ্যৎ গড়তে <?php echo esc_html( $school_name ); ?> দৃঢ় প্রতিজ্ঞ।</p>
             

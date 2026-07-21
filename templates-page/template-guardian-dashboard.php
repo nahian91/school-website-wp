@@ -1,34 +1,144 @@
 <?php
 /* Template Name: Guardian Dashboard */
-if (!is_user_logged_in()) { wp_redirect(home_url('/login')); exit; }
-get_header();
 
-$current_user = wp_get_current_user();
+// 1. Prevent Direct Access
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
+// 2. Safe Output Buffering & Session Engine Guard
+if ( ! headers_sent() ) {
+    ob_start();
+}
+if ( ! session_id() && ! headers_sent() ) {
+    session_start();
+}
+
+// 3. Authentication & Strict Role Check
+$is_session_logged_in = ! empty( $_SESSION['dnt_student_id'] ) && isset( $_SESSION['dnt_user_role'] ) && 'guardian' === $_SESSION['dnt_user_role'];
+$is_wp_logged_in      = is_user_logged_in() && ( in_array( 'guardian', (array) wp_get_current_user()->roles, true ) || in_array( 'parent', (array) wp_get_current_user()->roles, true ) );
+
+if ( ! $is_session_logged_in && ! $is_wp_logged_in ) {
+    wp_safe_redirect( site_url( '/custom-login/?login=empty' ) );
+    exit;
+}
+
+global $wpdb;
+
+// Database Table Definitions
+$table_students   = $wpdb->prefix . 'sms_students';
+$table_attendance = $wpdb->prefix . 'sms_attendance';
+$table_fees       = $wpdb->prefix . 'sms_fees';
+$table_notices    = $wpdb->prefix . 'sms_notices';
+$table_results    = $wpdb->prefix . 'sms_results';
+$table_exams      = $wpdb->prefix . 'sms_exams';
+
+$session_std_id = isset( $_SESSION['dnt_student_id'] ) ? absint( $_SESSION['dnt_student_id'] ) : 0;
+
+// Fetch Student Data Associated with Guardian
+$student = null;
+if ( $session_std_id > 0 ) {
+    $student = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table_students} WHERE id = %d AND status = 'Active'", $session_std_id ) );
+}
+
+if ( ! $student && is_user_logged_in() ) {
+    $current_wp_user = wp_get_current_user();
+    $student         = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table_students} WHERE guardian_phone = %s OR student_email = %s AND status = 'Active'", $current_wp_user->user_login, $current_wp_user->user_email ) );
+}
+
+$db_student_id  = $student ? $student->id : 0;
+$guardian_name  = $student ? ( $student->guardian_name ?: 'সম্মানিত অভিভাবক' ) : 'সম্মানিত অভিভাবক';
+$student_name   = $student ? ( $student->name_bn ?: $student->full_name ) : 'N/A';
+
+// Dynamic Day-Wise Attendance Data Engine
+$attendance_logs       = array();
+$total_days            = 0;
+$present_days          = 0;
+$absent_days           = 0;
+$late_days             = 0;
+$attendance_percentage = 0;
+
+if ( $db_student_id > 0 ) {
+    $attendance_logs = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$table_attendance} WHERE student_id = %d ORDER BY attendance_date DESC LIMIT 30", $db_student_id ) );
+    $total_days      = count( $attendance_logs );
+    
+    if ( $total_days > 0 ) {
+        foreach ( $attendance_logs as $log ) {
+            $status_lower = strtolower( trim( $log->status ) );
+            if ( 'present' === $status_lower ) {
+                $present_days++;
+            } elseif ( 'absent' === $status_lower ) {
+                $absent_days++;
+            } elseif ( 'late' === $status_lower ) {
+                $late_days++;
+                $present_days++;
+            }
+        }
+        $attendance_percentage = round( ( $present_days / $total_days ) * 100 );
+    }
+}
+
+// Dynamic Examination Result Engine (NEW)
+$student_results = array();
+if ( $db_student_id > 0 ) {
+    $results_sql = "
+        SELECT res.*, ex.exam_name 
+        FROM {$table_results} res
+        INNER JOIN {$table_exams} ex ON res.exam_id = ex.id
+        WHERE res.student_id = %d
+        ORDER BY res.id DESC
+    ";
+    $student_results = $wpdb->get_results( $wpdb->prepare( $results_sql, $db_student_id ) );
+}
+
+// Dynamic Fee & Ledger Engine
+$fees_list        = array();
+$total_due_amount = 0.00;
+
+if ( $db_student_id > 0 ) {
+    $fees_list        = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$table_fees} WHERE student_id = %d ORDER BY id DESC", $db_student_id ) );
+    $total_due_amount = $wpdb->get_var( $wpdb->prepare( "SELECT SUM(due_amount) FROM {$table_fees} WHERE student_id = %d AND payment_status != 'Paid'", $db_student_id ) );
+    $total_due_amount = $total_due_amount ? floatval( $total_due_amount ) : 0.00;
+}
+
+// Dynamic Notice Engine
+$guardian_notices = $wpdb->get_results( "SELECT * FROM {$table_notices} WHERE status = 'Published' AND (target_audience = 'All' OR target_audience = 'Guardians') ORDER BY id DESC LIMIT 10" );
+
+// Helper array for English to Bengali Day Names
+$bn_days = array(
+    'Saturday'  => 'শনিবার',
+    'Sunday'    => 'রবিবার',
+    'Monday'    => 'সোমবার',
+    'Tuesday'   => 'মঙ্গলবার',
+    'Wednesday' => 'বুধবার',
+    'Thursday'  => 'বৃহস্পতিবার',
+    'Friday'    => 'শুক্রবার',
+);
+
+get_header();
 ?>
 
-<!-- ৪. পেজ ব্যানার ও ব্রেডক্রাম্ব -->
-    <section class="dnt-page-banner" style="background-image: url('<?php echo get_template_directory_uri();?>/assets/img/breadcrumb.jpg');">
-        <div class="dnt-container">
-            <h1 class="dnt-page-title">অভিভাবক ড্যাশবোর্ড</h1>
-            <div class="dnt-breadcrumb">
-                <a href="<?php echo site_url();?>">
-                    <svg class="dnt-icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                    </svg> প্রথম পাতা
-                </a> 
-                <span>
-                    <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="opacity:0.7;">
-                        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
-                    </svg>
-                </span> 
-                <span style="color:var(--dnt-color-gray-300);">অভিভাবক ড্যাশবোর্ড</span>
-            </div>
+<!-- PAGE BANNER & BREADCRUMB -->
+<section class="dnt-page-banner" style="background-image: url('<?php echo esc_url( get_template_directory_uri() . '/assets/img/breadcrumb.jpg' ); ?>');">
+    <div class="dnt-container">
+        <h1 class="dnt-page-title"><?php esc_html_e( 'অভিভাবক ড্যাশবোর্ড', 'ggisc' ); ?></h1>
+        <div class="dnt-breadcrumb">
+            <a href="<?php echo esc_url( home_url( '/' ) ); ?>">
+                <svg class="dnt-icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg> <?php esc_html_e( 'প্রথম পাতা', 'ggisc' ); ?>
+            </a> 
+            <span>
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="opacity:0.7;">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                </svg>
+            </span> 
+            <span style="color:var(--dnt-color-gray-300);"><?php esc_html_e( 'অভিভাবক পোর্টাল', 'ggisc' ); ?></span>
         </div>
-    </section>
+    </div>
+</section>
 
-<!-- ==========================================================================
-     ULTRA-PROFESSIONAL WC STYLE GUARDIAN DASHBOARD CSS
-     ========================================================================== -->
+<!-- ULTRA-PROFESSIONAL WC STYLE GUARDIAN DASHBOARD CSS -->
 <style>
     :root {
         --dnt-wc-brand: #006a4e;
@@ -46,16 +156,15 @@ $current_user = wp_get_current_user();
     .dnt-wc-dashboard-wrapper {
         background-color: var(--dnt-wc-body-bg);
         padding: 60px 0;
-        font-family: 'Hind Siliguri', system-ui, -apple-system, sans-serif;
+        font-family: inherit;
     }
 
     .dnt-wc-account-layout {
         display: flex;
-        gap: 50px;
+        gap: 40px;
         align-items: flex-start;
     }
 
-    /* Left WooCommerce Sidebar Navigation */
     .dnt-wc-account-nav {
         width: 25%;
         flex-shrink: 0;
@@ -116,7 +225,6 @@ $current_user = wp_get_current_user();
         flex-shrink: 0;
     }
 
-    /* Right Side Content Engine */
     .dnt-wc-account-content {
         width: 75%;
         background: var(--dnt-wc-card-bg);
@@ -141,7 +249,6 @@ $current_user = wp_get_current_user();
         to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Overview Header Card */
     .dnt-wc-profile-overview {
         background: radial-gradient(circle at top right, var(--dnt-wc-brand-light) 0%, transparent 70%);
         border: 1px solid var(--dnt-wc-border-clr);
@@ -165,7 +272,6 @@ $current_user = wp_get_current_user();
         font-size: 0.95rem;
     }
 
-    /* Notification/Alert Component */
     .dnt-wc-notice-banner {
         background-color: #fff;
         border: 1px solid var(--dnt-wc-border-clr);
@@ -178,7 +284,6 @@ $current_user = wp_get_current_user();
         margin-bottom: 35px;
     }
 
-    /* Sub Grid Cards */
     .dnt-wc-metric-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -231,7 +336,6 @@ $current_user = wp_get_current_user();
         gap: 4px;
     }
 
-    /* Tables Styles */
     .dnt-wc-table-wrapper {
         overflow-x: auto;
         margin-top: 15px;
@@ -255,7 +359,17 @@ $current_user = wp_get_current_user();
         color: var(--dnt-wc-text-main);
     }
 
-    /* Responsive Architecture */
+    .dnt-badge-status {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+    .dnt-badge-present { background: #dcfce7; color: #16a34a; }
+    .dnt-badge-absent { background: #fee2e2; color: #dc2626; }
+    .dnt-badge-late { background: #fef3c7; color: #d97706; }
+
     @media (max-width: 992px) {
         .dnt-wc-account-layout { flex-direction: column; gap: 30px; }
         .dnt-wc-account-nav, .dnt-wc-account-content { width: 100%; }
@@ -277,31 +391,40 @@ $current_user = wp_get_current_user();
                     <li class="dnt-wc-nav-item is-active" data-target="wc-dash-guardian">
                         <a>
                             <svg class="dnt-wc-nav-svg" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                            ড্যাশবোর্ড
+                            <?php esc_html_e( 'ড্যাশবোর্ড', 'ggisc' ); ?>
                         </a>
                     </li>
                     <li class="dnt-wc-nav-item" data-target="wc-attendance">
                         <a>
                             <svg class="dnt-wc-nav-svg" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                            উপস্থিতি রিপোর্ট
+                            <?php esc_html_e( 'দিনভিত্তিক উপস্থিতি', 'ggisc' ); ?>
+                        </a>
+                    </li>
+                    <li class="dnt-wc-nav-item" data-target="wc-results">
+                        <a>
+                            <svg class="dnt-wc-nav-svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                            <?php esc_html_e( 'পরীক্ষার ফলাফল', 'ggisc' ); ?>
                         </a>
                     </li>
                     <li class="dnt-wc-nav-item" data-target="wc-payments">
                         <a>
                             <svg class="dnt-wc-nav-svg" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
-                            ফি ও পেমেন্ট
+                            <?php esc_html_e( 'ফি ও পেমেন্ট', 'ggisc' ); ?>
                         </a>
                     </li>
                     <li class="dnt-wc-nav-item" data-target="wc-notices-guardian">
                         <a>
                             <svg class="dnt-wc-nav-svg" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-                            নোটিশ বোর্ড
+                            <?php esc_html_e( 'নোটিশ বোর্ড', 'ggisc' ); ?>
                         </a>
                     </li>
                     <li class="dnt-logout-item">
-                        <a href="<?php echo wp_logout_url(home_url()); ?>">
+                        <?php 
+                            $logout_url = wp_nonce_url( add_query_arg( 'action', 'dnt_logout', site_url('/') ), 'dnt_logout_action' ); 
+                        ?>
+                        <a href="<?php echo esc_url( $logout_url ); ?>">
                             <svg class="dnt-wc-nav-svg" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                            লগআউট
+                            <?php esc_html_e( 'লগআউট', 'ggisc' ); ?>
                         </a>
                     </li>
                 </ul>
@@ -314,22 +437,33 @@ $current_user = wp_get_current_user();
                 <div id="wc-dash-guardian" class="dnt-wc-pane is-active">
                     <div class="dnt-wc-profile-overview">
                         <div class="dnt-wc-user-meta">
-                            <h2>সম্মানিত অভিভাবক, <?php echo esc_html($current_user->display_name); ?></h2>
-                            <p>পোর্টাল স্ট্যাটাস: <span style="font-weight: 700; color: var(--dnt-wc-brand);">সক্রিয় অভিভাবক অ্যাকাউন্ট</span></p>
+                            <h2><?php echo esc_html( sprintf( __( '%s', 'ggisc' ), $guardian_name ) ); ?></h2>
+                            <p><?php esc_html_e( 'পোর্টাল স্ট্যাটাস:', 'ggisc' ); ?> <span style="font-weight: 700; color: var(--dnt-wc-brand);"><?php esc_html_e( 'সক্রিয় অভিভাবক অ্যাকাউন্ট', 'ggisc' ); ?></span></p>
+                        </div>
+                        <div>
+                            <span style="font-size:0.9rem; background:#fff; border:1px solid var(--dnt-wc-border-clr); padding:8px 14px; border-radius:20px; font-weight:600;">
+                                <?php esc_html_e( 'সন্তান:', 'ggisc' ); ?> <strong><?php echo esc_html( $student_name ); ?></strong> (আইডি: <?php echo esc_html( $student->student_id ?? 'N/A' ); ?>)
+                            </span>
                         </div>
                     </div>
 
                     <p style="color: var(--dnt-wc-text-sub); margin-bottom: 25px;">
-                        অভিভাবক পোর্টাল ড্যাশবোর্ড থেকে আপনি আপনার সন্তানের ক্লাসে দৈনিক উপস্থিতির রেকর্ড ট্র্যাক করতে পারেন, তার বকেয়া একাডেমিক ফি ও টিউশন ফির পেমেন্ট বিবরণী দেখতে পারেন এবং বিদ্যালয়ের অফিশিয়াল নোটিশগুলো পর্যবেক্ষণ করতে পারেন।
+                        <?php esc_html_e( 'অভিভাবক পোর্টাল ড্যাশবোর্ড থেকে আপনি আপনার সন্তানের দিনভিত্তিক ক্লাসে উপস্থিতির বিবরণ, পরীক্ষার রেজাল্ট, বকেয়া ফি এবং নতুন অফিশিয়াল নোটিশগুলো স্বাচ্ছন্দ্যে ট্র্যাকিং করতে পারেন।', 'ggisc' ); ?>
                     </p>
 
                     <!-- WooCommerce Custom Notice Box Component -->
                     <div class="dnt-wc-notice-banner">
                         <span style="display: flex; align-items: center; gap: 12px; font-size: 0.95rem; color: var(--dnt-wc-text-main); font-weight: 600;">
                             <svg style="color: var(--dnt-wc-brand); width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:2;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                            জরুরি আপডেট: চলতি মাসের বেতন পরিশোধের শেষ সময় আগামী ২৫ তারিখ।
+                            <?php 
+                                if ( $total_due_amount > 0 ) {
+                                    echo esc_html( sprintf( __( 'জরুরি আপডেট: আপনার মোট ৳ %s টাকা ফি পরিশোধ বকেয়া রয়েছে।', 'ggisc' ), number_format( $total_due_amount, 2 ) ) );
+                                } else {
+                                    esc_html_e( 'আপনার সন্তানের সকল একাডেমিক ফি পরিশোধিত অবস্থায় রয়েছে। ধন্যবাদ।', 'ggisc' );
+                                }
+                            ?>
                         </span>
-                        <a class="dnt-wc-notice-shortcut" style="color: var(--dnt-wc-brand); font-weight: 700; text-decoration: none; font-size: 0.9rem; cursor: pointer; white-space: nowrap;">বিস্তারিত &rarr;</a>
+                        <a class="dnt-wc-notice-shortcut" style="color: var(--dnt-wc-brand); font-weight: 700; text-decoration: none; font-size: 0.9rem; cursor: pointer; white-space: nowrap;"><?php esc_html_e( 'বিস্তারিত →', 'ggisc' ); ?></a>
                     </div>
 
                     <!-- Metric Card Navigation Links -->
@@ -338,122 +472,193 @@ $current_user = wp_get_current_user();
                             <div>
                                 <div class="dnt-wc-card-head">
                                     <svg style="color: var(--dnt-wc-brand); width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:2;" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                                    <h3>উপস্থিতি রিপোর্ট</h3>
+                                    <h3><?php esc_html_e( 'দিনভিত্তিক উপস্থিতি', 'ggisc' ); ?></h3>
                                 </div>
-                                <p>আপনার সন্তানের দৈনিক ক্লাসে উপস্থিত ও অনুপস্থিতির মাসিক ডেটা ট্র্যাকিং শীট দেখুন।</p>
+                                <p><?php esc_html_e( 'আপনার সন্তানের দৈনন্দিন ক্লাসে উপস্থিতির বিস্তারিত বার ও তারিখভিত্তিক রিপোর্ট দেখুন।', 'ggisc' ); ?></p>
                             </div>
-                            <span class="dnt-wc-card-link-btn">হাজিরা রেকর্ড &rarr;</span>
+                            <span class="dnt-wc-card-link-btn"><?php esc_html_e( 'হাজিরা রেকর্ড →', 'ggisc' ); ?></span>
                         </div>
 
-                        <div class="dnt-wc-metric-card dnt-wc-quick-link" data-destination="wc-payments">
+                        <div class="dnt-wc-metric-card dnt-wc-quick-link" data-destination="wc-results">
                             <div>
                                 <div class="dnt-wc-card-head">
-                                    <svg style="color: var(--dnt-wc-brand); width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:2;" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
-                                    <h3>ফি ও পেমেন্ট হিস্ট্রি</h3>
+                                    <svg style="color: var(--dnt-wc-brand); width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:2;" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                                    <h3><?php esc_html_e( 'পরীক্ষার ফলাফল', 'ggisc' ); ?></h3>
                                 </div>
-                                <p>মাসিক টিউশন ফি ও অন্যান্য বকেয়া ফি খুব সহজে অনলাইনে পরিশোধ করুন ও রশিদ ডাউনলোড করুন।</p>
+                                <p><?php esc_html_e( 'বিষয়ভিত্তিক প্রাপ্ত নম্বর, গ্রেড ও একাডেমিক জিপিএ (GPA) মার্কশিট দেখুন।', 'ggisc' ); ?></p>
                             </div>
-                            <span class="dnt-wc-card-link-btn">পেমেন্ট গেটওয়ে &rarr;</span>
+                            <span class="dnt-wc-card-link-btn"><?php esc_html_e( 'মার্কশিট দেখুন →', 'ggisc' ); ?></span>
                         </div>
                     </div>
                 </div>
 
-                <!-- PANE 2: ATTENDANCE -->
+                <!-- PANE 2: DAY-WISE ATTENDANCE SECTION -->
                 <div id="wc-attendance" class="dnt-wc-pane">
-                    <h3 style="margin: 0 0 8px 0; font-size: 1.3rem; color: var(--dnt-wc-text-main); font-weight: 700;">সন্তানের উপস্থিতি ওভারভিউ</h3>
-                    <p style="color: var(--dnt-wc-text-sub); margin-bottom: 25px; font-size: 0.95rem;">চলতি মাসের ক্লাস হাজিরা রিপোর্টের সংক্ষিপ্ত সারণী:</p>
+                    <h3 style="margin: 0 0 8px 0; font-size: 1.3rem; color: var(--dnt-wc-text-main); font-weight: 700;"><?php esc_html_e( 'সন্তানের দিনভিত্তিক উপস্থিতি রিপোর্ট', 'ggisc' ); ?></h3>
+                    <p style="color: var(--dnt-wc-text-sub); margin-bottom: 25px; font-size: 0.95rem;"><?php esc_html_e( 'সাম্প্রতিক ৩০ কার্যদিবসের দৈনিক উপস্থিতি ট্র্যাকিং শীট:', 'ggisc' ); ?></p>
                     
                     <div style="display:flex; gap:15px; margin-bottom:25px; flex-wrap:wrap;">
-                        <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:15px 25px; border-radius:6px; text-align:center;">
-                            <span style="display:block; font-size:1.5rem; font-weight:700; color:#16a34a;">৯৫%</span>
-                            <small style="color:#15803d; font-weight:600;">মোট উপস্থিতি</small>
+                        <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:15px 25px; border-radius:6px; text-align:center; flex: 1;">
+                            <span style="display:block; font-size:1.5rem; font-weight:700; color:#16a34a;"><?php echo esc_html( $attendance_percentage . '%' ); ?></span>
+                            <small style="color:#15803d; font-weight:600;"><?php esc_html_e( 'মোট উপস্থিতি হার', 'ggisc' ); ?></small>
                         </div>
-                        <div style="background:#fef2f2; border:1px solid #fecaca; padding:15px 25px; border-radius:6px; text-align:center;">
-                            <span style="display:block; font-size:1.5rem; font-weight:700; color:#dc2626;">০১ দিন</span>
-                            <small style="color:#b91c1c; font-weight:600;">মোট অনুপস্থিতি</small>
+                        <div style="background:#fef2f2; border:1px solid #fecaca; padding:15px 25px; border-radius:6px; text-align:center; flex: 1;">
+                            <span style="display:block; font-size:1.5rem; font-weight:700; color:#dc2626;"><?php echo esc_html( sprintf( __( '%02d দিন', 'ggisc' ), $absent_days ) ); ?></span>
+                            <small style="color:#b91c1c; font-weight:600;"><?php esc_html_e( 'মোট অনুপস্থিতি', 'ggisc' ); ?></small>
+                        </div>
+                        <div style="background:#fef3c7; border:1px solid #fde68a; padding:15px 25px; border-radius:6px; text-align:center; flex: 1;">
+                            <span style="display:block; font-size:1.5rem; font-weight:700; color:#d97706;"><?php echo esc_html( sprintf( __( '%02d দিন', 'ggisc' ), $late_days ) ); ?></span>
+                            <small style="color:#92400e; font-weight:600;"><?php esc_html_e( 'মোট বিলম্ব (Late)', 'ggisc' ); ?></small>
                         </div>
                     </div>
 
                     <div class="dnt-wc-table-wrapper">
-                        <table class="dnt-wc-data-table">
-                            <thead>
-                                <tr>
-                                    <th>তারিখ</th>
-                                    <th>দিন</th>
-                                    <th>স্ট্যাটাস</th>
-                                    <th>মন্তব্য</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>১৯ জুলাই, ২০২৬</td>
-                                    <td>রবিবার</td>
-                                    <td><span style="color:#16a34a; font-weight:700;">উপস্থিত</span></td>
-                                    <td>যথাসময়ে প্রবেশ</td>
-                                </tr>
-                                <tr>
-                                    <td>১৬ জুলাই, ২০২৬</td>
-                                    <td>বৃহস্পতিবার</td>
-                                    <td><span style="color:#16a34a; font-weight:700;">উপস্থিত</span></td>
-                                    <td>যথাসময়ে প্রবেশ</td>
-                                </tr>
-                                <tr>
-                                    <td>১৫ জুলাই, ২০২৬</td>
-                                    <td>বুধবার</td>
-                                    <td><span style="color:#dc2626; font-weight:700;">অনুপস্থিত</span></td>
-                                    <td>ছুটির আবেদন ব্যতিত</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <?php if ( ! empty( $attendance_logs ) ) : ?>
+                            <table class="dnt-wc-data-table">
+                                <thead>
+                                    <tr>
+                                        <th><?php esc_html_e( 'তারিখ (Date)', 'ggisc' ); ?></th>
+                                        <th><?php esc_html_e( 'বার (Day)', 'ggisc' ); ?></th>
+                                        <th><?php esc_html_e( 'প্রবেশের সময়', 'ggisc' ); ?></th>
+                                        <th><?php esc_html_e( 'স্ট্যাটাস', 'ggisc' ); ?></th>
+                                        <th><?php esc_html_e( 'মন্তব্য / কারণ', 'ggisc' ); ?></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ( $attendance_logs as $log ) : 
+                                        $timestamp  = strtotime( $log->attendance_date );
+                                        $day_en     = date( 'l', $timestamp );
+                                        $day_bn     = isset( $bn_days[$day_en] ) ? $bn_days[$day_en] : $day_en;
+                                        $status_val = strtolower( trim( $log->status ) );
+                                    ?>
+                                        <tr>
+                                            <td><strong><?php echo esc_html( date( 'd F, Y', $timestamp ) ); ?></strong></td>
+                                            <td><?php echo esc_html( $day_bn ); ?></td>
+                                            <td>
+                                                <?php 
+                                                    echo ! empty( $log->in_time ) ? esc_html( date( 'h:i A', strtotime( $log->in_time ) ) ) : 'N/A'; 
+                                                ?>
+                                            </td>
+                                            <td>
+                                                <?php if ( 'present' === $status_val ) : ?>
+                                                    <span class="dnt-badge-status dnt-badge-present"><?php esc_html_e( 'উপস্থিত', 'ggisc' ); ?></span>
+                                                <?php elseif ( 'late' === $status_val ) : ?>
+                                                    <span class="dnt-badge-status dnt-badge-late"><?php esc_html_e( 'বিলম্বিত', 'ggisc' ); ?></span>
+                                                <?php else : ?>
+                                                    <span class="dnt-badge-status dnt-badge-absent"><?php esc_html_e( 'অনুপস্থিত', 'ggisc' ); ?></span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td><?php echo esc_html( $log->remarks ?: '—' ); ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        <?php else : ?>
+                            <div style="background: #f8fafc; border: 1px dashed var(--dnt-wc-border-clr); padding: 30px; border-radius: 8px; text-align: center;">
+                                <p style="color: var(--dnt-wc-text-sub); margin:0;"><?php esc_html_e( 'কোনো দিনভিত্তিক উপস্থিতি রেকর্ড পাওয়া যায়নি।', 'ggisc' ); ?></p>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
 
-                <!-- PANE 3: PAYMENTS -->
+                <!-- PANE 3: EXAMINATION RESULTS SECTION (NEWLY ADDED) -->
+                <div id="wc-results" class="dnt-wc-pane">
+                    <h3 style="margin: 0 0 8px 0; font-size: 1.3rem; color: var(--dnt-wc-text-main); font-weight: 700;"><?php esc_html_e( 'সন্তানের পরীক্ষার ফলাফল ও মার্কশিট', 'ggisc' ); ?></h3>
+                    <p style="color: var(--dnt-wc-text-sub); margin-bottom: 25px; font-size: 0.95rem;"><?php esc_html_e( 'একাডেমিক পরীক্ষার বিষয়ভিত্তিক নম্বর ও লেটার গ্রেড বিবরণী:', 'ggisc' ); ?></p>
+
+                    <div class="dnt-wc-table-wrapper">
+                        <?php if ( ! empty( $student_results ) ) : ?>
+                            <table class="dnt-wc-data-table">
+                                <thead>
+                                    <tr>
+                                        <th><?php esc_html_e( 'পরীক্ষার নাম', 'ggisc' ); ?></th>
+                                        <th><?php esc_html_e( 'বিষয়', 'ggisc' ); ?></th>
+                                        <th><?php esc_html_e( 'প্রাপ্ত নম্বর', 'ggisc' ); ?></th>
+                                        <th><?php esc_html_e( 'গ্রেড', 'ggisc' ); ?></th>
+                                        <th><?php esc_html_e( 'জিপিএ (GPA)', 'ggisc' ); ?></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ( $student_results as $res ) : ?>
+                                        <tr>
+                                            <td><strong><?php echo esc_html( $res->exam_name ); ?></strong></td>
+                                            <td><?php echo esc_html( $res->subject_name ); ?></td>
+                                            <td><?php echo esc_html( $res->obtained_marks . ' / ' . $res->total_marks ); ?></td>
+                                            <td><span class="dnt-badge-status dnt-badge-late"><?php echo esc_html( $res->grade ); ?></span></td>
+                                            <td><strong><?php echo esc_html( $res->gpa ); ?></strong></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        <?php else : ?>
+                            <div style="background: #f8fafc; border: 1px dashed var(--dnt-wc-border-clr); padding: 30px; border-radius: 8px; text-align: center;">
+                                <p style="color: var(--dnt-wc-text-sub); margin:0;"><?php esc_html_e( 'আপনার সন্তানের কোনো পরীক্ষার ফলাফল প্রকাশিত হয়নি।', 'ggisc' ); ?></p>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <!-- PANE 4: PAYMENTS -->
                 <div id="wc-payments" class="dnt-wc-pane">
-                    <h3 style="margin: 0 0 8px 0; font-size: 1.3rem; color: var(--dnt-wc-text-main); font-weight: 700;">ফি বিবরণী ও অনলাইন পেমেন্ট</h3>
-                    <p style="color: var(--dnt-wc-text-sub); margin-bottom: 25px; font-size: 0.95rem;">একাডেমিক সেশনের বকেয়া ও পরিশোধিত ফি-এর বিবরণী:</p>
+                    <h3 style="margin: 0 0 8px 0; font-size: 1.3rem; color: var(--dnt-wc-text-main); font-weight: 700;"><?php esc_html_e( 'ফি বিবরণী ও অনলাইন পেমেন্ট', 'ggisc' ); ?></h3>
+                    <p style="color: var(--dnt-wc-text-sub); margin-bottom: 25px; font-size: 0.95rem;"><?php esc_html_e( 'একাডেমিক সেশনের বকেয়া ও পরিশোধিত ফি-এর বিবরণী:', 'ggisc' ); ?></p>
                     
                     <div class="dnt-wc-table-wrapper">
-                        <table class="dnt-wc-data-table">
-                            <thead>
-                                <tr>
-                                    <th>ফি ক্যাটাগরি</th>
-                                    <th>মাসের নাম</th>
-                                    <th>পরিমাণ</th>
-                                    <th>স্ট্যাটাস</th>
-                                    <th>অ্যাকশন</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>মাসিক টিউশন ফি</td>
-                                    <td>জুলাই ২০২৬</td>
-                                    <td>১,৫০০/- টাকা</td>
-                                    <td><span style="color:#d97706; font-weight:700;">বকেয়া</span></td>
-                                    <td><a href="#" style="background:var(--dnt-wc-brand); color:#fff; padding:6px 12px; border-radius:4px; font-weight: 700; text-decoration: none; font-size:0.85rem;">ফি প্রদান করুন</a></td>
-                                </tr>
-                                <tr>
-                                    <td>অর্ধ-বার্ষিক পরীক্ষার ফি</td>
-                                    <td>জুন ২০২৬</td>
-                                    <td>১,০০০/- টাকা</td>
-                                    <td><span style="color:#16a34a; font-weight:700;">পরিশোধিত</span></td>
-                                    <td><a href="#" style="color: var(--dnt-wc-brand); font-weight: 700; text-decoration: none;">রশিদ (PDF)</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <?php if ( ! empty( $fees_list ) ) : ?>
+                            <table class="dnt-wc-data-table">
+                                <thead>
+                                    <tr>
+                                        <th><?php esc_html_e( 'ইনভয়েস আইডি', 'ggisc' ); ?></th>
+                                        <th><?php esc_html_e( 'ফি টাইপ', 'ggisc' ); ?></th>
+                                        <th><?php esc_html_e( 'মাস/বছর', 'ggisc' ); ?></th>
+                                        <th><?php esc_html_e( 'পরিমাণ', 'ggisc' ); ?></th>
+                                        <th><?php esc_html_e( 'স্ট্যাটাস', 'ggisc' ); ?></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ( $fees_list as $fee ) : ?>
+                                        <tr>
+                                            <td><strong>#<?php echo esc_html( $fee->invoice_id ); ?></strong></td>
+                                            <td><?php echo esc_html( $fee->fee_type ); ?></td>
+                                            <td><?php echo esc_html( $fee->fee_month . ' ' . $fee->fee_year ); ?></td>
+                                            <td>৳ <?php echo esc_html( number_format( $fee->net_payable, 2 ) ); ?></td>
+                                            <td>
+                                                <?php if ( 'Paid' === $fee->payment_status ) : ?>
+                                                    <span style="color:#16a34a; font-weight:700;"><?php esc_html_e( 'পরিশোধিত', 'ggisc' ); ?></span>
+                                                <?php else : ?>
+                                                    <span style="color:#d97706; font-weight:700;"><?php esc_html_e( 'বকেয়া', 'ggisc' ); ?></span>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        <?php else : ?>
+                            <div style="background: #f8fafc; border: 1px dashed var(--dnt-wc-border-clr); padding: 30px; border-radius: 8px; text-align: center;">
+                                <p style="color: var(--dnt-wc-text-sub); margin:0;"><?php esc_html_e( 'কোনো পেমেন্ট লেজার ডাটা পাওয়া যায়নি।', 'ggisc' ); ?></p>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
 
-                <!-- PANE 4: NOTICES -->
+                <!-- PANE 5: NOTICES -->
                 <div id="wc-notices-guardian" class="dnt-wc-pane">
-                    <h3 style="margin: 0 0 20px 0; font-size: 1.3rem; color: var(--dnt-wc-text-main); font-weight: 700;">অভিভাবক নোটিশ বোর্ড</h3>
+                    <h3 style="margin: 0 0 20px 0; font-size: 1.3rem; color: var(--dnt-wc-text-main); font-weight: 700;"><?php esc_html_e( 'অভিভাবক নোটিশ বোর্ড', 'ggisc' ); ?></h3>
                     
-                    <div style="border: 1px solid var(--dnt-wc-border-clr); padding: 20px; border-radius: var(--dnt-wc-radius); background: #fff; margin-bottom:20px;">
-                        <span style="color: var(--dnt-wc-brand); font-size: 0.85rem; font-weight: 700; background: var(--dnt-wc-brand-light); padding: 4px 8px; border-radius: 4px;">সাধারণ নোটিশ</span>
-                        <h4 style="margin: 12px 0 6px 0; font-size: 1.15rem; color: var(--dnt-wc-text-main); font-weight: 700;">চলতি মাসের বেতন ও ফি পরিশোধ সংক্রান্ত বিজ্ঞপ্তি</h4>
-                        <small style="color: var(--dnt-wc-text-sub); display: block; margin-bottom: 12px;">প্রকাশের তারিখ: ১৮ জুলাই, ২০২৬</small>
-                        <p style="margin: 0; color: #475569; font-size: 0.95rem; line-height: 1.6;">অত্র বিদ্যালয়ের সম্মানিত অভিভাবকদের অবগতির জন্য জানানো যাচ্ছে যে, আপনার সন্তানের চলতি জুলাই মাসের টিউশন ফি অনলাইন গেটওয়ের মাধ্যমে আগামী ২৫ জুলাইয়ের মধ্যে পরিশোধ করার জন্য অনুরোধ করা হলো।</p>
-                    </div>
+                    <?php if ( ! empty( $guardian_notices ) ) : ?>
+                        <?php foreach ( $guardian_notices as $notice ) : ?>
+                            <div style="border: 1px solid var(--dnt-wc-border-clr); padding: 20px; border-radius: var(--dnt-wc-radius); background: #fff; margin-bottom:20px;">
+                                <span style="color: var(--dnt-wc-brand); font-size: 0.85rem; font-weight: 700; background: var(--dnt-wc-brand-light); padding: 4px 8px; border-radius: 4px;"><?php echo esc_html( $notice->notice_type ); ?></span>
+                                <h4 style="margin: 12px 0 6px 0; font-size: 1.15rem; color: var(--dnt-wc-text-main); font-weight: 700;"><?php echo esc_html( $notice->title ); ?></h4>
+                                <small style="color: var(--dnt-wc-text-sub); display: block; margin-bottom: 12px;"><?php echo esc_html( sprintf( __( 'প্রকাশের তারিখ: %s', 'ggisc' ), date( 'd F, Y', strtotime( $notice->created_at ) ) ) ); ?></small>
+                                <p style="margin: 0; color: #475569; font-size: 0.95rem; line-height: 1.6;"><?php echo esc_html( $notice->description ); ?></p>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <div style="background: #f8fafc; border: 1px dashed var(--dnt-wc-border-clr); padding: 30px; border-radius: 8px; text-align: center;">
+                            <p style="color: var(--dnt-wc-text-sub); margin:0;"><?php esc_html_e( 'বর্তমানে কোনো নোটিশ নেই।', 'ggisc' ); ?></p>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
             </main>
@@ -461,24 +666,19 @@ $current_user = wp_get_current_user();
     </div>
 </div>
 
-<!-- ==========================================================================
-     CORE TAB ENGINE JAVASCRIPT FOR GUARDIAN
-     ========================================================================== -->
-<script>
+<!-- CORE TAB ENGINE JAVASCRIPT FOR GUARDIAN -->
+<script type="text/javascript">
 document.addEventListener('DOMContentLoaded', function() {
-    const navItems = document.querySelectorAll('.dnt-wc-nav-item');
-    const contentPanes = document.querySelectorAll('.dnt-wc-pane');
-    const quickLinks = document.querySelectorAll('.dnt-wc-quick-link');
+    const navItems       = document.querySelectorAll('.dnt-wc-nav-item');
+    const contentPanes   = document.querySelectorAll('.dnt-wc-pane');
+    const quickLinks     = document.querySelectorAll('.dnt-wc-quick-link');
     const noticeShortcut = document.querySelector('.dnt-wc-notice-shortcut');
 
-    // কোর ট্যাব ট্রান্সলেশন প্রসেসর
     function executeTabSwitch(targetId) {
-        // ১. অ্যাক্টিভ স্টেট ক্লিন-আপ
         navItems.forEach(item => item.classList.remove('is-active'));
         contentPanes.forEach(pane => pane.classList.remove('is-active'));
 
-        // ২. নির্দিষ্ট ট্যাবে ভিজ্যুয়াল স্টেট প্রদান
-        const intendedNav = document.querySelector(`.dnt-wc-nav-item[data-target="${targetId}"]`);
+        const intendedNav  = document.querySelector(`.dnt-wc-nav-item[data-target="${targetId}"]`);
         const intendedPane = document.getElementById(targetId);
 
         if (intendedNav && intendedPane) {
@@ -488,7 +688,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // সাইডবার এলিমেন্ট ক্লিক ট্রিগার
     navItems.forEach(nav => {
         nav.addEventListener('click', function() {
             const target = this.getAttribute('data-target');
@@ -496,7 +695,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // ড্যাশবোর্ড ইন্টেরিয়র কার্ড ট্রিগার
     quickLinks.forEach(card => {
         card.addEventListener('click', function() {
             const destination = this.getAttribute('data-destination');
@@ -504,7 +702,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // নোটিশ ব্যানার শর্টকাট ট্রিগার
     if (noticeShortcut) {
         noticeShortcut.addEventListener('click', function() {
             executeTabSwitch('wc-notices-guardian');

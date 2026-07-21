@@ -68,7 +68,7 @@
     <div class="dnt-brand-auth-buttons" style="display: flex; gap: 10px; align-items: center;">
         
         <?php
-        // 1. Ensure Session is active early
+        // 1. Ensure Session is active early for non-WP legacy fallback
         if ( ! session_id() && ! headers_sent() ) {
             session_start();
         }
@@ -80,15 +80,15 @@
         $full_name      = '';
         $dashboard_url  = home_url( '/custom-login' );
 
-        // 2. Query data via WP Logged-in User Context
+        // 2. Query data via WP Logged-in User Context (Primary Layer)
         if ( is_user_logged_in() ) {
             $current_user = wp_get_current_user();
             $user_roles   = (array) $current_user->roles;
 
             if ( in_array( 'student', $user_roles, true ) ) {
-                $dashboard_url = home_url( '/student-dashboard' );
+                $dashboard_url = site_url( '/student-dashboard/' );
                 
-                // Fetch student details from Plugin DB
+                // Fetch student details from Custom Plugin DB Table
                 $student_db = $wpdb->get_row( $wpdb->prepare( 
                     "SELECT full_name FROM {$table_students} WHERE wp_user_id = %d AND status = 'Active'", 
                     $current_user->ID 
@@ -98,7 +98,7 @@
                 $is_logged_in = true;
 
             } elseif ( in_array( 'guardian', $user_roles, true ) || in_array( 'parent', $user_roles, true ) ) {
-                $dashboard_url = home_url( '/guardian-dashboard' );
+                $dashboard_url = site_url( '/guardian-dashboard/' );
                 $full_name     = $current_user->display_name;
                 $is_logged_in  = true;
             }
@@ -115,7 +115,7 @@
 
             if ( $student_db && ! empty( $student_db->full_name ) ) {
                 $full_name     = $student_db->full_name;
-                $dashboard_url = home_url( '/student-dashboard' );
+                $dashboard_url = site_url( '/student-dashboard/' );
                 $is_logged_in  = true;
             }
         }

@@ -528,6 +528,10 @@
             transition: background-color var(--dnt-transition-fast);
         }
 
+        .dnt-nav-link svg {
+            fill: #fff;
+        }
+
         .dnt-nav-link:hover, .dnt-nav-item:hover > .dnt-nav-link {
             background-color: var(--dnt-color-secondary);
             color: var(--dnt-color-white);

@@ -11,10 +11,10 @@ if ( is_user_logged_in() ) {
     $user_roles   = (array) $current_user->roles;
 
     if ( in_array( 'student', $user_roles, true ) ) {
-        wp_safe_redirect( home_url( '/student-dashboard' ) );
+        wp_safe_redirect( home_url( '/student-dashboard/' ) );
         exit;
     } elseif ( in_array( 'guardian', $user_roles, true ) || in_array( 'parent', $user_roles, true ) ) {
-        wp_safe_redirect( home_url( '/guardian-dashboard' ) );
+        wp_safe_redirect( home_url( '/guardian-dashboard/' ) );
         exit;
     }
 }
@@ -23,6 +23,7 @@ if ( is_user_logged_in() ) {
 if ( ! session_id() && ! headers_sent() ) {
     session_start();
 }
+
 $n1 = wp_rand( 1, 9 );
 $n2 = wp_rand( 1, 9 );
 $_SESSION['dnt_login_captcha_ans'] = $n1 + $n2;
@@ -47,9 +48,9 @@ get_header();
         <div class="dnt-container dnt-history-grid">
             
             <main class="dnt-history-content">
-                <div class="dnt-login-wrapper" style="background: #fff; padding: 40px; border-radius: 12px; border: 1px solid #eef2f6; box-shadow: 0 5px 20px rgba(0,0,0,0.05);">
+                <div class="dnt-login-wrapper" style="background: #fff; padding: 40px; border-radius: 12px; border: 1px solid #eef2f6; box-shadow: 0 5px 20px rgba(0,0,0,0.05); max-width: 500px; margin: 0 auto;">
                     
-                    <h2 style="margin-bottom: 25px; color: #1e293b; font-size: 24px; font-weight: 700;">
+                    <h2 style="margin-bottom: 25px; color: #1e293b; font-size: 24px; font-weight: 700; text-align: center;">
                         <?php esc_html_e( 'অ্যাকাউন্ট অ্যাক্সেস', 'ggisc' ); ?>
                     </h2>
 
@@ -69,7 +70,7 @@ get_header();
                                 $error_msg = __( 'সমস্ত প্রয়োজনীয় তথ্য পূরণ করুন।', 'ggisc' );
                                 break;
                             case 'nonce':
-                                $error_msg = __( 'নিরাপত্তা সেশন মেয়ারোত্তীর্ণ হয়েছে। অনুগ্রহ করে পেজ রিফ্রেশ করুন।', 'ggisc' );
+                                $error_msg = __( 'নিরাপত্তা সেশন মেয়াদোত্তীর্ণ হয়েছে। অনুগ্রহ করে পেজ রিফ্রেশ করুন।', 'ggisc' );
                                 break;
                         }
 
@@ -93,7 +94,7 @@ get_header();
                         </button>
                     </div>
 
-                    <!-- Login Form -->
+                    <!-- Login Form Processor Endpoint -->
                     <form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="POST">
                         <?php wp_nonce_field( 'dnt_login_nonce_action', 'dnt_login_nonce' ); ?>
                         <input type="hidden" name="action" value="dnt_login_handler">
@@ -103,7 +104,7 @@ get_header();
                             <label id="id-label" style="display:block; margin-bottom:8px; font-weight:600; color:#334155;">
                                 <?php esc_html_e( 'স্টুডেন্ট আইডি', 'ggisc' ); ?>
                             </label>
-                            <input type="text" name="log" id="id-input" style="width:100%; padding:14px; border:1px solid #cbd5e1; border-radius:8px; box-sizing:border-box; outline:none;" placeholder="<?php esc_attr_e( 'আপনার আইডি', 'ggisc' ); ?>" required>
+                            <input type="text" name="log" id="id-input" style="width:100%; padding:14px; border:1px solid #cbd5e1; border-radius:8px; box-sizing:border-box; outline:none;" placeholder="<?php esc_attr_e( 'আপনার আইডি লিখুন', 'ggisc' ); ?>" required>
                         </div>
                         
                         <div style="margin-bottom:20px;">
@@ -113,26 +114,25 @@ get_header();
                             <input type="date" name="pwd" style="width:100%; padding:14px; border:1px solid #cbd5e1; border-radius:8px; box-sizing:border-box; outline:none;" required>
                         </div>
 
-                        <!-- Captcha Box -->
+                        <!-- Captcha Challenge Box -->
                         <div style="margin-bottom:25px; padding:15px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:8px;">
                             <label style="font-size: 12px; text-transform: uppercase; font-weight: 700; color: #64748b; display: block; margin-bottom: 5px;">
                                 <?php echo esc_html( sprintf( __( 'নিরাপত্তা যাচাই (%d + %d = ?)', 'ggisc' ), $n1, $n2 ) ); ?>
                             </label>
-                            <input type="number" name="captcha" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:6px; box-sizing:border-box;" required placeholder="<?php esc_attr_e( 'ফলাফল লিখুন', 'ggisc' ); ?>">
+                            <input type="number" name="captcha" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:6px; box-sizing:border-box;" required placeholder="<?php esc_attr_e( 'যোগফল লিখুন', 'ggisc' ); ?>">
                         </div>
 
-                        <button type="submit" style="width:100%; padding:15px; background:#f42a41; color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:700; transition:0.3s;" onmouseover="this.style.background='#d91b32';" onmouseout="this.style.background='#f42a41';">
+                        <button type="submit" style="width:100%; padding:15px; background:#006a4e; color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:700; transition:0.3s;" onmouseover="this.style.background='#00523d';" onmouseout="this.style.background='#006a4e';">
                             <?php esc_html_e( 'প্রবেশ করুন', 'ggisc' ); ?>
                         </button>
                     </form>
                 </div>
             </main>
 
-            <?php get_sidebar(); ?>
         </div>
     </section>
 
-    <!-- ROLE SWITCHER & INTERFACE INTERACTION SCRIPT -->
+    <!-- ROLE SWITCHER INTERFACE SCRIPT -->
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', function() {
             const tabBtns      = document.querySelectorAll('.tab-btn');
@@ -154,8 +154,8 @@ get_header();
                     selectedRole.value = role;
 
                     if (role === 'student') {
-                        idLabel.textContent = '<?php echo esc_js( __( 'স্টুডেন্ট আইডি', 'ggisc' ) ); ?>';
-                        idInput.placeholder = '<?php echo esc_js( __( 'আপনার আইডি', 'ggisc' ) ); ?>';
+                        idLabel.textContent = '<?php echo esc_js( __( 'স্টুডেন্ট আইডি / রোল নম্বর', 'ggisc' ) ); ?>';
+                        idInput.placeholder = '<?php echo esc_js( __( 'আপনার আইডি লিখুন', 'ggisc' ) ); ?>';
                     } else {
                         idLabel.textContent = '<?php echo esc_js( __( 'গার্ডিয়ান মোবাইল নম্বর', 'ggisc' ) ); ?>';
                         idInput.placeholder = '<?php echo esc_js( __( '01XXXXXXXXX', 'ggisc' ) ); ?>';
