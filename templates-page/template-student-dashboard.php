@@ -1,25 +1,69 @@
 <?php
 /* Template Name: Student Dashboard */
 
-if ( ! is_user_logged_in() ) { 
-    wp_safe_redirect( home_url( '/login' ) ); 
-    exit; 
+// 1. Session Engine Initialization
+if ( ! session_id() && ! headers_sent() ) {
+    session_start();
 }
 
-get_header();
-
 global $wpdb;
-$current_user   = wp_get_current_user();
-$wp_user_id     = $current_user->ID;
 
-// Fetch Student Profile from plugin DB
+// Table Definitions
 $table_students = $wpdb->prefix . 'sms_students';
 $table_results  = $wpdb->prefix . 'sms_results';
-$table_exams    = $wpdb->prefix . 'sms_exams';
+$table_routine  = $wpdb->prefix . 'sms_routine';
+$table_subjects = $wpdb->prefix . 'sms_subjects';
+$table_units    = $wpdb->prefix . 'sms_academic_units';
 $table_notices  = $wpdb->prefix . 'sms_notices';
 
-$student = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table_students} WHERE wp_user_id = %d AND status = 'Active'", $wp_user_id ) );
-$student_id = $student ? absint( $student->id ) : 0;
+$is_student_authenticated = false;
+$student                  = null;
+$wp_user_id               = 0;
+
+// 2. Dual Authentication Mechanism (WP Native + Custom Session)
+if ( is_user_logged_in() ) {
+    $current_user = wp_get_current_user();
+    $user_roles   = (array) $current_user->roles;
+
+    if ( in_array( 'student', $user_roles, true ) || in_array( 'administrator', $user_roles, true ) ) {
+        $student = $wpdb->get_row( $wpdb->prepare(
+            "SELECT s.*, u.class_name FROM {$table_students} s LEFT JOIN {$table_units} u ON s.class_id = u.id WHERE s.wp_user_id = %d AND s.status = 'Active'",
+            $current_user->ID
+        ) );
+
+        if ( $student ) {
+            $is_student_authenticated = true;
+            $wp_user_id               = $current_user->ID;
+        } elseif ( in_array( 'administrator', $user_roles, true ) ) {
+            // Bypass for admin testing
+            $is_student_authenticated = true;
+        }
+    }
+}
+
+// Custom Session Fallback Check
+if ( ! $is_student_authenticated && ! empty( $_SESSION['dnt_student_id'] ) ) {
+    $student_session_id = absint( $_SESSION['dnt_student_id'] );
+    $student            = $wpdb->get_row( $wpdb->prepare(
+        "SELECT s.*, u.class_name FROM {$table_students} s LEFT JOIN {$table_units} u ON s.class_id = u.id WHERE s.id = %d AND s.status = 'Active'",
+        $student_session_id
+    ) );
+
+    if ( $student ) {
+        $is_student_authenticated = true;
+    }
+}
+
+// 3. Strict Redirect Control to /custom-login (Never wp-login.php)
+if ( ! $is_student_authenticated ) {
+    wp_safe_redirect( home_url( '/custom-login' ) );
+    exit;
+}
+
+$student_id       = $student ? absint( $student->id ) : 0;
+$student_class_id = $student ? absint( $student->class_id ) : 0;
+
+get_header();
 ?>
 
 <!-- Page Banner & Breadcrumb -->
@@ -305,7 +349,8 @@ $student_id = $student ? absint( $student->id ) : 0;
                         </a>
                     </li>
                     <li class="dnt-logout-item">
-                        <a href="<?php echo esc_url( wp_logout_url( home_url() ) ); ?>">
+                        <?php $logout_url = wp_nonce_url( add_query_arg( 'action', 'dnt_logout', home_url('/') ), 'dnt_logout_action' ); ?>
+                        <a href="<?php echo esc_url( $logout_url ); ?>">
                             <svg class="dnt-wc-nav-svg" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                             <?php esc_html_e( 'লগআউট', 'ggisc' ); ?>
                         </a>
@@ -320,13 +365,13 @@ $student_id = $student ? absint( $student->id ) : 0;
                 <div id="wc-dashboard" class="dnt-wc-pane is-active">
                     <div class="dnt-wc-profile-overview">
                         <div class="dnt-wc-user-meta">
-                            <h2><?php printf( esc_html__( 'আসসালামু আলাইকুম, %s', 'ggisc' ), esc_html( $student ? $student->full_name : $current_user->display_name ) ); ?></h2>
+                            <h2><?php printf( esc_html__( 'আসসালামু আলাইকুম, %s', 'ggisc' ), esc_html( $student ? $student->full_name : ( isset( $current_user ) ? $current_user->display_name : 'শিক্ষার্থী' ) ) ); ?></h2>
                             <p>
                                 <?php esc_html_e( 'স্টুডেন্ট আইডি:', 'ggisc' ); ?> 
-                                <span style="font-weight: 700; color: var(--dnt-wc-text-main);"><?php echo esc_html( $student ? $student->student_id : $current_user->user_login ); ?></span>
+                                <span style="font-weight: 700; color: var(--dnt-wc-text-main);"><?php echo esc_html( $student ? $student->student_id : 'N/A' ); ?></span>
                                 <?php if ( $student ) : ?>
-                                    | <?php esc_html_e( 'শ্রেণি:', 'ggisc' ); ?> <strong><?php echo esc_html( $student->class_name ); ?></strong> (<?php echo esc_html( $student->section_name ); ?>)
-                                    | <?php esc_html_e( 'রোল:', 'ggisc' ); ?> <strong><?php echo esc_html( $student->roll_no ); ?></strong>
+                                    | <?php esc_html_e( 'শ্রেণি:', 'ggisc' ); ?> <strong><?php echo esc_html( ! empty( $student->class_name ) ? $student->class_name : 'N/A' ); ?></strong> (<?php echo esc_html( ! empty( $student->section_name ) ? $student->section_name : 'N/A' ); ?>)
+                                    | <?php esc_html_e( 'রোল:', 'ggisc' ); ?> <strong><?php echo esc_html( ! empty( $student->roll_no ) ? $student->roll_no : 'N/A' ); ?></strong>
                                 <?php endif; ?>
                             </p>
                         </div>
@@ -376,40 +421,49 @@ $student_id = $student ? absint( $student->id ) : 0;
                     </div>
                 </div>
 
-                <!-- PANE 2: ROUTINE -->
+                <!-- PANE 2: DYNAMIC ROUTINE -->
                 <div id="wc-routine" class="dnt-wc-pane">
                     <h3 style="margin: 0 0 8px 0; font-size: 1.3rem; color: var(--dnt-wc-text-main); font-weight: 700;"><?php esc_html_e( 'শ্রেণি পাঠদান রুটিন', 'ggisc' ); ?></h3>
-                    <p style="color: var(--dnt-wc-text-sub); margin-bottom: 25px; font-size: 0.95rem;"><?php esc_html_e( 'নিয়মিত আপডেট হওয়া দৈনিক ক্লাসের অফিশিয়াল সময়সূচী:', 'ggisc' ); ?></p>
+                    <p style="color: var(--dnt-wc-text-sub); margin-bottom: 25px; font-size: 0.95rem;"><?php esc_html_e( 'নিয়মিত আপডেট হওয়া আপনার শ্রেণির অফিশিয়াল সময়সূচী:', 'ggisc' ); ?></p>
                     
                     <div class="dnt-wc-table-wrapper">
                         <table class="dnt-wc-data-table">
                             <thead>
                                 <tr>
-                                    <th><?php esc_html_e( 'সময়', 'ggisc' ); ?></th>
+                                    <th><?php esc_html_e( 'দিন / বার', 'ggisc' ); ?></th>
+                                    <th><?php esc_html_e( 'সময়সূচী', 'ggisc' ); ?></th>
                                     <th><?php esc_html_e( 'বিষয়', 'ggisc' ); ?></th>
-                                    <th><?php esc_html_e( 'শিক্ষক', 'ggisc' ); ?></th>
                                     <th><?php esc_html_e( 'কক্ষ নম্বর', 'ggisc' ); ?></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>১০:০০ AM - ১০:৪৫ AM</td>
-                                    <td>আবশ্যিক গণিত</td>
-                                    <td>জনাব রফিকুল ইসলাম</td>
-                                    <td>কক্ষ ৩০২</td>
-                                </tr>
-                                <tr>
-                                    <td>১০:৪৫ AM - ১১:৩০ AM</td>
-                                    <td>ইংরেজি প্রথম পত্র</td>
-                                    <td>জনাব কামরুল হাসান</td>
-                                    <td>কক্ষ ৩০৫</td>
-                                </tr>
-                                <tr>
-                                    <td>১১:৩০ AM - ১২:১৫ PM</td>
-                                    <td>পদার্থবিজ্ঞান</td>
-                                    <td>জনাব আরিফ হোসেন</td>
-                                    <td>বিজ্ঞান ল্যাব ১</td>
-                                </tr>
+                                <?php
+                                if ( $student_class_id > 0 ) {
+                                    $routines = $wpdb->get_results( $wpdb->prepare(
+                                        "SELECT r.*, s.subject_name FROM {$table_routine} r INNER JOIN {$table_subjects} s ON r.subject_id = s.id WHERE r.class_id = %d ORDER BY FIELD(r.day_name, 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'), r.start_time ASC",
+                                        $student_class_id
+                                    ) );
+
+                                    if ( ! empty( $routines ) ) {
+                                        foreach ( $routines as $rt ) {
+                                            $start = ! empty( $rt->start_time ) ? date( 'h:i A', strtotime( $rt->start_time ) ) : '';
+                                            $end   = ! empty( $rt->end_time ) ? date( 'h:i A', strtotime( $rt->end_time ) ) : '';
+                                            ?>
+                                            <tr>
+                                                <td><strong><?php echo esc_html( $rt->day_name ); ?></strong></td>
+                                                <td><span style="color:var(--dnt-wc-brand); font-weight:600;"><?php echo esc_html( trim( $start . ' - ' . $end, ' -' ) ); ?></span></td>
+                                                <td><strong><?php echo esc_html( $rt->subject_name ); ?></strong></td>
+                                                <td><span style="background:#f1f5f9; padding:2px 8px; border-radius:4px; font-weight:600;"><?php echo esc_html( $rt->room_no ?: 'N/A' ); ?></span></td>
+                                            </tr>
+                                            <?php
+                                        }
+                                    } else {
+                                        echo '<tr><td colspan="4" style="text-align:center; padding:25px; color:#64748b;">' . esc_html__( 'আপনার শ্রেণির জন্য কোনো রুটিন পাওয়া যায়নি।', 'ggisc' ) . '</td></tr>';
+                                    }
+                                } else {
+                                    echo '<tr><td colspan="4" style="text-align:center; padding:25px; color:#64748b;">' . esc_html__( 'কোনো ক্লাস আইডেন্টিফাই করা যায়নি।', 'ggisc' ) . '</td></tr>';
+                                }
+                                ?>
                             </tbody>
                         </table>
                     </div>
@@ -448,10 +502,10 @@ $student_id = $student ? absint( $student->id ) : 0;
                                             <?php
                                         }
                                     } else {
-                                        echo '<tr><td colspan="5" class="text-center text-muted py-4">' . esc_html__( 'এখনো কোনো ফলাফল প্রকাশিত হয়নি।', 'ggisc' ) . '</td></tr>';
+                                        echo '<tr><td colspan="5" style="text-align:center; padding:25px; color:#64748b;">' . esc_html__( 'এখনো কোনো ফলাফল প্রকাশিত হয়নি।', 'ggisc' ) . '</td></tr>';
                                     }
                                 } else {
-                                    echo '<tr><td colspan="5" class="text-center text-muted py-4">' . esc_html__( 'আপনার আইডির সাথে কোনো সক্রিয় স্টুডেন্ট প্রোফাইল যুক্ত নেই।', 'ggisc' ) . '</td></tr>';
+                                    echo '<tr><td colspan="5" style="text-align:center; padding:25px; color:#64748b;">' . esc_html__( 'আপনার আইডির সাথে কোনো সক্রিয় স্টুডেন্ট প্রোফাইল যুক্ত নেই।', 'ggisc' ) . '</td></tr>';
                                 }
                                 ?>
                             </tbody>
@@ -472,7 +526,7 @@ $student_id = $student ? absint( $student->id ) : 0;
                     ?>
                         <div style="border: 1px solid var(--dnt-wc-border-clr); padding: 20px; border-radius: var(--dnt-wc-radius); background: #fff; margin-bottom: 15px;">
                             <span style="color: var(--dnt-wc-brand); font-size: 0.85rem; font-weight: 700; background: var(--dnt-wc-brand-light); padding: 4px 8px; border-radius: 4px;">
-                                <?php echo esc_html( $notice->notice_type ?: 'নোটিশ' ); ?>
+                                <?php echo esc_html( ! empty( $notice->notice_type ) ? $notice->notice_type : 'নোটিশ' ); ?>
                             </span>
                             <h4 style="margin: 12px 0 6px 0; font-size: 1.15rem; color: var(--dnt-wc-text-main); font-weight: 700;"><?php echo esc_html( $notice->title ); ?></h4>
                             <small style="color: var(--dnt-wc-text-sub); display: block; margin-bottom: 12px;"><?php esc_html_e( 'প্রকাশের তারিখ:', 'ggisc' ); ?> <?php echo esc_html( $pub_date ); ?></small>
@@ -487,7 +541,7 @@ $student_id = $student ? absint( $student->id ) : 0;
                         endforeach;
                     else : 
                     ?>
-                        <p class="text-muted"><?php esc_html_e( 'কোনো নোটিশ পাওয়া যায়নি।', 'ggisc' ); ?></p>
+                        <p style="color:#64748b;"><?php esc_html_e( 'কোনো নোটিশ পাওয়া যায়নি।', 'ggisc' ); ?></p>
                     <?php endif; ?>
                 </div>
 

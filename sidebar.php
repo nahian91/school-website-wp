@@ -27,25 +27,6 @@
         </ul>
     </div>
 
-    <!-- নতুন সেকশন: প্রধান শিক্ষকের বাণী / বার্তা (Message Callout) -->
-    <div class="dnt-widget">
-        <div class="dnt-widget-header" style="background: #2c3e50;">
-            <svg class="dnt-svg-icon dnt-icon-sm" style="margin-right: 8px; fill: white;" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-            অধ্যক্ষের বার্তা
-        </div>
-        <div class="dnt-info-box" style="padding: 15px; text-align: center;">
-            <div class="dnt-avatar-placeholder" style="width: 100px; height: 100px; background: #e5e7eb; border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center;">
-                <svg class="dnt-svg-icon" style="width: 48px; height: 48px; fill: #9ca3af;" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-            </div>
-            <h5 style="margin: 0 0 4px; font-size: 1rem; font-weight: 600; color: #111827;">অধ্যাপক মোঃ ফয়সল আহমদ</h5>
-            <small style="color: #6b7280; display: block; margin-bottom: 10px;">অধ্যক্ষ, জিজিআইএসসি</small>
-            <p style="margin: 0; font-size: 0.9rem; line-height: 1.5; color: #4b5563; text-align: justify;">
-                "সুশিক্ষিত ও নৈতিক মূল্যবোধসম্পন্ন প্রজন্ম গড়াই আমাদের মূল লক্ষ্য। প্রযুক্তিনির্ভর আধুনিক শিক্ষাদানের মাধ্যমে আমরা শিক্ষার্থীদের বৈশ্বিক চ্যালেঞ্জের উপযোগী করে তুলছি..."
-            </p>
-            <a href="<?php echo esc_url( site_url( '/message-from-principal/' ) ); ?>" style="display: inline-block; margin-top: 10px; font-size: 0.85rem; color: var(--dnt-color-primary); font-weight: 600; text-decoration: none;">বিস্তারিত পড়ুন →</a>
-        </div>
-    </div>
-
     <!-- ২. একাডেমিক তথ্য -->
     <div class="dnt-widget">
         <div class="dnt-widget-header" style="background: var(--dnt-color-primary-dark);">
@@ -61,36 +42,29 @@
         </ul>
     </div>
 
-    <!-- নতুন সেকশন: অনলাইন গেটওয়ে / কুইক অ্যাকশন বাটন সমূহ -->
+    <!-- ৪. যোগাযোগ -->
     <div class="dnt-widget">
-        <div class="dnt-widget-header" style="background: #16a085;">
-            <svg class="dnt-svg-icon dnt-icon-sm" style="margin-right: 8px; fill: white;" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-            অনলাইন সার্ভিস পোর্টাল
-        </div>
-        <div class="dnt-info-box" style="padding: 12px; display: flex; flex-direction: column; gap: 8px;">
-            <a href="<?php echo esc_url( site_url( '/student-login/' ) ); ?>" style="display: block; padding: 10px; background: #34495e; color: #fff; text-align: center; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">
-                🙋‍♂️ স্টুডেন্ট লগইন পোর্টাল
-            </a>
-            <a href="<?php echo esc_url( site_url( '/fees-payment/' ) ); ?>" style="display: block; padding: 10px; background: #e67e22; color: #fff; text-align: center; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">
-                💳 অনলাইন ফি প্রদান (Payment)
-            </a>
-        </div>
-    </div>
-
-    <!-- ৩. যোগাযোগ -->
-    <div class="dnt-widget">
-        <div class="dnt-widget-header" style="background: var(--dnt-color-secondary);">
+        <div class="dnt-widget-header" style="background: var(--dnt-color-secondary, #d32f2f);">
             <svg class="dnt-svg-icon dnt-icon-sm" style="margin-right: 8px; fill: white;" viewBox="0 0 24 24"><path d="M21 16.42V19c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h2.58c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2c2.83 2.83 5.14 5.16 6.59 6.59l2.2-2.2c.28-.28.67-.36 1.02-.25.12.04.24.08.36.11.45.16.89.26 1.34.31.35.04.66.3.74.65l.65 2.82c.08.35-.11.72-.45.86z"/></svg> 
             জরুরী যোগাযোগ
         </div>
         <div class="dnt-info-box" style="padding: 15px;">
-            <p style="margin-bottom: 12px; display: flex; align-items: center;"><svg class="dnt-svg-icon dnt-icon-sm" style="margin-right: 10px; fill: var(--dnt-color-primary); flex-shrink: 0;" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> প্রধান ক্যাম্পাস, ভিআইপি রোড, সিলেট</p>
-            <p style="margin-bottom: 12px; display: flex; align-items: center;"><svg class="dnt-svg-icon dnt-icon-sm" style="margin-right: 10px; fill: var(--dnt-color-primary); flex-shrink: 0;" viewBox="0 0 24 24"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-1-.99H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.49c0-.55-.45-.99-1-.99z"/></svg> +৮৮০ ১৭০০-০০۰۰০০</p>
-            <p style="margin-bottom: 0; display: flex; align-items: center;"><svg class="dnt-svg-icon dnt-icon-sm" style="margin-right: 10px; fill: var(--dnt-color-primary); flex-shrink: 0;" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg> info@gemsinternational.edu.bd</p>
+            <p style="margin-bottom: 12px; display: flex; align-items: center;">
+                <svg class="dnt-svg-icon dnt-icon-sm" style="margin-right: 10px; fill: var(--dnt-color-primary, #006a4e); flex-shrink: 0;" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> 
+                বঙ্গবীর রোড, দক্ষিণ সুরমা, সিলেট।
+            </p>
+            <p style="margin-bottom: 12px; display: flex; align-items: center;">
+                <svg class="dnt-svg-icon dnt-icon-sm" style="margin-right: 10px; fill: var(--dnt-color-primary, #006a4e); flex-shrink: 0;" viewBox="0 0 24 24"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-1-.99H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.49c0-.55-.45-.99-1-.99z"/></svg> 
+                <a href="tel:+8801755592295" style="color: inherit; text-decoration: none;">+880 1755-592295</a>
+            </p>
+            <p style="margin-bottom: 0; display: flex; align-items: center;">
+                <svg class="dnt-svg-icon dnt-icon-sm" style="margin-right: 10px; fill: var(--dnt-color-primary, #006a4e); flex-shrink: 0;" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg> 
+                <a href="mailto:ggisc.syl@gmail.com" style="color: inherit; text-decoration: none;">ggisc.syl@gmail.com</a>
+            </p>
         </div>
     </div>
 
-    <!-- ৪. গুরুত্বপূর্ণ লিংক -->
+    <!-- ৫. গুরুত্বপূর্ণ লিংক -->
     <div class="dnt-widget">
         <div class="dnt-widget-header" style="background: #34495e;">
             <svg class="dnt-svg-icon dnt-icon-sm" style="margin-right: 8px; fill: white;" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
