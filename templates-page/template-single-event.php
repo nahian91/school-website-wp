@@ -16,12 +16,20 @@ if ( $event_id > 0 ) {
     );
 }
 
-// Bengali Helper Function
+// Bengali Helper Function (Fixed Order for Month Names)
 if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
     function dnt_convert_to_bangla_nums( $str ) {
-        $eng = array('0','1','2','3','4','5','6','7','8','9','January','February','March','April','May','June','July','August','September','October','November','December');
-        $ban = array('০','১','২','৩','৪','৫','৬','৭','৮','৯','জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর');
-        return str_replace($eng, $ban, $str);
+        $eng = array(
+            '0','1','2','3','4','5','6','7','8','9',
+            'January','February','March','April','May','June','July','August','September','October','November','December',
+            'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'
+        );
+        $ban = array(
+            '০','১','২','৩','৪','৫','৬','৭','৮','৯',
+            'জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর',
+            'জানু','ফেব্রু','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টে','অক্টো','নভে','ডিসে'
+        );
+        return str_replace( $eng, $ban, $str );
     }
 }
 ?>
@@ -51,7 +59,7 @@ if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
 <!-- PAGE BREADCRUMB BANNER -->
 <section class="dnt-page-banner" style="background-image: url('<?php echo esc_url( get_template_directory_uri() . '/assets/img/breadcrumb.jpg' ); ?>');">
     <div class="dnt-container">
-        <h1 class="dnt-page-title"><?php echo $event ? esc_html( $event->title ) : 'ইভেন্ট পাওয়া যায়নি'; ?></h1>
+        <h1 class="dnt-page-title"><?php echo $event ? esc_html( $event->title ) : 'ইভেন্ট পাওয়া যায়নি'; ?></h1>
         <div class="dnt-breadcrumb">
             <a href="<?php echo esc_url( home_url( '/' ) ); ?>">প্রথম পাতা</a> 
             <span>/</span> 
@@ -76,13 +84,18 @@ if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
                 $formatted_date = date_i18n( 'j F, Y', strtotime( $event_date_raw ) );
                 $bangla_date    = dnt_convert_to_bangla_nums( $formatted_date );
 
-                // Cover Image
-                $banner_img = ! empty( $event->attachment_url ) 
-                    ? $event->attachment_url 
-                    : 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=1000';
+                // Cover Image Resolution Logic (No Default Fallback)
+                $banner_img = '';
+                if ( ! empty( $event->featured_image ) ) {
+                    $banner_img = $event->featured_image;
+                } elseif ( ! empty( $event->attachment_url ) ) {
+                    $banner_img = $event->attachment_url;
+                }
             ?>
-                <!-- Event Banner Image -->
-                <img src="<?php echo esc_url( $banner_img ); ?>" alt="<?php echo esc_attr( $event->title ); ?>" class="dnt-event-banner-img">
+                <!-- Event Banner Image (Rendered only if available) -->
+                <?php if ( ! empty( $banner_img ) ) : ?>
+                    <img src="<?php echo esc_url( $banner_img ); ?>" alt="<?php echo esc_attr( $event->title ); ?>" class="dnt-event-banner-img">
+                <?php endif; ?>
                 
                 <div class="dnt-event-body">
                     
@@ -105,7 +118,7 @@ if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
                             </div>
                             <div class="dnt-event-meta-text">
                                 <h4>আবেদনকারী/টার্গেট</h4>
-                                <p><?php echo esc_html( $event->target_audience ?: 'সকলের জন্য' ); ?></p>
+                                <p><?php echo esc_html( ! empty( $event->target_audience ) ? $event->target_audience : 'সকলের জন্য' ); ?></p>
                             </div>
                         </div>
                         <div class="dnt-event-meta-item">
@@ -114,7 +127,7 @@ if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
                             </div>
                             <div class="dnt-event-meta-text">
                                 <h4>স্থান</h4>
-                                <p>বিদ্যালয় প্রাঙ্গণ</p>
+                                <p>বিদ্যালয় প্রাঙ্গণ</p>
                             </div>
                         </div>
                     </div>
@@ -127,7 +140,7 @@ if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
                     <!-- Download Attachment Button (If Available) -->
                     <?php if ( ! empty( $event->attachment_url ) ) : ?>
                         <div style="margin-top: 30px; padding: 20px; background: #f1f5f9; border-radius: 8px; display: flex; align-items: center; justify-content: space-between;">
-                            <span><strong>সংযুক্ত নথি/অফিসিয়াল সার্কুলার:</strong></span>
+                            <span><strong>সংযুক্ত নথি/অফিসিয়াল সার্কুলার:</strong></span>
                             <a href="<?php echo esc_url( $event->attachment_url ); ?>" target="_blank" style="background: #006a4e; color: #fff; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 700;">
                                 ডাউনলোড করুন &rarr;
                             </a>
@@ -138,9 +151,9 @@ if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
 
             <?php else : ?>
                 <div style="padding: 60px; text-align: center;">
-                    <h2>দুঃখিত! কোনো ইভেন্ট পাওয়া যায়নি।</h2>
-                    <p>আপনার কাঙ্ক্ষিত ইভেন্টটি হয়তো মুছে ফেলা হয়েছে অথবা সচল নেই।</p>
-                    <a href="<?php echo esc_url( home_url('/') ); ?>" style="color: #006a4e; font-weight: 700;">&larr; প্রথম পাতায় ফিরে যান</a>
+                    <h2>দুঃখিত! কোনো ইভেন্ট পাওয়া যায়নি।</h2>
+                    <p>আপনার কাঙ্ক্ষিত ইভেন্টটি হয়তো মুছে ফেলা হয়েছে অথবা সচল নেই।</p>
+                    <a href="<?php echo esc_url( home_url('/') ); ?>" style="color: #006a4e; font-weight: 700;">&larr; প্রথম পাতায় ফিরে যান</a>
                 </div>
             <?php endif; ?>
 

@@ -19,12 +19,20 @@ $total_teachers_count = $wpdb->get_var( "SELECT COUNT(id) FROM {$wpdb->prefix}sm
 $total_students = $total_students_count ? intval( $total_students_count ) : 2500;
 $total_teachers = $total_teachers_count ? intval( $total_teachers_count ) : 75;
 
-// Bengali Number Converter Helper
+// Bengali Number & Month Converter Helper (Fixed Replacement Order)
 if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
     function dnt_convert_to_bangla_nums( $str ) {
-        $eng = array('0','1','2','3','4','5','6','7','8','9','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','January','February','March','April','May','June','July','August','September','October','November','December');
-        $ban = array('০','১','২','৩','৪','৫','৬','৭','৮','৯','জানু','ফেব্রু','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টে','অক্টো','নভে','ডিসে','জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর');
-        return str_replace($eng, $ban, $str);
+        $eng = array(
+            '0','1','2','3','4','5','6','7','8','9',
+            'January','February','March','April','May','June','July','August','September','October','November','December',
+            'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'
+        );
+        $ban = array(
+            '০','১','২','৩','৪','৫','৬','৭','৮','৯',
+            'জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর',
+            'জানু','ফেব্রু','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টে','অক্টো','নভে','ডিসে'
+        );
+        return str_replace( $eng, $ban, $str );
     }
 }
 ?>
@@ -157,7 +165,7 @@ if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
                 </div>
 
                 <div class="dnt-about-feature-item">
-                    <svg class="dnt-icon dnt-icon-md" style="color:var(--dnt-color-primary); width: 32px; height: 32px;" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.5-12.5l-6 6-3-3-1.5 1.5 4.5 4.5 7.5-7.5z"></path></svg>
+                    <svg class="dnt-icon dnt-icon-md" style="color:var(--dnt-color-primary); width: 32px; height: 32px;" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"></path></svg>
                     <div>
                         <h4>সহ-শিক্ষা কার্যক্রম</h4>
                         <p>খেলাধুলা, বিতর্ক ও সাংস্কৃতিক কর্মকাণ্ডে নিয়মিত অংশগ্রহণ।</p>
@@ -246,7 +254,9 @@ if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
 
 <!-- Speeches Section - 3 Box Layout -->
 <div class="dnt-container" style="margin-top: 40px;">
-    <div class="dnt-speech-box" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;"><!-- 1. Chairman Message Widget -->
+    <div class="dnt-speech-box" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        
+        <!-- 1. Chairman Message Widget -->
         <div class="dnt-widget dnt-person-widget">
             <div class="dnt-widget-header dnt-widget-header-accent">
                 <svg class="dnt-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
@@ -254,12 +264,12 @@ if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
             </div>
             <div class="dnt-widget-body" style="text-align: center; padding: 20px;">
                 <div class="dnt-person-img-wrapper">
-                    <img src="<?php echo get_template_directory_uri();?>/assets/img/chairman.jpg ?>">
+                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/chairman.jpg' ); ?>" alt="চেয়ারম্যান">
                 </div>
                 <h3 class="dnt-person-name" style="font-size: 1.1rem; margin-bottom: 5px;">ডা. মো. আল মাহির ফেরদৌস</h3>
                 <p class="dnt-person-designation" style="color: #6b7280; font-size: 0.9rem; margin-bottom: 10px;">চেয়ারম্যান</p>
                 <p class="dnt-person-quote" style="font-size: 0.88rem; color: #4b5563; text-align: justify; line-height: 1.5;">
-                    একবিংশ শতাব্দীর চ্যালেঞ্জ মোকাবিলায় শিক্ষা কেবল জ্ঞান অর্জনের মাধ্যম নয়; বরং এটি একটি মানবিক ও দায়িত্বশীল সমাজ গঠনের প্রধান ভিত্তি। ২০১৭ সালে "Quality Education for Better Future" মূলমন্ত্র নিয়ে প্রতিষ্ঠানটি যাত্রা শুরু করে। শিক্ষক, অভিভাবক ও পরিচালনা পর্ষদের সম্মিলিত প্রচেষ্টায় আমরা আন্তর্জাতিক মানসম্পন্ন শিক্ষা নিশ্চিত করতে প্রতিশ্রুতিবদ্ধ।
+                    একবিংশ শতাব্দীর চ্যালেঞ্জ মোকাবিলায় শিক্ষা কেবল জ্ঞান অর্জনের মাধ্যম নয়; বরং এটি একটি মানবিক ও দায়িত্বশীল সমাজ গঠনের প্রধান ভিত্তি। ২০১৭ সালে "Quality Education for Better Future" মূলমন্ত্র নিয়ে প্রতিষ্ঠানটি যাত্রা শুরু করে। শিক্ষক, অভিভাবক ও পরিচালনা পর্ষদের সম্মিলিত প্রচেষ্টায় আমরা আন্তর্জাতিক মানসম্পন্ন শিক্ষা নিশ্চিত করতে প্রতিশ্রুতিবদ্ধ।
                 </p>
                 <a href="<?php echo esc_url( site_url('/chairman-speech') ); ?>" class="dnt-btn dnt-btn-outline-primary dnt-btn-sm" style="margin-top: 15px; display: inline-block;">সম্পূর্ণ বাণী ➔</a>
             </div>
@@ -273,12 +283,12 @@ if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
             </div>
             <div class="dnt-widget-body" style="text-align: center; padding: 20px;">
                 <div class="dnt-person-img-wrapper">
-                    <img src="<?php echo get_template_directory_uri();?>/assets/img/md.jpg ?>">
+                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/md.jpg' ); ?>" alt="ম্যানেজিং ডিরেক্টর">
                 </div>
                 <h3 class="dnt-person-name" style="font-size: 1.1rem; margin-bottom: 5px;">মো. আব্দুল ওয়াহিদ</h3>
                 <p class="dnt-person-designation" style="color: #6b7280; font-size: 0.9rem; margin-bottom: 10px;">ম্যানেজিং ডিরেক্টর</p>
                 <p class="dnt-person-quote" style="font-size: 0.88rem; color: #4b5563; text-align: justify; line-height: 1.5;">
-                    একটি জাতির উন্নয়ন ও সমৃদ্ধির মূল ভিত্তি হলো আধুনিক ও নৈতিক শিক্ষা। কেবল একাডেমিক সাফল্য নয়; বরং প্রতিটি শিক্ষার্থীর মধ্যে সৃজনশীলতা, নেতৃত্বগুণ ও প্রযুক্তিগত দক্ষতা তৈরি করাই আমাদের মূল উদ্দেশ্য। সকলের আস্থা ও ভালোবাসাকে পাথেয় করে আমরা একটি আলোকিত ও সমৃদ্ধ ভবিষ্যতের দিকে এগিয়ে যাচ্ছি।
+                    একটি জাতির উন্নয়ন ও সমৃদ্ধির মূল ভিত্তি হলো আধুনিক ও নৈতিক শিক্ষা। কেবল একাডেমিক সাফল্য নয়; বরং প্রতিটি শিক্ষার্থীর মধ্যে সৃজনশীলতা, নেতৃত্বগুণ ও প্রযুক্তিগত দক্ষতা তৈরি করাই আমাদের মূল উদ্দেশ্য। সকলের আস্থা ও ভালোবাসাকে পাথেয় করে আমরা একটি আলোকিত ও সমৃদ্ধ ভবিষ্যতের দিকে এগিয়ে যাচ্ছি।
                 </p>
                 <a href="<?php echo esc_url( site_url('/principle-speech') ); ?>" class="dnt-btn dnt-btn-outline-primary dnt-btn-sm" style="margin-top: 15px; display: inline-block;">সম্পূর্ণ বাণী ➔</a>
             </div>
@@ -292,12 +302,12 @@ if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
             </div>
             <div class="dnt-widget-body" style="text-align: center; padding: 20px;">
                 <div class="dnt-person-img-wrapper">
-                    <img src="<?php echo get_template_directory_uri();?>/assets/img/principle.jpg ?>">
+                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/principle.jpg' ); ?>" alt="অধ্যক্ষ">
                 </div>
                 <h3 class="dnt-person-name" style="font-size: 1.1rem; margin-bottom: 5px;">মো. সিদ্দিকুর রহমান</h3>
                 <p class="dnt-person-designation" style="color: #6b7280; font-size: 0.9rem; margin-bottom: 10px;">অধ্যক্ষ</p>
                 <p class="dnt-person-quote" style="font-size: 0.88rem; color: #4b5563; text-align: justify; line-height: 1.5;">
-                    শিক্ষা মানুষের জীবনের সবচেয়ে শক্তিশালী হাতিয়ার এবং বিদ্যালয় হলো শিশুর সুপ্ত প্রতিভা বিকাশের প্রাক-ক্ষেত্র। "Quality Education for Better Future" নীতিকে ধারন করে আমরা শিক্ষার্থীদের মধ্যে নৈতিকতা, সমালোচনামূলক চিন্তাভাবনা ও মানবিক মূল্যবোধ জাগ্রত করে আন্তর্জাতিক মানের নাগরিক হিসেব গড়ে তুলছি।
+                    শিক্ষা মানুষের জীবনের সবচেয়ে শক্তিশালী হাতিয়ার এবং বিদ্যালয় হলো শিশুর সুপ্ত প্রতিভা বিকাশের প্রাক-ক্ষেত্র। "Quality Education for Better Future" নীতিকে ধারন করে আমরা শিক্ষার্থীদের মধ্যে নৈতিকতা, সমালোচনামূলক চিন্তাভাবনা ও মানবিক মূল্যবোধ জাগ্রত করে আন্তর্জাতিক মানের নাগরিক হিসেব গড়ে তুলছি।
                 </p>
                 <a href="<?php echo esc_url( site_url('/principal-message') ); ?>" class="dnt-btn dnt-btn-outline-primary dnt-btn-sm" style="margin-top: 15px; display: inline-block;">সম্পূর্ণ বাণী ➔</a>
             </div>
@@ -313,12 +323,12 @@ if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
         <div class="dnt-stats-grid">
             <div class="dnt-stat-box">
                 <svg class="dnt-stat-icon" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-                <div class="dnt-stat-number"><?php echo esc_html( $total_students ); ?>+</div>
+                <div class="dnt-stat-number"><?php echo esc_html( dnt_convert_to_bangla_nums( (string) $total_students ) ); ?>+</div>
                 <div class="dnt-stat-label">সর্বমোট শিক্ষার্থী</div>
             </div>
             <div class="dnt-stat-box">
                 <svg class="dnt-stat-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                <div class="dnt-stat-number"><?php echo esc_html( $total_teachers ); ?>+</div>
+                <div class="dnt-stat-number"><?php echo esc_html( dnt_convert_to_bangla_nums( (string) $total_teachers ) ); ?>+</div>
                 <div class="dnt-stat-label">অভিজ্ঞ শিক্ষক</div>
             </div>
             <div class="dnt-stat-box">
@@ -404,19 +414,15 @@ if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
         )
     );
 
-    // Default Fallback Image Stock
-    $default_images = array(
-        'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=400',
-        'https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=400',
-        'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=400',
-        'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=400'
-    );
-
     if ( ! empty( $events ) ) :
-        $img_index = 0;
         foreach ( $events as $event ) :
-            $img_url = ! empty( $event->attachment_url ) ? $event->attachment_url : $default_images[$img_index % 4];
-            $img_index++;
+            // Strict Image Selection Logic (No Default Image Fallback)
+            $img_url = '';
+            if ( ! empty( $event->featured_image ) ) {
+                $img_url = $event->featured_image;
+            } elseif ( ! empty( $event->attachment_url ) ) {
+                $img_url = $event->attachment_url;
+            }
 
             $event_date_raw = ( ! empty( $event->event_date ) && $event->event_date !== '1970-01-01' ) 
                 ? $event->event_date 
@@ -429,7 +435,9 @@ if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
     ?>
             <div class="dnt-event-item" style="border: 1px solid #eef2f6; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
                 <a href="<?php echo esc_url( $event_url ); ?>" style="text-decoration: none; color: inherit;">
-                    <div class="dnt-event-img" style="background-image: url('<?php echo esc_url( $img_url ); ?>'); height: 160px; background-size: cover; background-position: center; border-radius: 8px 8px 0 0;"></div>
+                    <?php if ( ! empty( $img_url ) ) : ?>
+                        <div class="dnt-event-img" style="background-image: url('<?php echo esc_url( $img_url ); ?>'); height: 160px; background-size: cover; background-position: center; border-radius: 8px 8px 0 0;"></div>
+                    <?php endif; ?>
                     <div class="dnt-event-content" style="padding: 15px; background: #fff;">
                         <h4 style="font-size: 1.1rem; margin-bottom: 8px; color: #1e293b; font-weight: 700; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;">
                             <?php echo esc_html( $event->title ); ?>

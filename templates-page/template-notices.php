@@ -7,19 +7,27 @@ get_header();
 
 global $wpdb;
 
-// Bengali Number & Month Converter Helper
+// Bengali Number & Month Converter Helper (Fixed str_replace order)
 if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
     function dnt_convert_to_bangla_nums( $str ) {
-        $eng = array('0','1','2','3','4','5','6','7','8','9','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','January','February','March','April','May','June','July','August','September','October','November','December');
-        $ban = array('০','১','২','৩','৪','৫','৬','৭','৮','৯','জানু','ফেব্রু','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টে','অক্টো','নভে','ডিসে','জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর');
-        return str_replace($eng, $ban, $str);
+        $eng = array(
+            '0','1','2','3','4','5','6','7','8','9',
+            'January','February','March','April','May','June','July','August','September','October','November','December',
+            'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'
+        );
+        $ban = array(
+            '০','১','২','৩','৪','৫','৬','৭','৮','৯',
+            'জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর',
+            'জানু','ফেব্রু','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টে','অক্টো','নভে','ডিসে'
+        );
+        return str_replace( $eng, $ban, $str );
     }
 }
 
 // 1. Pagination setup (Strictly 10 per page)
-$paged = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1;
+$paged    = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1;
 $per_page = 10;
-$offset = ( $paged - 1 ) * $per_page;
+$offset   = ( $paged - 1 ) * $per_page;
 
 $table_notices = $wpdb->prefix . 'sms_notices';
 
@@ -48,7 +56,7 @@ $notices = $wpdb->get_results(
 ?>
 
     <!-- PAGE BREADCRUMB BANNER -->
-    <section class="dnt-page-banner" style="background-image: url('<?php echo get_template_directory_uri();?>/assets/img/breadcrumb.jpg');">
+    <section class="dnt-page-banner" style="background-image: url('<?php echo esc_url( get_template_directory_uri() . '/assets/img/breadcrumb.jpg' ); ?>');">
         <div class="dnt-container">
             <h1 class="dnt-page-title">একাডেমিক নোটিশবোর্ড</h1>
             <div class="dnt-breadcrumb">
@@ -134,7 +142,7 @@ $notices = $wpdb->get_results(
                                 // Page Numbers
                                 for ( $i = 1; $i <= $total_pages; $i++ ) {
                                     $active_style = ( $i == $paged ) ? 'background: #006a4e; color: #fff;' : 'background: #e5e7eb; color: #333;';
-                                    $page_link = add_query_arg( 'paged', $i, get_permalink() );
+                                    $page_link    = add_query_arg( 'paged', $i, get_permalink() );
                                     echo '<a href="' . esc_url( $page_link ) . '" style="padding: 8px 14px; text-decoration: none; border-radius: 4px; font-weight: 600; ' . $active_style . '">' . dnt_convert_to_bangla_nums( $i ) . '</a>';
                                 }
 
@@ -149,7 +157,7 @@ $notices = $wpdb->get_results(
 
                     <?php else : ?>
                         <div style="padding: 30px; text-align: center; background: #fff; border-radius: 8px; border: 1px solid #e5e7eb; color: #64748b;">
-                            <p>বর্তমানে কোনো নোটিশ প্রকাশিত হয়নি।</p>
+                            <p>বর্তমানে কোনো নোটিশ প্রকাশিত হয়নি।</p>
                         </div>
                     <?php endif; ?>
                 </div>

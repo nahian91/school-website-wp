@@ -7,19 +7,29 @@ get_header();
 
 global $wpdb;
 
-// Bengali Number & Month Converter Helper
+// Bengali Number & Month Converter Helper (Fixed str_replace order)
 if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
     function dnt_convert_to_bangla_nums( $str ) {
-        $eng = array('0','1','2','3','4','5','6','7','8','9','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','January','February','March','April','May','June','July','August','September','October','November','December');
-        $ban = array('০','১','২','৩','৪','৫','৬','৭','৮','৯','জানু','ফেব্রু','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টে','অক্টো','নভে','ডিসে','জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর');
-        return str_replace($eng, $ban, $str);
+        $eng = array(
+            '0','1','2','3','4','5','6','7','8','9',
+            'January','February','March','April','May','June','July','August','September','October','November','December',
+            'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'
+        );
+        
+        $ban = array(
+            '০','১','২','৩','৪','৫','৬','৭','৮','৯',
+            'জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর',
+            'জানু','ফেব্রু','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টে','অক্টো','নভে','ডিসে'
+        );
+        
+        return str_replace( $eng, $ban, $str );
     }
 }
 
 // 1. Pagination setup (9 Events Per Page)
-$paged = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1;
+$paged    = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1;
 $per_page = 9;
-$offset = ( $paged - 1 ) * $per_page;
+$offset   = ( $paged - 1 ) * $per_page;
 
 $table_notices = $wpdb->prefix . 'sms_notices';
 
@@ -46,14 +56,6 @@ $events = $wpdb->get_results(
         $per_page,
         $offset
     )
-);
-
-// Fallback Images for Events
-$default_images = array(
-    'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=600',
-    'https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=600',
-    'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=600',
-    'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=600'
 );
 ?>
 
@@ -95,10 +97,14 @@ $default_images = array(
                         
                         <div class="dnt-event-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px;">
                             <?php 
-                            $img_index = 0;
                             foreach ( $events as $event ) : 
-                                $img_url = ! empty( $event->attachment_url ) ? $event->attachment_url : $default_images[$img_index % 4];
-                                $img_index++;
+                                // Image URL Processing (No Default Fallback)
+                                $img_url = '';
+                                if ( ! empty( $event->featured_image ) ) {
+                                    $img_url = $event->featured_image;
+                                } elseif ( ! empty( $event->attachment_url ) ) {
+                                    $img_url = $event->attachment_url;
+                                }
 
                                 $date_raw = ( ! empty( $event->event_date ) && $event->event_date !== '1970-01-01' ) 
                                     ? $event->event_date 
@@ -110,13 +116,22 @@ $default_images = array(
                                 $event_url      = home_url( '/single-event/?id=' . absint( $event->id ) );
                             ?>
                                 <div class="dnt-event-card" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: transform 0.3s, box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 15px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)';">
-                                    <div class="dnt-event-thumb" style="position: relative; height: 180px; background-image: url('<?php echo esc_url( $img_url ); ?>'); background-size: cover; background-position: center;">
-                                        <div class="dnt-event-date-badge" style="position: absolute; top: 12px; right: 12px; background: #006a4e; color: #fff; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">
-                                            <?php echo esc_html( $bangla_date ); ?>
+                                    
+                                    <?php if ( ! empty( $img_url ) ) : ?>
+                                        <div class="dnt-event-thumb" style="position: relative; height: 180px; background-image: url('<?php echo esc_url( $img_url ); ?>'); background-size: cover; background-position: center;">
+                                            <div class="dnt-event-date-badge" style="position: absolute; top: 12px; right: 12px; background: #006a4e; color: #fff; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">
+                                                <?php echo esc_html( $bangla_date ); ?>
+                                            </div>
                                         </div>
-                                    </div>
+                                    <?php endif; ?>
 
                                     <div class="dnt-event-body" style="padding: 18px;">
+                                        <?php if ( empty( $img_url ) ) : ?>
+                                            <div class="dnt-event-date-badge" style="display: inline-block; background: #006a4e; color: #fff; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; margin-bottom: 12px;">
+                                                <?php echo esc_html( $bangla_date ); ?>
+                                            </div>
+                                        <?php endif; ?>
+
                                         <h3 style="font-size: 1.1rem; margin-bottom: 10px; line-height: 1.4;">
                                             <a href="<?php echo esc_url( $event_url ); ?>" style="text-decoration: none; color: #1e293b; font-weight: 700; transition: color 0.2s;" onmouseover="this.style.color='#006a4e';" onmouseout="this.style.color='#1e293b';">
                                                 <?php echo esc_html( $event->title ); ?>
@@ -148,7 +163,7 @@ $default_images = array(
 
                                 for ( $i = 1; $i <= $total_pages; $i++ ) {
                                     $active_style = ( $i == $paged ) ? 'background: #006a4e; color: #fff;' : 'background: #e5e7eb; color: #333;';
-                                    $page_link = add_query_arg( 'paged', $i, get_permalink() );
+                                    $page_link    = add_query_arg( 'paged', $i, get_permalink() );
                                     echo '<a href="' . esc_url( $page_link ) . '" style="padding: 8px 14px; text-decoration: none; border-radius: 4px; font-weight: 600; ' . $active_style . '">' . dnt_convert_to_bangla_nums( $i ) . '</a>';
                                 }
 
@@ -162,7 +177,7 @@ $default_images = array(
 
                     <?php else : ?>
                         <div style="padding: 40px; text-align: center; background: #fff; border-radius: 8px; border: 1px solid #e5e7eb; color: #64748b;">
-                            <p>বর্তমানে কোনো ইভেন্ট পাওয়া যায়নি।</p>
+                            <p>বর্তমানে কোনো ইভেন্ট পাওয়া যায়নি।</p>
                         </div>
                     <?php endif; ?>
                 </div>

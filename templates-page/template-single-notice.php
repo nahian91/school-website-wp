@@ -16,12 +16,20 @@ if ( $notice_id > 0 ) {
     );
 }
 
-// Bengali Helper Function
+// Bengali Helper Function (Fixed Order for Month Names)
 if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
     function dnt_convert_to_bangla_nums( $str ) {
-        $eng = array('0','1','2','3','4','5','6','7','8','9','January','February','March','April','May','June','July','August','September','October','November','December');
-        $ban = array('০','১','২','৩','৪','৫','৬','৭','৮','৯','জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর');
-        return str_replace($eng, $ban, $str);
+        $eng = array(
+            '0','1','2','3','4','5','6','7','8','9',
+            'January','February','March','April','May','June','July','August','September','October','November','December',
+            'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'
+        );
+        $ban = array(
+            '০','১','২','৩','৪','৫','৬','৭','৮','৯',
+            'জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর',
+            'জানু','ফেব্রু','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টে','অক্টো','নভে','ডিসে'
+        );
+        return str_replace( $eng, $ban, $str );
     }
 }
 ?>
@@ -33,7 +41,7 @@ if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
     .dnt-page-section { padding: 60px 0; background: #f0f2f5; }
     .dnt-page-grid { display: grid; grid-template-columns: 1fr 350px; gap: 40px; }
     .dnt-notice-details-wrapper { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; overflow: hidden; }
-    .dnt-notice-banner-img { width: 100%; height: 320px; object-fit: cover; display: block; }
+    .dnt-notice-banner-img { width: 100%; height: 350px; object-fit: cover; display: block; }
     .dnt-notice-body { padding: 40px; }
     
     .dnt-notice-meta-bar { display: flex; flex-wrap: wrap; gap: 20px; background: #f8fafc; padding: 25px; border-radius: 8px; margin-bottom: 35px; border-left: 5px solid #006a4e; }
@@ -96,11 +104,23 @@ if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
                 $bangla_date    = dnt_convert_to_bangla_nums( $formatted_date );
 
                 // Priority Badge Class
-                $priority = strtolower( $notice->priority ?? 'normal' );
-                $badge_class = ( $priority === 'urgent' || $priority === 'high' ) ? 'badge-urgent' : 'badge-normal';
+                $priority       = strtolower( $notice->priority ?? 'normal' );
+                $badge_class    = ( $priority === 'urgent' || $priority === 'high' ) ? 'badge-urgent' : 'badge-normal';
                 $priority_label = ( $priority === 'urgent' || $priority === 'high' ) ? 'জরুরি নোটিশ' : 'সাধারণ নোটিশ';
+
+                // Featured Image Check
+                $featured_img = ! empty( $notice->featured_image ) ? $notice->featured_image : '';
+                
+                // Memo ID
+                $memo_id_raw = sprintf( '%04d', absint( $notice->id ) );
+                $bangla_memo_id = dnt_convert_to_bangla_nums( $memo_id_raw );
             ?>
                 
+                <!-- Notice Banner Image (Rendered only if available) -->
+                <?php if ( ! empty( $featured_img ) ) : ?>
+                    <img src="<?php echo esc_url( $featured_img ); ?>" alt="<?php echo esc_attr( $notice->title ); ?>" class="dnt-notice-banner-img">
+                <?php endif; ?>
+
                 <!-- Notice Content Body -->
                 <div class="dnt-notice-body">
                     
@@ -136,7 +156,7 @@ if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
                             </div>
                             <div class="dnt-notice-meta-text">
                                 <h4>প্রাপক / টার্গেট</h4>
-                                <p><?php echo esc_html( $notice->target_audience ?: 'সকলের জন্য' ); ?></p>
+                                <p><?php echo esc_html( ! empty( $notice->target_audience ) ? $notice->target_audience : 'সকলের জন্য' ); ?></p>
                             </div>
                         </div>
                         <div class="dnt-notice-meta-item">
@@ -145,7 +165,7 @@ if ( ! function_exists( 'dnt_convert_to_bangla_nums' ) ) {
                             </div>
                             <div class="dnt-notice-meta-text">
                                 <h4>স্মারক নম্বর / আইডি</h4>
-                                <p>#NOT-<?php echo sprintf( '%04d', absint( $notice->id ) ); ?></p>
+                                <p>#NOT-<?php echo esc_html( $bangla_memo_id ); ?></p>
                             </div>
                         </div>
                     </div>
